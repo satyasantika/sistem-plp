@@ -24,4 +24,4 @@ Route::get('/dashboard', function () {
 
 require __DIR__.'/auth.php';
 
-Route::resource('roles', RoleController::class)->middleware('role:admin');
+Route::resource('konfigurasi/roles', RoleController::class)->middleware('role:admin');
