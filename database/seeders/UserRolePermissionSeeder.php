@@ -118,6 +118,7 @@ class UserRolePermissionSeeder extends Seeder
             Permission::create(['name' => 'delete role']);
 
             $admin_role->givePermissionTo(Permission::all());
+            $admin->assignRole('admin');
             $operator->assignRole('operator');
             $dekanat->assignRole('dekanat');
             $ketua->assignRole('ketua');
