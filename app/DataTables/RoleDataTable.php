@@ -28,8 +28,8 @@ class RoleDataTable extends DataTable
             })
             ->addColumn('action', function($row){
                 $action = '';
-                $action .= '<button type="button" class="btn btn-primary btn-sm"><i class="ti-pencil"></i></button>';
-                $action .= ' <button type="button" class="btn btn-danger btn-sm"><i class="ti-trash"></i></button>';
+                $action .= '<button type="button" data-id='.$row->id.' data-jenis="edit" class="btn btn-primary btn-sm action"><i class="ti-pencil"></i></button>';
+                $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
                 return $action;
             })
             ->setRowId('id')
