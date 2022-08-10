@@ -31,8 +31,12 @@
                         </a>
                         <ul class="sub-menu {{ request()->segment(1) == 'konfigurasi' ? 'expand' : '' }}">
                             <li><a href="auth-register.html" class="link"><span>User#</span></a></li>
-                            <li><a href="{{ route('roles.index') }}" class="link"><span>Role</span></a></li>
-                            <li><a href="auth-register.html" class="link"><span>Permission#</span></a></li>
+                            <li class="{{ request()->segment(1) == 'konfigurasi' &&request()->segment(2) == 'roles' ? 'active' : '' }}">
+                                <a href="{{ route('roles.index') }}" class="link"><span>Role</span></a>
+                            </li>
+                            <li class="{{ request()->segment(1) == 'konfigurasi' &&request()->segment(2) == 'permissions' ? 'active' : '' }}">
+                                <a href="auth-register.html" class="link"><span>Permission#</span></a>
+                            </li>
                         </ul>
                     </li>
                     <li>
