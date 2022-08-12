@@ -1,9 +1,11 @@
 <div class="modal-content">
-    <form id="formAction" action="{{ route('roles.update',$role->id) }}" method="post">
+    <form id="formAction" action="{{ $role->id ? route('roles.update',$role->id) : route('roles.store') }}" method="post">
         @csrf
-        @method('PUT')
+        @if ($role->id)
+            @method('PUT')
+        @endif
         <div class="modal-header">
-            <h5 class="modal-title" id="largeModalLabel">Modal title</h5>
+            <h5 class="modal-title" id="largeModalLabel">Edit Role</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"
                 aria-label="Close"></button>
         </div>
