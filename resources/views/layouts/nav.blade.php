@@ -24,22 +24,22 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li class="{{ request()->segment(1) == 'konfigurasi' ? 'active open' : '' }}">
+                    @foreach (myNavigation() as $menu)
+                    <li class="{{ request()->segment(1) == $menu->url ? 'active open' : '' }}">
                         <a href="#" class="main-menu has-dropdown">
-                            <i class="ti-hummer"></i>
-                            <span>Konfigurasi</span>
+                            <i class="{{ $menu->icon }}"></i>
+                            <span>{{ $menu->name }}</span>
                         </a>
-                        <ul class="sub-menu {{ request()->segment(1) == 'konfigurasi' ? 'expand' : '' }}">
-                            <li><a href="auth-register.html" class="link"><span>User#</span></a></li>
-                            <li class="{{ request()->segment(1) == 'konfigurasi' &&request()->segment(2) == 'roles' ? 'active' : '' }}">
-                                <a href="{{ route('roles.index') }}" class="link"><span>Role</span></a>
+                        <ul class="sub-menu {{ request()->segment(1) == $menu->url ? 'expand' : '' }}">
+                            @foreach ($menu->children as $submenu)
+                            <li class="{{ request()->segment(1) == explode('/',$submenu->url)[0] && request()->segment(2) == explode('/',$submenu->url)[1] ? 'active' : '' }}">
+                                <a href="{{ url($submenu->url) }}" class="link"><span>{{ $submenu->name }}</span></a>
                             </li>
-                            <li class="{{ request()->segment(1) == 'konfigurasi' &&request()->segment(2) == 'permissions' ? 'active' : '' }}">
-                                <a href="auth-register.html" class="link"><span>Permission#</span></a>
-                            </li>
+                            @endforeach
                         </ul>
                     </li>
-                    <li>
+                    @endforeach
+                    {{-- <li>
                         <a href="#" class="main-menu has-dropdown">
                             <i class="ti-desktop"></i>
                             <span>UI Elements</span>
@@ -107,7 +107,7 @@
                             <i class="ti-bar-chart"></i>
                             <span>Charts</span>
                         </a>
-                    </li>
+                    </li> --}}
                 </ul>
             </div>
         </nav>
