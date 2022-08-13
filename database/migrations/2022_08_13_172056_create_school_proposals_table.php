@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('school_id')->constrained();
             $table->string('coordinator_name');
+            $table->boolean('registered')->default(0);
             $table->timestamps();
         });
         Schema::create('teacher_proposals', function (Blueprint $table) {
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->string('subject_id')->nullable();
             $table->foreign('subject_id')->references('id')->on('subjects')->constrained();
             $table->integer('class_count')->nullable();
+            $table->boolean('registered')->default(0);
             $table->timestamps();
         });
     }
