@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('navigations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('url');
-            $table->string('icon');
+            $table->string('url')->nullabel();
+            $table->string('icon')->nullabel();
             $table->bigInteger('parent_id')->nullable();
             $table->integer('order')->nullable();
             $table->timestamps();

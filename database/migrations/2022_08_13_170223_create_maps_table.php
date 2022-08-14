@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('maps', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->constrained('users');
-            $table->foreignId('lecture_id')->constrained('users');
-            $table->foreignId('teacher_id')->constrained('users');
-            $table->foreignId('school_id')->constrained();
+            $table->foreignId('student_id')->constrained('users')->nullabel();
+            $table->foreignId('lecture_id')->constrained('users')->nullabel();
+            $table->foreignId('teacher_id')->constrained('users')->nullabel();
+            $table->foreignId('school_id')->constrained()->nullabel();
             $table->integer('year')->nullable();
             $table->boolean('plp1')->default(1);
             $table->boolean('plp2')->default(1);
