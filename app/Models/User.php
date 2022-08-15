@@ -20,8 +20,21 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
+        'subject_id',
+        'gender',
+        'birth_place',
+        'birth_date',
+        'address',
+        'phone',
+        'provider',
+        'is_pns',
+        'golongan',
+        'npwp',
+        'nomor_rekening',
+        'bank'
     ];
 
     /**
@@ -41,5 +54,12 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'birth_date' => 'date=Y-m-d',
+        'is_pns' => 'boolean',
     ];
+
+    public function subjets()
+    {
+        $this->belongsTo(Subject::class);
+    }
 }
