@@ -29,8 +29,8 @@ return new class extends Migration
             $table->string('id')->primary();
             $table->string('name');
             $table->string('type')->nullable();
-            $table->integer('count')->nullable();
-            $table->integer('max_score')->nullable();
+            $table->integer('count')->default(0);
+            $table->integer('max_score')->default(0);
         });
     }
 

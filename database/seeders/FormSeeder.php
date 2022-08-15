@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Subject;
+use App\Models\Form;
 use Illuminate\Database\Seeder;
-use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class SubjectSeeder extends Seeder
+class FormSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,14 +15,16 @@ class SubjectSeeder extends Seeder
      */
     public function run()
     {
-        $csvData = fopen(base_path('/database/seeders/csvs/subjects.csv'), 'r');
+        $csvData = fopen(base_path('/database/seeders/csvs/forms.csv'), 'r');
         $transRow = true;
         while (($data = fgetcsv($csvData, 555, ',')) !== false) {
             if (!$transRow) {
-                Subject::create([
+                Form::create([
                     'id' => $data['0'],
                     'name' => $data['1'],
-                    'departement' => $data['2'],
+                    'count' => $data['2'],
+                    'type' => $data['3'],
+                    'max_score' => $data['4'],
                 ]);
             }
             $transRow = false;
