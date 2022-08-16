@@ -21,7 +21,16 @@
     </head>
 
     <body>
-        @yield('content')
-    <script src="{{ asset('') }}assets/js/login.js"></script>
+        <section class="container h-100">
+            <div class="row justify-content-sm-center h-100 align-items-center">
+                <div class="col-xxl-4 col-xl-5 col-lg-6 col-md-7 col-sm-8">
+                @yield('content')
+                    <div class="text-center mt-5 text-muted">
+                        Copyright &copy; 2022 &mdash; FKIP Universitas Siliwangi
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script src="{{ asset('') }}assets/js/login.js"></script>
     </body>
 </html>

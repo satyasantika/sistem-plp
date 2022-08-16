@@ -151,9 +151,9 @@
                                 <i class="ti-user"></i> Profile
                             </div>
                         </a>
-                        <a href="#">
+                        <a href="{{ route('change-password') }}">
                             <div class="description">
-                                <i class="ti-settings"></i> Setting
+                                <i class="ti-key"></i> Password
                             </div>
                         </a>
                         <a href="{{ route('logout') }}" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">

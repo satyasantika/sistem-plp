@@ -24,4 +24,7 @@ Route::get('/dashboard', function () {
 
 require __DIR__.'/auth.php';
 
+Route::get('/change-password', [App\Http\Controllers\AuthController::class, 'changePassword'])->name('change-password');
+Route::post('/change-password', [App\Http\Controllers\AuthController::class, 'updatePassword'])->name('update-password');
+
 Route::resource('konfigurasi/roles', RoleController::class)->middleware('role:admin');

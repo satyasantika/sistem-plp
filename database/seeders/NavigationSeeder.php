@@ -18,7 +18,7 @@ class NavigationSeeder extends Seeder
         $konfigurasi = Navigation::create([
             'name' => 'Konfigurasi',
             'url' => 'konfigurasi',
-            'icon' => 'ti-hummer',
+            'icon' => 'ti-settings',
             'parent_id' => null,
             'order' => Navigation::count() + 1,
         ]);
