@@ -62,4 +62,29 @@ class User extends Authenticatable
     {
         $this->belongsTo(Subject::class);
     }
+
+    public function headmasters()
+    {
+        $this->hasMany(School::class, 'headmaster_id');
+    }
+
+    public function coordinators()
+    {
+        $this->hasMany(School::class, 'coordinator_id');
+    }
+
+    public function students()
+    {
+        $this->hasMany(Map::class, 'student_id');
+    }
+
+    public function lectures()
+    {
+        $this->hasMany(Map::class, 'lecture_id');
+    }
+
+    public function teachers()
+    {
+        $this->hasMany(Map::class, 'teacher_id');
+    }
 }

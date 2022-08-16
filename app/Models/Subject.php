@@ -17,4 +17,9 @@ class Subject extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    public function teacher_proposals()
+    {
+        return $this->hasMany(TeacherProposal::class);
+    }
 }

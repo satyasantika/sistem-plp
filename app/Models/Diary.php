@@ -10,7 +10,7 @@ class Diary extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
-    public function map()
+    public function maps()
     {
         return $this->belongsTo(Map::class);
     }

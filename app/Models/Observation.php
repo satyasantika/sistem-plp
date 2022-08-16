@@ -11,7 +11,7 @@ class Observation extends Model
 
     protected $guarded = ['id'];
 
-    public function map()
+    public function maps()
     {
         return $this->belongsTo(Map::class);
     }

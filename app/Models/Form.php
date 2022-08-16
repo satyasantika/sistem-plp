@@ -28,9 +28,4 @@ class Form extends Model
         return $this->hasMany(Observation::class);
     }
 
-    public function dairies()
-    {
-        return $this->hasMany(Diary::class);
-    }
-
 }

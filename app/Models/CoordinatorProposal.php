@@ -5,19 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Assessment extends Model
+class CoordinatorProposal extends Model
 {
     use HasFactory;
-
     protected $guarded = ['id'];
 
-    public function maps()
-    {
-        return $this->belongsTo(Map::class);
-    }
+    protected $casts = [
+        'registered' => 'boolean',
+    ];
 
-    public function forms()
+    public function schools()
     {
-        return $this->belongsTo(Form::class);
+        return $this->belongsTo(School::class);
     }
 }

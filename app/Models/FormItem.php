@@ -13,7 +13,7 @@ class FormItem extends Model
 
     public $timestamps = false;
 
-    public function form()
+    public function forms()
     {
         return $this->belongsTo(Form::class);
     }
