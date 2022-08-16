@@ -1,143 +1,177 @@
-username,name,phone,email,subject_id
-0407028601,"Adita Widara Putra, M.Pd.",82127171486,adita.widara@unsil.ac.id,21
-0003088603,"Agi Ahmad Ginanjar, M.Pd.",85223306627,agiahmad@unsil.ac.id,21
-0031019001,"Ai Siti Nurjamilah, M.Pd.",85223939772,aisitinurjamilah@unsil.ac.id,21
-0405099002,"Aveny Septi Astriani, M.Hum.",85772022019,aveny.septi@unsil.ac.id,21
-0406118301,"Budi Riswandi, M.Pd.",81323195766,budiriswandi@unsil.ac.id,21
-0002066102,Dr. Iis Lisnawati,85221074746,iislisnawati@unsil.ac.id,21
-0401086002,Dr. Titin Setiartin Ruslan,8122287871,titinsetiartin@unsil.ac.id,21
-0001049401,"Fikri Hakim, M.Hum.",87887670878,fikri.hakim@unsil.ac.id,21
-0415026001,Prof. Dedi Heryadi,81320797358,dediheryadi@unsil.ac.id,21
-0003019103,"Shinta Rosiana, M.Pd.",82217610015,shinta.rosiana@unsil.ac.id,21
-0422018103,"Welly Nores Kartadireja, M.Pd.",81387377977,wellykartadireja@unsil.ac.id,21
-0007068501,"Yuni Ertinawati, M.Pd.",85294469246,yuniertinawati@unsil.ac.id,21
-0406048801,"Arini Nurul Hidayati, M.Pd.",81223111553,arini@unsil.ac.id,22
-0021118901,"Asri Siti Fatimah, M.Pd.",82216178199,asri@unsil.ac.id,22
-0003039301,"Dea Silvani, M.Pd.",81329865508,dea.silvani@unsil.ac.id,22
-0429076101,"Dede Pertamana, M.Pd.",82111690102,dedepertamana@unsil.ac.id,22
-0412127601,"Dewi Rosmala, MA.",81221498318,dewi.rosmala@unsil.ac.id,22
-0411088302,Dr. Agis Andriani,81313696478,agisandriani@unsil.ac.id,22
-0415097002,Dr. Soni Tantan Tandiana,82120390001,sonitantan@unsil.ac.id,22
-0031128502,"Fera Sulastri, M.Pd.",81289490368,ferasulastri@unsil.ac.id,22
-0028038901,"Fuad Abdullah, M.Pd.",85223980454,fuad.abdullah182@gmail.com,22
-0005019004,"Sitti Syakira, M.Pd.",81241582921,sitti.syakira@unsil.ac.id,22
-0402018202,"Melisa Sri, M.Pd.",85223767677,melisasri@unsil.ac.id,22
-0430087601,"Metty Agustine Primary, M.Pd.",8112014793,mettyagustine@unsil.ac.id,22
-0415128105,"Neni Marlina, M.Pd.",85353377779,nenimarlina@unsil.ac.id,22
-0025128105,"Nita Sari Narulita Dewi, M.Pd.",85353045608,nitasarinarulitadewi@unsil.ac.id,22
-0413117802,"Rahmat, M.Hum.",8154665193,rahmat@unsil.ac.id,22
-0012039501,"Ratu Sarah Pujasari, M.Pd.",85323032338,ratu@unsil.ac.id,22
-0407046201,"Ruslan, M.Pd.",82217619444,ruslan@unsil.ac.id,22
-0405077601,"Santiana, M.Pd.",81223345433,santiana@unsil.ac.id,22
-0405117502,"Dr. Yusup Supriyono, M.Pd.",81222933359,yusupsupriyono@unsil.ac.id,22
-0404078207,"Yuyus Saputra, M.Pd.",82318923882,yuyus@unsil.ac.id,22
-0420127003,"Dedi Muhtadi, M.Pd",85351926993,dedimuhtadi@unsil.ac.id,51
-0407076101,"Dedi Nurjamil, M.Pd.",81323244333,dedinurjamil@unsil.ac.id,51
-0007028902,"Depi Ardian Nugraha, M.Pd",8889433335,depi@unsil.ac.id,51
-0419117705,"Depi Setialesmana, M.Pd.",85353622058,depisetialesmana@unsil.ac.id,51
-0427127904,"Dian Kurniawan, M.Pd.",81336238785,diankurniawan@unsil.ac.id,51
-0018126201,Dr. Supratman,81221309123,supratman@unsil.ac.id,51
-0430056602,Dr. Nani Ratnaningsih,82126087779,naniratnaningsih@unsil.ac.id,51
-0424018801,Dr. Mega Nur Prabawati,81221801414,meganurprabawati@unsil.ac.id,51
-0008098504,Dr. Sinta Verawati Dewi,85353533993,sintaverawati@unsil.ac.id,51
-0416118004,Dr. Sri Tirto Madawistama,85222333631,sritirtomadawistama@unsil.ac.id,51
-0003079801,"Eko Yulianto, M.Pd.",85223904150,ekoyulianto@unsil.ac.id,51
-0424098103,"Elis Nurhayati, M.Pd.",85353292281,elisnurhayati@unsil.ac.id,51
-0420058303,"Eva Mulyani, M.Pd.",85322669558,evamulyani@unsil.ac.id,51
-0429046101,"Edi Hidayat, M.Pd.",8122427561,edihidayat@unsil.ac.id,51
-0429017801,"Hetty Patmawati, M.Pd.",82118022333,hettypatmawati@unsil.ac.id,51
-0408076501,"Ipah Muzdalipah, M.Pd.",8122487658,ipahmuzdalipah@unsil.ac.id,51
-0405128005,"Ike Natalliasari, M.Pd.",85212361296,ikenatalliasari@unsil.ac.id,51
-0427108101,"Linda Herawati, M.Pd.",85223552789,lindaherawati@unsil.ac.id,51
-0017059303,"M. Zulfikar Mansyur, M.Pd.",85224849770,zulfikar.mansyur@unsil.ac.id,51
-0420068303,"Ratna Rustina, M.Pd.",85351831150,ratnarustina@unsil.ac.id,51
-0410098101,"Redi Hermanto, M.Pd.",81320279905,redihermanto@unsil.ac.id,51
-0027118602,"Satya Santika, M.Pd.",85294194510,satyasantika@unsil.ac.id,51
-0428018102,"Siska Ryane Muslim, M.Pd.",82321050582,siskaryanemuslim@unsil.ac.id,51
-0427047502,"Vepi Apiati, M.Pd.",82130672608,vepiapiati@unsil.ac.id,51
-0409118003,"Yeni Heryani, M.Pd.",85224101516,yeniheryani@unsil.ac.id,51
-0029046201,Dr. Endang Surahman,81322588100,e.surahman@unsil.ac.id,53
-0005067911,Dr. Nana,82133440942,nana@unsil.ac.id,53
-0014079201,"Dwi Sulistyaningsih, M.Pd.",85726293698,dwi.sulistyaningsih@unsil.ac.id,53
-0723098901,"Eko Sujarwanto, M.Pd.",83846204456,eko.sujarwanto@unsil.ac.id,53
-0020059301,"Ernita Susanti, M.Pd.",82117457010,ernita.susanti@unsil.ac.id,53
-0022089102,"Ifa Rifatul Mahmudah, M.Pd.",82260007375,ifa.rifatul@unsil.ac.id,53
-0014109002,"Rifaatul Maulidah, M.PFis.",81312503005,rifaatulm@unsil.ac.id,53
-0003109204,"Yanti Sofi Makiyah, M.Pd.",87722657747,yanti.sofi@unsil.ac.id,53
-0008128703,"Dea Diella, M.Pd.",81320402253,deadiella@unsil.ac.id,54
-0022128802,"Diki Muhamad Chaidir, M.Pd.",82115101710,dikimc@unsil.ac.id,54
-0407088803,Dr. Dita Agustian,85223830734,dita.agustian@unsil.ac.id,54
-0411047701,Dr. Diana Hernawati,82119606014,hernawatidiana@yahoo.co.id,54
-0415046001,Dr. Purwati Kuswarini Suprapto,81395364222,purwatikuswarini@unsil.ac.id,54
-0426097804,Dr. Romy Faisal Mustofa,81235955555,syahla.aini@gmail.com,54
-0019038901,"Egi Nuryadin, M.Si.",81312669700,egi.nuryadin@unsil.ac.id,54
-0022079701,"Mufti Ali, M.Pd.",85223082329,muftiali@unsil.ac.id,54
-2002106501,Prof. Wahidin,89607529897,wahidin.unsil2021@gmail.com,54
-0001048902,"Rinaldi Rizal Putra, M.Sc.",8112344989,rinaldi.rizalputra@unsil.ac.id,54
-0008018901,"Ryan Ardiansyah, M.Pd.",8997979633,ryanardiansyah@unsil.ac.id,54
-0011089103,"Samuel Agus Triyanto, M.Pd.",85728594244,samuel.agus@unsil.ac.id,54
-0422055902,"Suharsono, M.Pd.",8122283468,suharsonomarjadi@gmail.com,54
-0027059001,"Vita Meylani, M.Sc.",85327122811,vita@unsil.ac.id,54
-0011058306,"Ai Nur Solihat, M.Pd.",8122484044,ainursolihat@unsil.ac.id,65
-0021068904,"Astri Srigustini, M.Pd.",85223016001,astrisrigustini@unsil.ac.id,65
-0423018103,"Ati Sadiah, M.Pd.",82127197419,atisadiah@unsil.ac.id,65
-0728128801,"Bakti Widyaningrum, M.Pd.",82257630827,bakti.widyaningrum@unsil.ac.id,65
-0015099201,"Betanika Nila Nirbita, M.Pd.",81392935680,betanika@unsil.ac.id,65
-0002016803,Dr. Ade Rustiana,811276833,ade.rustiana@unsil.ac.id,65
-0026049002,"Edi Fitriana, M.M.",82127916763,edifitriana@unsil.ac.id,65
-0020048408,"Gugum Gumilar, M.Pd.",85323017398,gugumgumilar@unsil.ac.id,65
-0019035901,"Heti Suherti, M.M.",8121479969,hetisuherti@unsil.ac.id,65
-0407038901,"Iis Aisyah, M.Pd.",82126602127,iis.aisyah@unsil.ac.id,65
-0012118902,"Kurniawan, M.M.",85323042484,kurniawanspdmm@gmail.com,65
-0020088802,"Raden Roro Suci Nurdianti, M.Pd.",85720825885,rorosucinurdianti@gmail.com,65
-0010028801,"Rendra Gumilar, M.Pd.",85223065020,rendragumilar@unsil.ac.id,65
-0002099203,"Sri Hardianti Sartika, M.Pd.",85221880045,sri.hardianti@unsil.ac.id,65
-0414026201,"Yoni Hermawan, M.Pd",8122483217,yonihermawan@unsil.ac.id,65
-0009058903,"Anita Eka Putri, M.Pd.",82237270905,anita.eka@unsil.ac.id,70
-0002028803,"Darwis Darmawan, M.Pd.",85320527890,darwis@unsil.ac.id,70
-0404098002,Dr. Iman Hilman,85223062335,imanhilman@unsil.ac.id,70
-0406046602,Dr. Siti Fadjarajani,8122289363,sitifadjarajani@unsil.ac.id,70
-0011118307,"Elgar Balasa Singkawijaya, M.Pd.",8122220566,elgar@unsil.ac.id,70
-0014127805,"Ely Satiyasih Rosali, M.Pd.",82121034229,ely@unsil.ac.id,70
-0018038901,"Erni Mulyanie, M.Pd.",85223372951,ernimulyanie@unsil.ac.id,70
-0013018901,"Erwin Hilman Hakim, M.Pd.",85320022254,erwinhilman@unsil.ac.id,70
-0029058803,"Mega Prani Ningsih, M.Pd.",87751056315,mega.prani@unsil.ac.id,70
-0008059004,"Setio Galih Marliyono, M.Pd.",81322229669,setiogeo@unsil.ac.id,70
-0003019002,"Tineu Indrianeu, M.Pd.",85223057000,tineuindrianeu@unsil.ac.id,70
-0404057701,"Yani Sri Astuti, M.Pd.",81323995477,yanisriastuti@unsil.ac.id,70
-0425105801,"Alex Anis Ahmad, M.Pd.",82120058747,alexanisahmad@unsil.ac.id,71
-2116098803,"Dede Wahyu Firdaus, M.Pd.",85320120066,dede.firdaus@unsil.ac.id,71
-0426065801,Dr. Dodih Heryadi,81323129900,dodihheryadi@unsil.ac.id,71
-0011039304,"Ilham Rohman Ramadhan, M.Pd.",85723262548,ilham.rohman@unsil.ac.id,71
-0429066201,"M. Iyus Jayusman, M.Pd.",82219481992,iyusjayusman@unsil.ac.id,71
-0312058702,"Laely Armiyati, M.Pd.",81328464436,laely.armiyati@unsil.ac.id,71
-0009109301,"Miftahul Habib Fachrurozi, M.Pd.",895373650681,miftahul.habib@unsil.ac.id,71
-0005088704,"Oka Agus Kurniawan Shavab, M.Pd.",82124861848,okaaks@unsil.ac.id,71
-0417077804,"Yulia Sofiani, M.Hum.",81324247802,yuliasofiani@unsil.ac.id,71
-0429128101,"Zulpi Miftahudin, M.Pd.",8121435681,zulfimiptahudin@unsil.ac.id,71
-0422118801,"Aang Rohyana, M.Pd.",81322351233,aangrohyana@unsil.ac.id,91
-0429098404,"Agus Arief Rahmat, M.Pd.",82319352226,agusarifrahman@unsil.ac.id,91
-0004018801,"Ari Priana, M.Pd.",85223370722,aripriana@unsil.ac.id,91
-0029129104,"Arief Abdul Malik, M.Pd.",85727269118,arief.abdulmalik@unsil.ac.id,91
-0031128603,"Defri Mulyana, M.Pd.",8112347077,defrimulyana@unsil.ac.id,91
-0425018302,"Deni Setiawan, M.Pd.",85722484489,denisetiawan@unsil.ac.id,91
-0010068603,"Dicky Tri Juniar, M.Pd.",85222616766,dickytrijuniar@unsil.co.id,91
-0001016702,Dr. Gumilar Mulya,82120111000,gumilarmulya@unsil.ac.id,91
-0009046301,Dr. Cucu Hidayat,81323743550,cucuhidayat@unsil.ac.id,91
-0403097602,Dr. Nanang Kusnadi,81320752316,nanangkusnadi@unsil.ac.id,91
-0031108107,"Endah Listyasari, M.Pd.",82118264181,endah@unsil.ac.id,91
-0412068903,"Fegie Rizkia Mulyana, M.Pd.",8112348753,fegierizkiamulyana@unsil.ac.id,91
-0415116301,"Abdul Narlan, M.Pd.",81312612987,abdulnarlan@unsil.ac.id,91
-0427086201,"Agus Mulyadi, M.Pd.",81324093472,agusmulyadi@unsil.ac.id,91
-0401026401,"Budi Indrawan, M.Pd.",81320343839,budiindrawan@unsil.ac.id,91
-0005088703,"Haikal Millah, M.Pd.",81510897458,haikal@unsil.ac.id,91
-0425077101,"Ida Wahidah, M.Pd.",81384363285,idawahidah@unsil.ac.id,91
-0422048304,"Iman Rubiana, M.Pd.",85223444421,imanrubiana@unsil.ac.id,91
-0004128902,"Melya Nur Herliana, M.Pd.",85223520088,melya.nh22@unsil.ac.id,91
-0415059004,"Novi Soraya, M.Pd.",81322713395,novisoraya@unsil.ac.id,91
-0408038201,"Nuriska Subekti, M.Pd.",85314403182,nuriskasubekti@unsil.ac.id,91
-0018086401,Prof. Iis Marwan,81323154411,iismarwan@unsil.ac.id,91
-0003088702,"Resty Agustryani, M.Pd.",85311030007,resty@unsil.ac.id,91
-0015059004,"Ridwan Gumilar, M.Pd.",81394447646,ridwangumilar38@gmail.com,91
-0025018802,"Selly Purnama, M.Pd.",89512156450,sellypurnama@unsil.ac.id,91
-0409108005,"Ucu Muhammad Afif, M.Pd.",85224709234,ucumuhammadafif@unsil.ac.id,91
+username,name,phone,email,subject_id,password
+0001108802,"Lesi Oktiwanti, S.Pd., M.Pd.",081395417734,lesi.oktiwanti@gmail.com,03,0001108802,""
+KJK023,"H. Mumu, Drs., M.Pd.",,mumu@unsil.ac.id,03,0002085902,"Kp. Mugarsari"
+20190043,"Nastiti Novitasari, S.Pd., M.Pd",082117786645,nastiti@unsil.ac.id,03,0005119001,""
+20170099,"Lulu Yuliani, M.Pd., ",085323975141,luluyuliani@unsil.ac .id,03,0008047703,"Perum pdank cikunten indah no.88 jl.winaya 4 kel.kahuripan kec.Tawang"
+20220001,"Dr. Nurlaila, M.Pd",,nurlaila@unsil.ac.id,03,0017077713,""
+KBL001,"Dr. Wiwin Herwina, S.Pd., M.Pd.",085223506611,wiwinherwina@unsil.ac.id,03,0023056903,"Leuwihalang No. 107 RT/RW 003/004 Kelurahan Sukamanah Kec. Cipedes"
+20190044,"Ahmad Hamdan, S.Pd., M.Pd",082218318901,ahmad.hamdan@unsil.ac.id,03,0025058803,""
+KBK015,"H. Adang Danial, Drs., M.Kes.",08122099546,adangdanial@unsil.ac.id,03,0027035801,"Jalan KH. Mustofa Gg. Nusawangi I No.7 RT.001 RW.006 Kel. Nagarawang Kec. Cihideung"
+KBY001,"Dr. Lilis Karwati, Dra., M.Pd.",85222260501,liliskarwati@unsil.ac.id,03,0403106706,"Jln.Raya Nasional III. Dusun Pengkolan No.405. RT.023/RW.007 Kelurahan Sindangkasih Kecamatan Sindangkasih."
+20210002,"Bayu Adi Laksono, M.Pd",,bayu@unsil.ac.id,03,0730129204,""
+KBK017,"Prof. Dr. H. Yus Darusman, Drs., M.Si.",81223590606,yusdarusman@unsil.ac.id,03,8909350022,"Jalan Tonjong No. A-139 Cigeureung RT. 004 RW.011 Kel. Parkannyasag Kecamata Indihiang"
+20190049,"Fikri Hakim, S.Hum., M.Hum",087887670878,fikri.hakim@unsil.ac.id,21,0001049401,"Jln. Rancabolang No.213, RT 06 RW 16, Kelurahan Manjahlega, Kecamatan Rancasari"
+KCK026,"Dr. Hj. Iis Lisnawati, Dra., M.Pd.",,iislisnawati@unsil.ac.id,21,0002066102,"Jl. Cikunten Indah II No.20B, RT/RW 002/010 Kel. Kahuripan Kec. Tawang"
+20190048,"Shinta Rosiana, S.Pd., M.Pd.",087725798143,shinta.rosiana@unsil.ac.id,21,0003019103,"asrama penerbad jl. Bell k-45/5 rt 002 rw 002 kel. kembangarum"
+KCL050,"Agi Ahmad Ginanjar, S.Pd., M.Pd.",85223306627,agiahmad@unsil.ac.id,21,0003088603,"Dusun Babakan, RT 009 RW 007, Desa/Kec. Panumbangan, Kab. Ciamis"
+KCL052,"Yuni Ertinawati, S.Pd., M.Pd.",085294469246,yuniertinawati@unsil.ac.id,21,0007068501,"Kp. Pasir Kaler, RT/RW 007/002 Kel.Margaluyu Kec.Manonjaya"
+KCL051,"Ai Siti Nurjamilah, M.Pd.",85223939772,aisitinurjamilah@unsil.ac.id,21,0031019001,"Kp. Cipanengah RT/RW 001/003, Kel. Tawangbanteng Kec. Sukaratu"
+KCY013,"Dr. Titin Setiartin Ruslan, Dra., M.Pd.",,titinsetiartin@unsil.ac.id,21,0401086002,"Jalan Winaya I No. 17 RT/RW 001/010 Kel. Kahuripan Kec.Tawang"
+20190062,"Aveny Septi Astriani, S.Pd., M.Hum",085872022019,aveny.septi@unsil.ac id,21,0405099002,""
+KCY009,"Dede Anwar, Drs., M.Pd.",81323778176,dedeanwar@unsil.ac.id,21,0406075801,"Kp. Cilendek RT/RW 004/008, Kel Kota Baru Kec. Cibeureum"
+KCL049,"Budi Riswandi, S.Pd., M.Pd.",,budiriswandi@unsil.ac.id,21,0406118301,"Cilembang No. 57 RT/RW 002/015 Kel.Cilembang Kec.Cihihideung"
+20190068,"Adita Widara Putra, S.Pd., M.Pd",,adita@unsil.ac.id,21,0407028601,""
+KCY015,"H. DUDUNG SURYANA, DRS., M.PD",,dudungsuryana@unsil.ac.id,21,0411116102,"Jl.Dr.Moch.Hatta No. 106 B"
+KCY012,"Prof. Dr. H. Dedi Heryadi, Drs., M.Pd.",081320797358,dediheryadi@unsil.ac.id,21,0415026001,"Jl. Cikarang No. 8 Sadananya, RT/RW 010/003, Kel. Sadananya Kec. Sadananya"
+KCL047,"Welly Nores Kartadireja, S.Pd., M.Pd.",081387377977,wellykartadireja@unsil.ac.id,21,0422018103,"Warung Nyantong RT/RW 003/002 Kel. Sumelap Tamansari"
+KCK011,"Hj. Titin Kusmini, Dra., M.Pd.",,titinkusmini@unsil.ac.id,21,9990160779,"Babakanpala No. 56, RT/RW 003/010 Kel. Karsamenak Kec. Kawalu"
+20220044,"Siti Pitrianti, M.Pd.",,sitipitrianti@unsil.ac.id,21,CPNS,""
+20220045,"Sri Maryani, M.Pd.",,srimulyani@unsil.ac.id,21,CPNS,""
+20220028,"Nita Nurhayati, M.Hum",,nita@unsil.ac.id,21,CPNS 2021.23,""
+20220013,"Ichsan Fauzi Rachman, M.Pd",,ichsan@unsil.ac.id,21,CPNS 2021.8,""
+20190039,"Dea Silvani, S.Pd., M.Pd",085872474005,dea.silvani@unsil.ac.id,22,0003039301,""
+20190013,"Sitti Syakira, S.Pd., M.Pd",081241582921,sitti.syakira@unsil.ac.id,22,0005019004,""
+KIL060,"Ratu Sarah Pujasari, S.Pd., M.Pd.",85323032338,ratu@unsil.ac.id,22,0012039501,"Jalan Bantar No. 90 001/008 Bantarsari Bungursari"
+KIL057,"Junjun Muhamad Ramdani, M.Pd.",,junjun@unsil.ac.id,22,0014068502,"Dusun Paratag 010/005 Bojong Barat Bojong"
+KIL063,"Asri Siti Fatimah, S.Pd., M.Pd.",082216178199,asrisitifatimah@unsil.ac.id,22,0021118901,"Jl. Letkol RE Djaelani RT/RW 002/014 Kel.Cilembang Kec. Cihideung"
+KIL030,"Nita Sari Narulita Dewi, S.Pd., M.Pd.",085353045608,nitasarinarulitadewi@unsil.ac.id,22,0025128105,"Jl. Leuwianyar No. 31, RT/RW 001/003, Kel.Sukamanah Kec.Cipedes"
+KIL061,"Fuad Abdullah, M.Pd.",,fuad.abdullah182@gmail.com,22,0028038901,"Kp. Siluman 003/002 Setiaratu Cibeureum"
+KIL059,"Fera Sulastri, S.Pd, M.Pd.",81289490368,ferasulastri@unsil.ac.id,22,0031128502,"Dusun Cijamban RT/RW 004/002 Kel. Panumbangan Kec. Panumbanagan"
+KIL054,"Melisa Sri, S.Pd., M.Pd.",85223767677,melisasri@unsil.ac.id,22,0402018202,"Perum Marhamah Regency Blok I. 04 RT/RW 006/012 Kel. Mulyasari Kec.Tamansari"
+KIL056,"Yuyus Saputra, S.Pd., M.Pd.",,yuyus@unsil.ac.id,22,0404078207,"Perum Aksajaya Blok E No. 02 RT/RW 004/009 Kel. Sambongjaya Kec. Mangkubumi"
+KIY058,"Santiana, S.S., M.Pd.",081223345433,santiana@unsil.ac.id,22,0405077601,"PERUM BUMI RESIK INDAH BLOK B.8, NO.9-10, JL.AHMAD YANI - BOULEVARD, SUKAMANAH, CIPEDES"
+KIY051,"Dr. Yusup Supriyono, S.Pd., M.Pd.",081222933359,yusupsupriyono@unsil.ac.id,22,0405117502,"Jl. Leuwianyar No. 31 RT/RW 001/003 Kel. Sukamanah Kec. Cipedes"
+KIL066,"Arini Nurul Hidayati, S.Pd., M.Pd.",,arini@unsil.ac.id,22,0406048801,"Kp. Arjasari RT/RW 006/002 Kel. Arjasari Kec. Leuwisari"
+KIY038,"Ruslan, Drs., M.Pd.",,ruslan@unsil.ac.id,22,0407046201,"Prm Mitra Batik Blok E.434 RT/RW 004/013  Kel.Mulyasari Kec.Tamansari"
+KIL007,"Dr. Agis Andriani, S.Pd., M.Hum.",81313696478,agisandriani@unsil.ac.id,22,0411088302,"Jl. Bantarsari RT/RW 001/002 Kel. Bantarsari Kec. Bangusari"
+KIY054,"Dewi Rosmala, S.Pd., MA.",081221498318,dewi.rosmala@unsil.ac.id,22,0412127601,"Perum Tamansari Indah  Jl. Aster Blok A No. 2, rt/rw 001/011, Kel.Karsamenak Kec.Kawalu"
+KIY052,"Rahmat, S.Pd., M.Hum.",08154665193,rahmat@unsil.ac.id,22,0413117802,"Griya Mulyasari Blok C2 Cicantel, RT/RT 005/007 Kel.Mulyasari Kec.Tamansari"
+KIY049,"H. Soni Tantan Tandiana, Dr.,  S.Pd., ",082120390001,sonitantan@unsil.ac.id,22,0415097002,"Babakan Karang Pawitan, RT/RW 001/005 Kel.Mangkubumi Kec.Mangkubumi"
+KIL053,"Neni Marlina, S.Pd., M.Pd.",085353377779,nenimarlina@unsil.ac.id,22,0415128105,"Perum Marhamah Regency Blok M.10"
+KIY006,"Dede Pertamana, Dra., M.Pd.",082111690102,dedepertamana@unsil.ac.id,22,0429076101,"Perum Tamansari Indah Blok E No.16 RT/RW 005/011 Kel.Karasemanak Kec. Kawalu"
+KIY053,"Metty Agustine Primary, S.Pd., M.Pd.",8112014793,mettyagustine@unsil.ac.id,22,0430087601,"Griya Mulyasari Blok C2 Cicantel RT/RW 005/007, Kel.Mulyasari Kec. Tamansari"
+KHL041,"Eko Yulianto, S.Pd., M.Pd.",082215648018,ekoyulianto@unsil.ac.id,51,0003079801,"Jl. H. Sobandi Rahayu II RT/RW 003/005 Kel. Sukahurip Kec. Tamansari"
+20170001,"Depi Ardian Nugraha, S.Pd., M.Pd",08889433335 / 0811211478,depi@unsil.ac.id,51,0007028902,""
+KHL037,"Dr. Sinta Verawati Dewi, S.Pd., M.Pd.",,arsinta.vd@gmail.com,51,0008098504,"Jl. Puncakasih No.17, RT/RW: 015/006 Desa Sukasenang, Kecamatan Sindangkasih"
+20190035,"Muhamad Zulfikar Mansyur, S.Pd., M.Pd",085224849770,zulfikar.mansyur@unsil.ac.id,51,0017059303,""
+KHK047,"Dr. H. Supratman, Drs., M.Pd.",081221309123,supratman@unsil.ac.id,51,0018126201,"PERUM GRAHA PERSADA BLOK B NO. 4 RT/RW 053/018 DESA DAN KECAMATAN SINDANGKASIH"
+KHL040,"Satya Santika, S.Pd., M.Pd.",85294194510,satyasantika@unsil.ac.id,51,0027118602,"Kp. Sirnagalih RT/RW 003/004 Kel. Sirnagalih Kec. Indihiang"
+20190063,"Dr. Diar Veni Rahayu, S.Pd., M.Pd",085221257824,diarvenirahayu@unsil.ac.id,51,0403078702,"Rabbany Regency Ciparay Blok i no 7 RT 002 RW 16 Desa Godog Kecamatan Karangpawitan"
+KHL026,"Ike Natalliasari, S.Pd., M.Pd.",085212361296,ikenatalliasari@unsil.ac.id,51,0405128005,"Prm Wijaya Permai I No.19 003/011 Kersanagara Cibeureum"
+KHY016,"Dedi Nurjamil, Drs., M.Pd.",081323244333,dedinurjamil@unsil.ac.id,51,0407076101,"Ciwasmandi Rt.001/ Rw.008 Kel. Sukajaya Kec. Purbaratu"
+KHY035,"Hj. Ipah Muzdalipah, Dra., M.Pd.",08122487658,ipahmuzdalipah@unsil.ac.id,51,0408076501,"Perum Abdi Negara D.44 Rt.002/015 Mangkubumi"
+KHL029,"Yeni Heryani, S.Pd., M.Pd.",085224101516,yeniheryani@unsil.ac.id,51,0409118003,"Rt 1 Rw 1 kelurahan Sukanagara Kecamatan Purbaratu"
+KHL020,"Redi Hermanto, S.Pd., M.Pd.",081320279905,redihermanto@unsil.ac.id,51,0410098101,"PERUM WIJAYA PERMAI I NO.19 RT.003 RW.011 KEL. KERSANAGARA KEC. CIBEUREUM"
+KHL028,"Dr. Sri Tirto Madawistama, S.Pd., M.Pd.",085222333631,sritirtomadawistama@unsil.ac.id,51,0416118004,"Kp. Tanjungsari RT/RW 001/001 Kel.Sukanagara Kec.Purbaratu"
+KHL034,"Depi Setialesmana, S.Pd., M.Pd.",85353622058,depisetialesmana@unsii.ac.id,51,0419117705,"Jl. Noenoeng Tisna Saputra Sindanggalih RT/RW. 005/011. Kel. Kahuripan Kec. Tawang"
+KHL032,"Eva Mulyani, S.Pd., M.Pd.",085322669558,evamulyani@unsil.ac.id,51,0420058303,"LASWI RESIDENCE BLOK B NO.4 CIKLANG TAWANG"
+KHL024,"Ratna Rustina, S.Pd., M.Pd.",085351831150,ratnarustina@unsil.ac.id,51,0420068303,"Kp. Pasangrahan Rt/Rw 006/001 Gunungsari - Sukaratu - Kab. Tasikmalaya"
+KHL031,"Dedi Muhtadi, S.Pd., M.Pd.",085351926993,dedimuhtadi@unsil.ac.id,51,0420127003,"Perum Situ Gede Indah Jl. Teratai 251 006/014 Mangkubumi"
+KHL038,"Dr. Mega Nur Prabawati, S.Pd., M.Pd.",081221801414,meganurprabawati@unsil.ac.id,51,0424018801,"Sambong Nyalindung 002/005 Mangkubumi"
+KHL039,"Elis Nurhayati, S.Pd., M.Pd",085353292281,elisnurhayati@unsil.ac.id,51,0424098103,"Perum Bumi Citra Saguling Blok C-8 002/024 Kersamenak Kawalu"
+KHL035,"Vepi Apiati, S.Pd., M.Pd.",082130672608,vepiapiati@unsil.ac.id,51,0427047502,"Jl. Garuda Perum Bumi Parahyangan D-10. RT:003/RW:002. Kelurahan Setiaratu. Kecamatan Cibeureum"
+KHL030,"Linda Herawati, S.Pd., M.Pd.",085223552789,lindaherawati@unsil.ac.id,51,0427108101,"Cibangun Kaler I No. 4 RT/RW 004/010 Kel. Ciherang Kec.Cibeureum"
+KHL036,"Dian Kurniawan, S.Pd., M.Pd.",,dian.kurniawan27@gmail.com,51,0427127904,"JL.PEMANDANGAN NO.88 RT 003/ RW 006 KELURAHAN MEKARSARI DUSUN CIMENYAN 2"
+KHL023,"Siska Ryane Muslim, S.Pd., M.Pd.",082321050582,siskaryanemuslim@unsil.ac.id,51,0428018102,"JL. RAYA INDIHIANG NO.83"
+KHY054,"Hj. Hetty Patmawati, S.Pd., M.Pd.",082118022333,hettypatmawati@unsil.ac.id,51,0429017801,"Perum Bumi Lestari D13 RT 03 RW 15 kel Sambongjaya kec Mangkubumi"
+KHY024,"H. Edi Hidayat, Drs., M.Pd.",08122427561,edihidayat@unsil.ac.id,51,0429046101,"Perum Mitra Batik Jl. Batik Keris 1 No. C.103 Kawalu"
+KHY034,"Dr. Hj. Nani Ratnaningsih, Dra., M.Pd.",082126087779,naniratnaningsih@unsil.ac.id,51,0430056602,"Perum Mitra Batik C. 103"
+20190016,"Yanti Sofi Makiyah, S.Pd., M.Pd",085221041488,yanti.sofi@unsil.ac.id,53,0003109204,""
+20180015,"Dr. Nana, S.Pd., M.Pd.",082133440942,nana@unsil.ac.id,53,0005067911,"Jl. SILIWANGI RT02 RW O3 MALEBER CIAMIS"
+20190019,"Dwi Sulistyaningsih, S.Pd., M.Pd",085726293698,dwi.sulistyaningsih@unsil.ac.id,53,0014079201,"Dermasari RT 002 RW 002, Susukan"
+20180001,"Irwan Muhammad Ridwan, M.Pd",081321818956,irwanmr@unsil.ac.id,53,0014088503,"Kp. Ciakar Desa Leuwidulang Kec. Sodonghilir"
+20180012,"Rifaatul Maulidah, M.PFis",081312503005,rmaulidah@gmail.com,53,0014109002,""
+20180004,"Irfan Ansori, M.Pd",,irfanansori@unsil.ac.id,53,0015089003,"Kp. Umbui Tengah Desa Jayawaras Kecamatan Tarogong Kidul"
+20190014,"Ernita Susanti, S.Pd., M.Pd",083187388883,ernita.susanti@unsil.ac.id,53,0020059301,""
+20190015,"Ifa Rifatul Mahmudah, S.Pd., M.Pd",082260007375,ifa.rifatul@unsil.ac.id,53,0022089102,""
+20220032,"Dr. Agus Sumantri, M.Pd",082219209371,gus.suman3@gmail.com,53,0026066307,"Dusun Ciawitali RT 02 RW 09 Desa Panulisan Timur Kecamatan Dayeuhluhur Kabupaten Cialacap"
+KGK039,"Dr. H. Endang Surahman, Drs., M.Pd.",081322588100,e.surahman@unsil.ac.id,53,0029046201,"JL. Khoer Afandi 145 Kp. Elos 002/003 Kota Baru Cibeureum"
+20180002,"Dr. Rahmat Rizal, S.Pd., M.Pd.",085218588810,rahmatrizal@unsil.ac.id,53,0421018701,"Sekbrong RT 01 RW 07 Desa Condong Kecamatan Jamanis"
+20190032,"Eko Sujarwanto, S.Pd., M.Pd",083846204456,eko.sujarwanto@unsil.ac.id,53,0723098901,""
+KGL004,"Rinaldi Rizal Putra, S.Pd., M.Sc.",0852-2104-0574,rinaldi.rizalputra@unsil.ac.id,54,0001048902,"Perumahan Puri Sumelap Indah Blok B No. 5 RT. 003/010 Kel. Sumelap Kec. Tamansari"
+0008018901,"RYAN ARDIANSYAH, S.PD., M.PD",08997979633,ryanardiansyah@unsil.ac.id,54,0008018901,"perum kertasari jl. kertawinangun I Blok IV RT 05/12. Ciamis"
+0008128703,"DEA DIELLA, S.PD., M.PD",081320402253,deadiella@unsil.ac.id,54,0008128703,"CEMPAKAWARNA NO. 12A"
+20190030,"Samuel Agus Triyanto, S.Pd., M.Pd.",082147180470,samuel.agus@unsil.ac.id,54,0011089103,"Tegalan RT 01/RW 06, Lalung, Karanganyar"
+KGL001,"Liah Badriah, S.Pd., M.Pd.",81322526493,liahbadriah@unsil.ac.id,54,0013088802,"Gunung Tujuh RT.02 RT.08 Kelurahan Sukarindik kecamatan Bungursari Tasikmalaya Jawa Barat"
+KGL008,"Egi Nuryadin, S.Pd., M.Si.",85221835608,egi.nuryadin@unsil.ac.id,54,0019038901,"PERUM VILLA PERDANIA BLOK A.21 RT/RW 001/012  KEL.SETIAMULYA KEC. TAMANSARI"
+KGL005,"Mufti Ali, S.Pd., M.Pd.",085223082329,muftiali@unsil.ac.id,54,0022079701,"Panututan RT/RW 001/001 Kel. Tuguraja Kec. Cihideung"
+KGL002,"Diki Muhamad Chaidir, S.Pd., M.Pd.",82115101710,dikimc@unsil.ac.id,54,0022128802,"Perum Baitul Marhamah I Blok B.9 RT/RW 001/014 Kel. Sambongjaya Kec. Mangkubumi"
+KGL006,"Vita Meylani, S.Pd., M.Sc.",,vita@unsil.ac.id,54,0027059001,"Nagarakasih Kaler RT/RW 002/002 Kel. Kersanagara Kec. Cibeureum"
+KGL009,"Dani Ramdani, S.Pd., M.Pd.",082127911113,daniramdani@unsil.ac.id,54,0028048902,"Perum Bumi Citra Saguling N0. C-12  Kawalu"
+KGL003,"Rita Fitriani, S.Pd., M.Pd.",,tatairawan12@gmail.com,54,0028118901,"Jalan Cikalang Girang Gg. Sukasukur I RT/RW 004/004 Kel. Kahuripan Kec. Tawang"
+20190033,"Dr. Dita Agustian, S.Pd., M.Pd",085223830734,dita.agustian@unsil.ac.id,54,0407088803,"Komplek Puri Sumelap Indah Blok C No 20"
+KGY050,"Dr. Diana Hernawati, S.Pd., M.Pd.",,hernawatidiana@yahoo.co.id,54,0411047701,"Perum BIP Kav. K Bojong Tritura RT/RW 001/005 Kel.Panglayungan Kec.Cipedes"
+KGY011,"Dr. Purwati Kuswarini, Dra., M.Si.",081395364222,purwatikuswarini@unsil.ac.id,54,0415046001,"Perum Yogya Permai Jl. Nusa Indah I/18"
+KGY023,"Suharsono, Drs., M.Pd.",,suharsono225@yahoo.com,54,0422055902,"Perum Argasari Permai RT/RW 008/007 Kel. Argasari Kec.Cihideung"
+KGY051,"Dr. Romy Faisal Mustofa, S.Pd., M.Pd.",081235955555,syahla.aini@gmail.com,54,0426097804,"Jalan Laskar Wanita "Laswi Resindence" Blok C-21 RT/RW 006/008 Kelurahan Cikalang Kecamatan Tawang"
+20210006,"Prof., Dr., Wahidin, M.Pd",,wahidin@unsil.ac.id,54,2002106501,""
+20190065,"Dr. ADE RUSTIANA, Drs., M.Si.",,aderustiana@unsil.ac.id,65,0002016803,""
+20190052,"Sri Hardianti Sartika, S.Pd., M.Pd",085221880045,sri.hardianti@unsil.ac.id,65,0002099203,"Lingkungan Cipadung RT.02 RW.14 Kelurahan Kotakaler, Kecamatan Sumedang Utara"
+KEL047,"Rendra Gumilar, S.Pd., M.Pd.",085223065020,rendragumilar@unsil.ac.id,65,0010028801,"DUSUN PATROL NO. 93 RT 004 RW 001 KEL. SUKAJAYA KEC.CIMERAK PANGANDARAN JAWA BARAT"
+0011058306,"AI NUR SOLIHAT, S.PD., M.PD.",08122484044,ainursolihat@unsil.ac.id,65,0011058306,""
+KEL048,"Kurniawan, S.Pd., M.M.",085323042484,kurniawanspdmm@gmail.com,65,0012118902,""
+20190050,"Betanika Nila Nirbita, S.Pd., M.Pd",081392935680,betanika@unsil.ac.id,65,0015099201,""
+KEK024,"Heti Suherti, Dra., M.M.",08121479969,hetisuherti@unsil.ac.id,65,0019035901,"Perum Laswi Residence Blok D.4"
+KEL001,"Gugum Gumilar, S.Pd., M.Pd.",085323017398,gugumgumilar@unsil.ac.id,65,0020048408,""
+0020088802,"RADEN RORO SUCI NURDIANTI, S.PD., M.PD.",085720825885,rorosucinurdianti@gmail.com,65,0020088802,""
+KEL050,"Astri Srigustini, S.Pd., M.Pd.",085223016001,astrisrigustini@unsil.ac.id,65,0021068904,""
+KEL049,"Edi Fitriana, S.Pd., MM",082127916763,edifitriana@unsil.ac.id,65,0026049002,"Jl Peta Gn. Roay No.09 RT.003 RW.014 Kel. Kahuripan Kec. Tawang"
+20190053,"Iis Aisyah, S.Pd., M.Pd",082126602127,iis.aisyah@unsil.ac.id,65,0407038901,""
+KEY058,"Yoni Hermawan, Drs., M.Pd.",8122483217,yonihermawan@unsil.ac.id,65,0414026201,"Jl. RE. Martadinata Gg. Sayuran I No. 18"
+KEL046,"Ati Sadiah, S.Pd., M.Pd.",082127197419,atisadiah@unsil.ac.id,65,0423018103,"Perum Graha Sambong Mandiri"
+20190051,"Bakti Widyaningrum, S.Pd., M.Pd",082138320530,bakti.widyaningrum@unsil.ac.id,65,0728128801,""
+KFL011,"Darwis Darmawan, S.Pd., M.Pd.",085320527890,darwis@unsil.ac.id,70,0002028803,"Kampung sukarasa RT/RW 005/001 Desa Kurniabakti Kecamatan Ciawi Kabupaten Tasikmalaya"
+KFL007,"Dr. Ruli As`ari , S.Pd., M.Pd.",85294968876,ruliasari@unsil.ac.id,70,0002058802,"Perum Baitussalam Regency Blok D.10 Rt005/Rw 15, Kelurahan Mulyasari Kecamatan Tamnsari"
+20170019,"Tineu Indrianeu, S.Pd., M.Pd",085223057000,tineuindrianeu@unsil.ac.id,70,0003019007,"PERUM MUTIARA CILOLOHAN BLOK H-1 RT 05 RW 08 KELURAHAN KAHURIPAN KECAMATAN TAWANG"
+20190024,"Setio Galih Marlyono, S.Pd., M.Pd.",081322229669,setiogeo@unsil.ac.id,70,0008059004,"Rt 01 Rw 12, Dusun Cijoho, Desa Margajaya, Kecamatan Sukadana"
+20190042,"Anita Eka Putri, S.Pd., M.Pd",082237270905,anita.eka@unsil.ac.id,70,0009058903,"Ds. Dukuh Dusun Krajan RT 02/RW 03 Kecamatan Gondang"
+20170018,"Elgar Balasa Singkawijaya, S.Pd., M.Pd.",08122220566,elgar@unsil.ac.id,70,0011118307,"Perum Asri Residence Blok N 66 Desa Cintaraja, Kecamatan Singaparna"
+KFK012,"Prof. Dr. H.M. Ahman Sya, Drs., M.Pd.",,ahmansya@unsil.ac.id,70,0012065801,""
+KFL013,"Ely Satiyasih Rosali, S.Pd., M.Pd.",082121034229,ely@unsil.ac.id,70,0014127805,"Perum Cipta Graha Mandiri Blok C No. 09 003/002 Kel. Sukarindik Kec.Bungursari"
+0018038901,"Erni Mulyanie, S.Pd., M.Pd.",085223372951,ernimulyanie@unsil.ac.id,70,0018038901,"SITUBEET RT 1 RW 5 KELURAHAN CIPARI KECAMATAN MANGKUBUMI"
+20190041,"Mega Prani Ningsih , S.Pd., M.Pd",087751056315,mega.prani@unsil.ac.id,70,0029058803,"Jalan Tropodo 1 Barat, gang. Merah Delima No. 225 C, Kecamatan Waru, Kabupaten Sidoarjo."
+KFL049,"Yani Sri Astuti, S.Pd., M.Pd.",,yanisriastuti@unsil.ac.id,70,0404057701,"Griya Mangkubumi Indah No.33 004/010 Mangkubumi"
+KFL010,"Dr. Iman Hilman, S.Pd., M.Pd.",85223062335,imanhilman@unsil.ac.id,70,0404098002,"Perum Sukarindik Blok D.13 Kelurahan Sukarindik Kecamatan Bungursari"
+KFY036,"Dr. Siti Fadjarajani, Dra., M.T.",,sitifadjarajani@unsil.ac.id,70,0406046602,"Perum Bumi Sentra Mas (BSM) Blok G No. 11"
+20220012,"Esta Rendra RS, S.Pd., M.Pd.",,esta@unsil.ac.id,70,CPNS 2021.7,""
+KJL006,"Oka Agus Kurniawan Shavab, S.Pd., M.Pd.",082124861848,okaaks@unsil.ac.id,71,0005088704,"Perum Ciracas Blok B No. 292 001/011 Serang"
+20190056,"Miftahul Habib Fachrurozi, S.Pd., M.Pd",0895421385367,habib@unsil.ac.id,71,0009109301,""
+20190058,"Ilham Rohman Ramadhan, S.Pd., M.Pd",082137532464,ilham.rohman@unsil.ac.id,71,0011039304,"JL.BHAYANGKARA, GG. GELATIK 2, NO.3, RT03/RW11, GUNUNG PUYUH"
+20190059,"Laely Armiyati, S.Pd., M.Pd",081328464436,laely.armiyati@unsil.ac.id,71,0312058702,""
+KSL050,"Yulia Sofiani, S.Pd., M.Hum.",081324247802,yuliasofiani@unsil.ac.id,71,0417077804,"Mentari Batara Regency C5 Jl. PETA Kahuripan Tawang"
+KSY014,"Alex Anis Ahmad, Drs., M.Pd.",,alexanisahmad@unsil.ac.id,71,0425105801,"Jl. Sutisna Senjaya No. 115"
+KSY008,"Dr. Dodih Heryadi, Drs., M.Pd.",081323129900,dodihheryadi@unsil.ac.id,71,0426065801,"Jl. Cisalak No. 49 A"
+KSY019,"M. Iyus Jayusman, Drs., M.Pd.",082219481992,iyusjayusman@unsil.ac.id,71,0429066201,"Dsn Mekarsari Rt 09 Rw 02 Ds Nagaratengah Kec Cineam Kab Tasikmalaya"
+KSL047,"Zulpi Miftahudin, S.Pd., M.Pd.",08121435681,zulfimiptahudin@unsil.ac.id,71,0429128101,"Grya Mediteranean Blok B No. 30"
+20190057,"Dede Wahyu Firdaus, S.Pd., M.Pd",085320120066,dede.firdaus@unsil.ac.id,71,2116098803,"Dusun Cikohkol RT.004 RW.001 Desa Sukasari Kecamatan Banjarsari"
+KJK043,"Dr. H. Gumilar Mulya, Drs., M.Pd.",,gumilarmulya@unsil.ac.id,91,0001016702,"0"
+KJL075,"Resty Agustryani, S.Pd., M.Pd.",085311030007,resty@unsil.ac.id,91,0003088702,""
+KJL076,"Ari Priana, S.Pd., M.Pd.",085223370722,aripriana@unsil.ac.id,91,0004018801,""
+KJL079,"Melya Nur Herliana, S.Pd., M.Pd.",085223520088,melya.nh22@unsil.ac.id,91,0004128902,""
+KJL074,"Haikal Millah, S.Pd., M.Pd.",081510897458,haikal@unsil.ac.id,91,0005088703,""
+20170005,"DWI YULIA NUR MULYADI, M.Pd",085703156294,dwiyulilanm@upi.edu,91,0007079201,"Jl. Raya Cibeuti Kp, Babakanpala RT. 01 RW 10 Karsamenak, Kawalu"
+KJK040,"Dr. H. Cucu Hidayat, Drs., M.Pd.",,cucuhidayat@unsil.ac.id,91,0009046301,"0"
+KJL077,"Rd. Herdi Hartadji, S.Pd., M.Pd.",08112244911,herdihartadji@unsil.ac.id,91,0009116812,"Perum Mutiara Citra Asri C 6"
+KJL070,"Dicky Tri Juniar, M.Pd.",085222616766,dickytrijuniar@unsil.co.id,91,0010068603,"Jl. Cilolohan, Perum Mutiara Cilolohan Blok H-1,RT05/RW08 Kelurahan Kahuripan Kecamatan Tawang"
+20170006,"Ridwan Gumilar, M.Pd",081394447646,ridwangumilar@unsil.ac.id,91,0015059004,"kp.sumurgede no.34 RT.003 RW.011 kel. gununggede kec.kawalu"
+KJL073,"Juhrodin, S.Pd., M.Pd.",,juhrodin@unsil.ac.id,91,0016048703,""
+KJK037,"Prof. Dr., Iis Marwan, Drs., S.H., M.Pd.",081323154411,iismarwan@unsil.ac.id,91,0018086401,"0Jalan Benda No. 41 RT.02 RW. 11 Kelurahan Cikalang Kecamatan Tawang"
+KJL078,"Selly Purnama, S.Pd., M.Pd.",089512156450,sellypurnama@unsil.ac.id,91,0025018802,""
+20190031,"Arief Abdul Malik, S.Pd., M.Pd",088218267167,arief.abdulmalik@unsil.ac.id,91,0029129104,"Cikadu, Rt 03 Rw 02 Desa Lumbir Kec. Lumbir"
+KJL072,"Endah Listyasari, S.Pd., M.Pd.",082118264181,endah@unsil.ac.id,91,0031108107,""
+KJL071,"Defri Mulyana, S.Pd., M.Pd.",085659727790,defrimulyana@unsil.ac.id,91,0031128603,""
+KJY029,"H. Budi Indrawan, Drs., M.Pd.",,budiindrawan@unsil.ac.id,91,0401026401,"Condong"
+KJL049,"Nanang Kusnadi, Dr., M.Pd.",085813964051 atau 081320752316,nanangkusnadi@unsil.ac.id,91,0403097602,"Perum Arrasy Residence Blok A no.8 RT 005 RW 003 Kelurahan Cipari Kecamatan Mangkubumi"
+KJL063,"Nuriska Subekti, S.Pd., M.Pd.",085314403182,nuriskasubekti@unsil.ac.id,91,0408038201,"Dusun Kalapanunggal I Bumi Kalapanunggal, No. B. 8. Rt 34/ Rw 10,Desa Sindangkasih kec, Sindangkasih kab ciami"
+KJL061,"Ucu Muhammad Afif, S.Pd., M.Pd.",085224709234,ucumuhammadafif@unsil.ac.id,91,0409108005,"Blok Ahad"
+20170008,"FEGIE RIZKIA MULYANA, M.Pd",08112348753,fegierizkiamulyana@unsil.ac.id,91,0412068903,"PERUM BUMI CITRA SAGULING BLOK F.6 RT.03 RW.024.KELURAHAN KARSAMENAK. KECAMATAN KAWALU. TASIKMALAYA"
+KJL064,"Sani Gunawan, S.Pd., M.Pd.",081323190677,sanigunawan@unsil.ac.id,91,0415058203,"Jalan Lukmanuil Hakim"
+20170007,"NOVI SORAYA, M.PD",081322713395,sorayanovi14@gmail.com,91,0415059004,"Jl. Dr. Mochamamad Hatta Rt 07/ Rw 14 Kel. Sukamanah Kec. Cipedes"
+KJY027,"H. Abdul Narlan, Drs., M.Pd.",081312612987,abdulnarlan@unsil.ac.id,91,0415116301,"0"
+KJL062,"Iman Rubiana, S.Pd., M.Pd.",085223444421,imanrubiana@unsil.ac.id,91,0422048304,"0"
+KJL067,"Aang Rohyana, S.Pd., M.Pd.",081322351233,aangrohyana@unsil.ac.id,91,0422118801,""
+KJY018,"H. Iwan Sudjarwo, Drs., M.Pd.",,iwansudjarwo@unsil.ac.id,91,0423085401,"0"
+KJL065,"Deni Setiawan, S.Pd., M.Pd.",085722484489,denisetiawan@unsul.ac.id,91,0425018302,"Dsn. Ciluncat rt.02rw.01 Desa Madiasari kec. Cineam kab. Tasikmalaya"
+KJL069,"Ida Wahidah, S.Pd., M.Pd.",081384363285,idawahidah@unsil.ac.id,91,0425077101,""
+KJY020,"H. Agus Mulyadi, Drs., M.Pd.",081324093472,agusmulyadi@unsil.ac.id,91,0427086201,"0"
+KJL068,"Agus Arief Rahmat, S.Pd., M.Pd.",082319352226,agusarifrahman@unsil.ac.id,91,0429098404,"Gunung pongpok III no 18"
