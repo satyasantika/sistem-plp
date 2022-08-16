@@ -4,21 +4,17 @@
     <div class="card shadow-lg">
         <div class="card-body p-4">
             <h1 class="fs-4 text-center fw-bold mb-4">Login PLP</h1>
-            @error('password')
-                <span class="alert alert-danger" role="alert">
-                    <strong>{{ session('status') }}</strong>
-                </span>
-            @enderror
-            {{-- <h1 class="fs-6 mb-3">{{ session('status') }}</h1> --}}
-            <form method="POST"  action="{{ route('login') }}" aria-label="abdul" data-id="abdul" class="needs-validation" novalidate=""
-                autocomplete="off">
+            <form method="POST" action="{{ route('login') }}">
                 @csrf
+
                 <div class="mb-3">
-                    <label class="mb-2 text-muted" for="email">Username</label>
+                    <label for="username" class="mb-2 text-muted">{{ __('Username') }}</label>
+
                     <div class="input-group input-group-join mb-3">
-                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                        <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
                         <span class="input-group-text rounded-end">&nbsp<i class="fa fa-envelope"></i>&nbsp</span>
-                        @error('email')
+
+                        @error('username')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -27,10 +23,12 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="mb-2 text-muted" for="password">Password</label>
+                    <label for="password" class="mb-2 text-muted">{{ __('Password') }}</label>
+
                     <div class="input-group input-group-join mb-3">
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
                         <span class="input-group-text rounded-end password cursor-pointer">&nbsp<i class="fa fa-eye"></i>&nbsp</span>
+
                         @error('password')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -39,14 +37,27 @@
                     </div>
                 </div>
 
+                {{-- <div class="row mb-3">
+                    <div class="col-md-6 offset-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+
+                            <label class="form-check-label" for="remember">
+                                {{ __('Remember Me') }}
+                            </label>
+                        </div>
+                    </div>
+                </div> --}}
+
                 <div class="mb-3">
                     <div class="mb-2 w-100">
-                        <button type="submit" class="btn btn-primary ms-auto">
+                        <button type="submit" class="btn btn-primary">
                             {{ __('Login') }}
                         </button>
+
                         @if (Route::has('password.request'))
-                            <a class="float-end btn btn-link" href="{{ route('password.request') }}">
-                                {{ __('Lupa password?') }}
+                            <a class="btn btn-link float-end" href="{{ route('password.request') }}">
+                                {{ __('Lupa Password?') }}
                             </a>
                         @endif
                     </div>
