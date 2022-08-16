@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Form extends Model
+class FormItem extends Model
 {
     use HasFactory;
 
@@ -13,9 +13,8 @@ class Form extends Model
 
     public $timestamps = false;
 
-    public function formItems()
+    public function form()
     {
-        return $this->hasMany(FormItem::class);
+        return $this->belongsTo(Form::class);
     }
-
 }

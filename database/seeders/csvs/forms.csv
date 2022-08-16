@@ -1,11 +1,12 @@
-2022L1,lembar pengamatan kultur sekolah,8,yes_no,1
-2022L2,lembar pengamatan struktur organisasi dan tata kerja (SOTK),2,yes_no,1
-2022L3,lembar pengamatan kokurikuler dan ekstrakurikuler,5,yes_no,1
-2022N1,format penilaian kompetensi kepribadian dan sosial,8,skor,4
-2022N2,format penilaian pelaporan PLP,5,skor,40
-2022N3,"format penilaian telaah kurikulum, strategi pembelajaran, sistem evaluasi, dan pemanfaatan TIK dalam pembelajaran/RPP",6,skor,4
-2022N4,format penilaian kemampuan peserta PLP dalam membantu mengembangkan RPP,4,skor,4
-2022N5,format penilaian latihan mengajar,9,skor,4
-2022N6,format penilaian perangkat pembelajaran,6,skor,4
-2022N7,format penilaian ujian mengajar,9,skor,4
-2022N8,format penilaian ujian lisan PLP,4,skor,30
+id,name,type,count
+2022L1,lembar pengamatan kultur sekolah,8,yes_no
+2022L2,lembar pengamatan struktur organisasi dan tata kerja (SOTK),2,yes_no
+2022L3,lembar pengamatan kokurikuler dan ekstrakurikuler,5,yes_no
+2022N1,format penilaian kompetensi kepribadian dan sosial,8,skor_4
+2022N2,format penilaian pelaporan PLP,5,skor_40
+2022N3,"format penilaian telaah kurikulum, strategi pembelajaran, sistem evaluasi, dan pemanfaatan TIK dalam pembelajaran/RPP",6,skor_4
+2022N4,format penilaian kemampuan peserta PLP dalam membantu mengembangkan RPP,4,skor_4
+2022N5,format penilaian latihan mengajar,9,skor_4
+2022N6,format penilaian perangkat pembelajaran,6,skor_4
+2022N7,format penilaian ujian mengajar,9,skor_4
+2022N8,format penilaian ujian lisan PLP,4,skor_max

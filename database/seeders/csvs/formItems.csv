@@ -1,0 +1,107 @@
+form_id,component,component_order,name,max_score
+2022L1,petunjuk,1,"Lembar ini untuk mencatat hasil kerja individu setelah melaksanakan pengamatan pada Topik Kultur Sekolah",0
+2022L1,petunjuk,2,"Lembar ini untuk mengidentifikasi kegiatan-kegiatan pembiasaan yang terjadi di sekolah tempat PLP, yang dapat membangun sikap (karakter) baik warga sekolah",0
+2022L1,petunjuk,3,"Mohon memberi tanda centang (√) pada kolom di bawah Ya atau Tidak (Jika Ya termasuk Baik atau Kurang)",0
+2022L1,petunjuk,4,"Masing-masing kegiatan yang ada dapat ditambah uraian untuk mendeskripsikannya lebih baik",0
+2022L1,item,1,"Kegiatan 3S (Senyum, Salam, Sapa)",0
+2022L1,item,2,"Pengondisian awal belajar",0
+2022L1,item,3,"Upacara Bendera",0
+2022L1,item,4,"Penggunaan Seragam Sekolah",0
+2022L1,item,5,"Anjuran menjaga kebersihan dan kesehatan",0
+2022L1,item,6,"Anjuran menjaga ketenangan",0
+2022L1,item,7,"Tercipta suasana yang tenang dan nyaman untuk belajar",0
+2022L1,item,8,"Suasana di sekolah menyenangkan",0
+2022L1,tambahan,1,"Informasi tambahan (kultur sekolah):",0
+2022L2,petunjuk,1,"Lembar ini untuk mencatat hasil kerja individu setelah melaksanakan PLP, pada Topik SOTK",0
+2022L2,petunjuk,2,"Lembar ini untuk mendeskripsikan SOTK di sekolah",0
+2022L2,petunjuk,3,"Mohon memberi tanda centang (√) pada kolom di bawah Ya atau Tidak (Jika Ya termasuk Baik atau Kurang)",0
+2022L2,petunjuk,4,"Masing-masing kegiatan yang ada dapat ditambah keterangan untuk mendeskripsikannya lebih baik",0
+2022L2,item,1,"Ada bagan struktur organisasi sekolah",0
+2022L2,item,2,"Ada deskripsi tugas untuk masing- masing komponen organisasi",0
+2022L2,tambahan,1,"Informasi tambahan (SOTK) :",0
+2022L3,petunjuk,1,"Lembar ini untuk mencatat hasil kerja individu setelah melaksanakan PLP, pada Topik Kokurikuler dan Ekstrakurikuler",0
+2022L3,petunjuk,2,"Mohon memberi tanda centang (√) pada kolom di bawah Ya atau Tidak (Jika Ya termasuk Baik atau Kurang)",0
+2022L3,petunjuk,3,"Masing-masing kegiatan yang ada dapat ditambah keterangan untuk mendeskripsikannya lebih baik",0
+2022L3,item,1,"Ada bagan struktur organisasi sekolah",0
+2022L3,item,2,"Ada deskripsi tugas untuk masing- masing komponen organisasi",0
+2022L3,item,3,"Ada pembinaan kokurikuler dan ekstrakurikuler",0
+2022L3,item,4,"Setiap guru/tenaga pendidik menjadi pembina kokurikuler dan ekstrakurikuler",0
+2022L3,item,5,"Setiap peserta didik wajib mengikuti kokurikuler dan ekstrakurikuler",0
+2022L3,tambahan,1,"Informasi tambahan (kokurikuler dan ekstrakurikuler) :",0
+2022N1,petunjuk,1,"Berilah skor pada indikator/aspek yang diamati dengan cara memberi simbol (√) pada kolom skor yang sesuai dengan kriteria sebagai berikut.",4
+2022N1,petunjuk,2,"Skor 1 : Sangat kurang, Skor 2 : kurang , Skor 3 : baik, Skor 4 : Sangat baik",4
+2022N1,item,1,"Kewibawaan (gezag) sebagai calon guru/tenaga pendidik (tegas, berwawasan luas, mempunyai jiwa pemimpin)",4
+2022N1,item,2,"Kejujuran (tidak plagiat, melaporkan kegiatan pembelajaran yang telah dilakukan, mengungkapkan masalah apa adanya)",4
+2022N1,item,3,"Kedisiplinan (taat terhadap jadwal, taat terhadap tugas, taat terhadap aturan)",4
+2022N1,item,4,"Kepercayaan diri (berani menyatakan pendapat, mandiri, pantang menyerah)",4
+2022N1,item,5,"Sikap supel/ramah dalam berkomunikasi (ramah, salam, dan sapa)",4
+2022N1,item,6,"Kemampuan bekerja sama dengan guru/tenaga pendidik (saling membantu, menghargai masukan/saran, memberikan manfaat)",4
+2022N1,item,7,"Responsif (cepat tanggap) terhadap berbagai keadaan (cepat memberi solusi, merespon secara cepat terkait tugas guru/tenaga pendidik, berperan aktif terhadap berbagai kegiatan sekolah yang dilakukan)",4
+2022N1,item,8,"Kerapian dalam penampilan (formal, rapi, dan tidak berlebihan/mencolok)",4
+2022N2,petunjuk,1,"Lembar ini digunakan untuk menilai laporan hasil kegiatan PLP I yang dibuat oleh kelompok peserta PLP I",0
+2022N2,item,1,"Sistematika penulisan",10
+2022N2,item,2,"Isi laporan ",40
+2022N2,item,3,"Kebermaknaan simpulan dan rekomendasi",20
+2022N2,item,4,"Tata tulis dan Bahasa",15
+2022N2,item,5,"Kelengkapan laporan (foto, pengesahan/verifikasi, dan lampiran)",15
+2022N3,petunjuk,1,"Lembar ini digunakan untuk menilai ketepatan RPP ke-1 sampai RPP ke-2",0
+2022N3,petunjuk,2,"Berilah skor pada aspek yang diamati dengan cara memberi tanda centang (√) pada kolom skor sesuai penilaian dengan kriteria sebagai berikut:",0
+2022N3,petunjuk,3,"Skor 1: sangat kurang, skor 2: kurang, skor 3: baik, skor 4: sangat baik",0
+2022N3,petunjuk,4,"Untuk catatan tambahan, mohon dituliskan pada tempat yang disediakan.",0
+2022N3,item,1,"Kesesuaian rumusan tujuan pencapaian dengan kompetensi dasar",4
+2022N3,item,2,"Ketepatan pemilihan metode pembelajaran",4
+2022N3,item,3,"Kesesuaian langkah-langkah pembelajaran",4
+2022N3,item,4,"Kesesuaian teknik penilaian dengan tujuan yang ditetapkan",4
+2022N3,item,5,"Kesesuaian instrumen penilaian dengan teknik penilaian",4
+2022N3,item,6,"Ketepatan pemilihan Media Pembelajaran ",4
+2022N3,item,7,"koreksi utk div data di system PLP",4
+2022N4,petunjuk,1,"Berilah skor pada aspek yang diamati dengan cara memberi tanda centang (√) pada kolom skor sesuai penilaian dengan kriteria sebagai berikut:",0
+2022N4,petunjuk,2,"Skor 1: tidak terpenuhi semua aspek, Skor 2: hanya 1 aspek ada, Skor 3: 2 aspek ada, Skor 4: 3 aspek ada.",0
+2022N4,petunjuk,3,"Untuk beberapa catatan/informasi tambahan, mohon dituliskan pada tempat yang disediakan.",0
+2022N4,item,1,"Ketekunan/kegigihan (menyelesaikan RPP dalam kondisi apapun, tepat waktu, tidak mengeluh)",4
+2022N4,item,2,"Kelancaran (menyelesaikan RPP tanpa banyak konsultasi, tidak ada hambatan dalam membuat RPP, tidak ada alasan tidak menyelesaikan RPP)",4
+2022N4,item,3,"Penguasaan konsep RPP (memahami komponen RPP, memahami instrumen dalam RPP, memahami bahan ajar/LKPD dalam RPP)",4
+2022N4,item,4,"Kemampuan mengoperasionalkan pedoman penyusunan RPP (komponen RPP lengkap, sistematis, dan sesuai tuntutan) kurikulum)",4
+2022N4,tambahan,1,"Catatan RPP",0
+2022N5,petunjuk,1,"Lembar ini digunakan untuk menilai latihan mengajar ke-1 sampai dengan ke-4 ",0
+2022N5,petunjuk,2,"Berilah skor pada aspek yang diamati dengan cara memberi simbol (√) pada kolom skor sesuai penilaian dengan kriteria sebagai berikut:",0
+2022N5,petunjuk,3,"Skor 1: sangat kurang, skor 2: kurang, skor 3: baik, skor 4: sangat baik",0
+2022N5,item,1,"Membuka pelajaran/pertemuan",4
+2022N5,item,2,"Menunjukkan penguasaan materi pembelajaran",4
+2022N5,item,3,"Menunjukkan kemampuan dalam melaksanakan langkah pembelajaran",4
+2022N5,item,4,"Menunjukkan kemampuan memilih media yang sesuai dengan karakteristik pembelajaran",4
+2022N5,item,5,"Menunjukkan kemampuan menggunakan media secara efektif dan efisien",4
+2022N5,item,6,"Menunjukkan kemampuan mengelola kelas ",4
+2022N5,item,7,"Berkomunikasi secara lisan/tulis dengan jelas dan benar",4
+2022N5,item,8,"Menunjukkan gaya (gestur) yang sesuai",4
+2022N5,item,9,"Menutup pembelajaran dengan membuat rangkuman",4
+2022N5,tambahan,1,"Catatan Penampilan",0
+2022N6,petunjuk,1,"Lembar ini digunakan untuk menilai ketepatan dalam penilaian perangkat pembelajaran dengan pelaksanaan pembelajaran pada saat ujian praktik mengajar.",0
+2022N6,petunjuk,2,"Berilah skor pada aspek yang diamati dengan cara memberi simbol (√) pada kolom skor sesuai",0
+2022N6,petunjuk,3,"penilaian dengan kriteria sebagai berikut:",0
+2022N6,petunjuk,4,"Skor 1: sangat kurang, skor 2: kurang, skor 3: baik, skor 4: sangat baik",4
+2022N6,petunjuk,5,"Untuk catatan tambahan, mohon dituliskan pada tempat yang disediakan.",4
+2022N6,item,1,"Kesesuaian rumusan tujuan pencapaian dengan kompetensi dasar",4
+2022N6,item,2,"Ketepatan pemilihan metode pembelajaran",4
+2022N6,item,5,"Kesesuaian langkah-langkah pembelajaran",4
+2022N6,item,6,"Kesesuaian teknik penilaian dengan tujuan yang ditetapkan",4
+2022N6,item,7,"Kesesuaian instrumen penilaian dengan teknik penilaian",4
+2022N6,item,8,"Ketepatan pemilihan Media Pembelajaran ",4
+2022N6,tambahan,1,"Catatan RPP",0
+2022N7,petunjuk,1,"Berilah skor pada aspek yang diamati dengan cara memberi tanda centang (√) pada kolom skor sesuai penilaian dengan kriteria sebagai berikut :",0
+2022N7,petunjuk,2,"Skor 1: sangat kurang, skor 2: kurang, skor 3: baik, skor 4: sangat baik",0
+2022N7,item,1,"Membuka pelajaran/pertemuan",4
+2022N7,item,2,"Menunjukkan penguasaan materi pembelajaran",4
+2022N7,item,3,"Menunjukkan kemampuan dalam melaksanakan langkah pembelajaran",4
+2022N7,item,4,"Menunjukkan kemampuan memilih media yang sesuai dengan karakteristik pembelajaran",4
+2022N7,item,5,"Menunjukkan kemampuan menggunakan media secara efektif dan efisien",4
+2022N7,item,6,"Menunjukkan kemampuan mengelola kelas ",4
+2022N7,item,7,"Berkomunikasi secara lisan/tulis dengan jelas dan benar",4
+2022N7,item,8,"Menunjukkan gaya (gestur) yang sesuai",4
+2022N7,item,9,"Menutup pembelajaran dengan membuat rangkuman",4
+2022N7,tambahan,1,"Catatan Penampilan",0
+2022N8,petunjuk,1,"Skor 1: sangat kurang, skor 2: kurang, skor 3: baik, skor 4: sangat baik",0
+2022N8,item,1,"Pemahaman terkait kultur sekolah",30
+2022N8,item,2,"Pemahaman terkait SOTK",20
+2022N8,item,3,"Pemahaman tentang kokurikuler dan ekstrakurikuler",30
+2022N8,item,4,"Penampilan/performance, Sikap/etika, Bahasa, Cara berpakaian",20
