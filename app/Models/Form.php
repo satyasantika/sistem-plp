@@ -18,4 +18,19 @@ class Form extends Model
         return $this->hasMany(FormItem::class);
     }
 
+    public function assessments()
+    {
+        return $this->hasMany(Assessment::class);
+    }
+
+    public function observations()
+    {
+        return $this->hasMany(Observation::class);
+    }
+
+    public function dairies()
+    {
+        return $this->hasMany(Diary::class);
+    }
+
 }
