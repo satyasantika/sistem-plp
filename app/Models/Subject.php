@@ -13,6 +13,10 @@ class Subject extends Model
 
     public $timestamps = false;
 
+    protected $casts = [
+        'id' => 'string',
+    ];
+
     public function users()
     {
         return $this->hasMany(User::class);

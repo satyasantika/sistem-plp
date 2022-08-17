@@ -13,6 +13,11 @@ class Form extends Model
 
     public $timestamps = false;
 
+    protected $casts = [
+        'id' => 'string',
+    ];
+
+
     public function formItems()
     {
         return $this->hasMany(FormItem::class);

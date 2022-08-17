@@ -17,7 +17,7 @@
                 @csrf
 
                 <div class="mb-3">
-                    <label for="name" class="mb-2 text-muted">{{ __('Name') }}</label>
+                    <label for="name" class="mb-2 text-muted">{{ __('Nama Lengkap') }}</label>
 
                     <div class="input-group input-group-join mb-3">
                         <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
@@ -32,7 +32,22 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="email" class="mb-2 text-muted">{{ __('Email Address') }}</label>
+                    <label for="username" class="mb-2 text-muted">{{ __('Username') }}</label>
+
+                    <div class="input-group input-group-join mb-3">
+                        <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
+                        <span class="input-group-text rounded-end">&nbsp<i class="fa fa-user"></i>&nbsp</span>
+
+                        @error('username')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="mb-2 text-muted">{{ __('Email') }}</label>
 
                     <div class="input-group input-group-join mb-3">
                         <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">

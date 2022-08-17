@@ -137,7 +137,7 @@
                 <a href="#" class="user-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="label">
                         <span></span>
-                        <div>Admin</div>
+                        <div>{{ Auth::user()->name }}</div>
                     </div>
                     <img class="img-user" src="{{ asset('') }}assets/images/avatar1.png" alt="user"srcset="">
                 </a>

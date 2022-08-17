@@ -22,10 +22,12 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php';
 
-Route::get('/change-password', [App\Http\Controllers\Auth\PasswordChangeController::class, 'showChangePasswordGet'])->name('change-password');
-Route::post('/change-password', [App\Http\Controllers\Auth\PasswordChangeController::class, 'changePasswordPost'])->name('update-password');
+Route::get('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'showChangePasswordGet'])->name('change-password');
+Route::post('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'changePasswordPost'])->name('update-password');
+Route::get('/register/with-role', [App\Http\Controllers\Auth\Custom\RegisterController::class, 'showRegistrationForm'])->name('register-with-role');
+Route::post('/register/with-role', [App\Http\Controllers\Auth\Custom\RegisterController::class, 'register']);
 
 Route::resource('konfigurasi/roles', RoleController::class)->middleware('role:admin');
 
