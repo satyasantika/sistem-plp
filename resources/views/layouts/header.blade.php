@@ -5,7 +5,7 @@
             <div class="theme-switch-icon"></div>
         </div>
         <div class="header-content">
-            <div class="notification dropdown">
+            {{-- <div class="notification dropdown">
                 <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="far fa-envelope"></i>
                 </a>
@@ -132,7 +132,8 @@
                         </a>
                     </li>
                 </ul>
-            </div>
+            </div> --}}
+            {{-- akses to PROFILE, PASSWORD CHANGE, LOGOUT --}}
             <div class="dropdown dropdown-menu-end">
                 <a href="#" class="user-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="label">

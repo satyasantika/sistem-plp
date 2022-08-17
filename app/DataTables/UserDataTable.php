@@ -79,8 +79,9 @@ class UserDataTable extends DataTable
                     ->addClass('text-center'),
             Column::make('name'),
             Column::make('username'),
+            Column::make('email'),
             Column::computed('role')->orderable(true),
-            Column::make('subject_id')->title('mapel'),
+            Column::make('subject_id')->title('Mapel'),
             Column::make('updated_at'),
         ];
     }
