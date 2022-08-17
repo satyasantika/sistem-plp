@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
             FormSeeder::class,
             FormItemSeeder::class,
             UserRolePermissionSeeder::class,
-            UserSeeder::class,
             NavigationSeeder::class,
+            // UserSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
 

@@ -20,7 +20,7 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="guardName" class="form-label">Guard</label>
-                        <input type="text" placeholder="Role name" value="{{ $role->guard_name }}" name="guard_name" class="form-control" id="guardName">
+                        <input type="text" placeholder="Guard name" value="{{ $role->guard_name }}" name="guard_name" class="form-control" id="guardName">
                     </div>
                 </div>
             </div>

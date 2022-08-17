@@ -126,13 +126,13 @@ class UserRolePermissionSeeder extends Seeder
             Role::create(['name' => 'kordosen']);
             Role::create(['name' => 'new_user']);
 
-            Permission::create(['name' => 'read konfigurasi']);
-            Permission::create(['name' => 'create konfigurasi/roles']);
-            Permission::create(['name' => 'read konfigurasi/roles']);
-            Permission::create(['name' => 'update konfigurasi/roles']);
-            Permission::create(['name' => 'delete konfigurasi/roles']);
+            // Permission::create(['name' => 'read konfigurasi']);
+            // Permission::create(['name' => 'create konfigurasi/roles']);
+            // Permission::create(['name' => 'read konfigurasi/roles']);
+            // Permission::create(['name' => 'update konfigurasi/roles']);
+            // Permission::create(['name' => 'delete konfigurasi/roles']);
 
-            $admin_role->givePermissionTo(Permission::all());
+            // $admin_role->givePermissionTo(Permission::all());
             $admin->assignRole('admin');
             $operator->assignRole('operator');
             $dekanat->assignRole('dekanat');

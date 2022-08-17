@@ -8,14 +8,14 @@
 @section('content')
 <div class="main-content">
     <div class="title">
-        Konfigurasi Role
+        Konfigurasi User
     </div>
     <div class="content-wrapper">
         <div class="row same-height">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <button type="button" class="btn btn-primary btn-sm mb-3 btn-add">+ Role</button>
+                        <button type="button" class="btn btn-primary btn-sm mb-3 btn-add">+ User</button>
                         {{ $dataTable->table() }}
                     </div>
                 </div>
@@ -43,7 +43,7 @@
         $('.btn-add').on('click', function() {
             $.ajax({
                 method: 'GET',
-                url: `{{ url('konfigurasi/roles/create') }}`,
+                url: `{{ url('konfigurasi/users/create') }}`,
                 success : function(response) {
                     $('#modalAction').find('.modal-dialog').html(response)
                     modal.show()
@@ -70,14 +70,13 @@
                     processData: false,
                     contentType: false,
                     success : function(response) {
-                        window.LaravelDataTables['role-table'].ajax.reload()
+                        window.LaravelDataTables['user-table'].ajax.reload()
                         modal.hide()
                         iziToast.success({
                             title: 'Saved!',
                             message: response.message,
                             position: 'topRight'
                         });
-
                     },
                     error: function(response) {
                         let errors = response.responseJSON?.errors
@@ -92,7 +91,7 @@
             })
         }
 
-        $('#role-table').on('click','.action',function() {
+        $('#user-table').on('click','.action',function() {
             let data = $(this).data()
             let id = data.id
             let jenis = data.jenis
@@ -105,17 +104,17 @@
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonText: 'Ya, Hapus!'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
                             method: 'DELETE',
-                            url: `{{ url('konfigurasi/roles/') }}/${id}`,
+                            url: `{{ url('konfigurasi/users/') }}/${id}`,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             success : function(response) {
-                                window.LaravelDataTables['role-table'].ajax.reload()
+                                window.LaravelDataTables['user-table'].ajax.reload()
                                 iziToast.warning({
                                     title: 'Deleted!',
                                     message: response.message,
@@ -130,15 +129,13 @@
 
             $.ajax({
                 method: 'GET',
-                url: `{{ url('konfigurasi/roles/') }}/${id}/edit`,
+                url: `{{ url('konfigurasi/users/') }}/${id}/edit`,
                 success : function(response) {
                     $('#modalAction').find('.modal-dialog').html(response)
                     modal.show()
                     store()
                 }
             })
-
-
         })
     </script>
 @endpush

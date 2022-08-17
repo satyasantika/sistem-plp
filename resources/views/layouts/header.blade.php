@@ -156,7 +156,7 @@
                                 <i class="ti-key"></i> Password
                             </div>
                         </a>
-                        <a href="{{ route('logout') }}" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                             <div class="description">
                                 <i class="ti-power-off"></i> Logout
                             </div>

@@ -66,6 +66,7 @@
                                     <button type="submit" class="btn btn-primary ms-auto">
                                         {{ __('Ubah Password') }}
                                     </button>
+                                    <a href="{{ route('dashboard') }}" class="btn btn-secondary float-end">Kembali</a>
                                 </div>
                             </div>
                         </form>

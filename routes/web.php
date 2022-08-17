@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RoleController;
+// use App\Http\Controllers\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,10 +26,9 @@ Route::get('/dashboard', function () {
 
 Route::get('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'showChangePasswordGet'])->name('change-password');
 Route::post('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'changePasswordPost'])->name('update-password');
-Route::get('/register/with-role', [App\Http\Controllers\Auth\Custom\RegisterController::class, 'showRegistrationForm'])->name('register-with-role');
-Route::post('/register/with-role', [App\Http\Controllers\Auth\Custom\RegisterController::class, 'register']);
 
-Route::resource('konfigurasi/roles', RoleController::class)->middleware('role:admin');
+Route::resource('konfigurasi/roles', App\Http\Controllers\RoleController::class)->middleware('role:admin');
+Route::resource('konfigurasi/users', App\Http\Controllers\UserController::class)->middleware('role:admin');
 
 Auth::routes();
 

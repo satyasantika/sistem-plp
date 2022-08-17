@@ -54,11 +54,11 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'birth_date' => 'date=Y-m-d',
+        'birth_date' => 'date',
         'is_pns' => 'boolean',
     ];
 
-    public function subjets()
+    public function subjects()
     {
         $this->belongsTo(Subject::class);
     }
