@@ -5,7 +5,7 @@
             @method('PUT')
         @endif
         <div class="modal-header">
-            <h5 class="modal-title" id="largeModalLabel">User</h5>
+            <h5 class="modal-title" id="largeModalLabel">{{ $user->id ? 'Edit' : 'Tambah' }} {{ ucFirst(request()->segment(2)) }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"
                 aria-label="Close"></button>
         </div>

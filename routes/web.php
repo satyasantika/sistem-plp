@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('konfigurasi/roles', App\Http\Controllers\RoleController::class)->middleware('role:admin');
     Route::resource('konfigurasi/permissions', App\Http\Controllers\PermissionController::class)->middleware('role:admin');
     Route::resource('konfigurasi/users', App\Http\Controllers\UserController::class)->middleware('role:admin');
+    Route::resource('konfigurasi/navigations', App\Http\Controllers\NavigationController::class)->middleware('role:admin');
 });
 
 

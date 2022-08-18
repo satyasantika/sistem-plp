@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('navigations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('url')->nullabel();
-            $table->string('icon')->nullabel();
+            $table->string('url')->nullable();
+            $table->string('icon')->nullable();
             $table->bigInteger('parent_id')->nullable();
             $table->integer('order')->nullable();
-            $table->timestamps();
+            // $table->timestamps();
         });
     }
 

@@ -25,7 +25,7 @@ class PermissionRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', Rule::unique('roles')->ignore($this->role)],
+            'name' => ['required', Rule::unique('permissions')->ignore($this->permission)],
             'guard_name' => 'required',
         ];
     }
