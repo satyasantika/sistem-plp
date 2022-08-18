@@ -14,7 +14,7 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="roleName" class="form-label">Name</label>
-                        <input type="text" placeholder="Role name" value="{{ $role->name }}" name="name" class="form-control" id="roleName">
+                        <input type="text" placeholder="Role name" value="{{ $role->name }}" name="name" class="form-control" id="roleName" required autofocus>
                     </div>
                 </div>
                 <div class="col-md-6">

@@ -27,7 +27,7 @@
 
                     {{-- add MENU from database --}}
                     @foreach (myNavigation() as $menu)
-                    @can('read '.$menu->url)
+                    @can($menu->url.'-read')
                     <li class="{{ request()->segment(1) == $menu->url ? 'active open' : '' }}">
                         <a href="#" class="main-menu has-dropdown">
                             <i class="{{ $menu->icon }}"></i>
@@ -35,7 +35,7 @@
                         </a>
                         <ul class="sub-menu {{ request()->segment(1) == $menu->url ? 'expand' : '' }}">
                             @foreach ($menu->children as $submenu)
-                            @can('read '.$submenu->url)
+                            @can($submenu->url.'-read')
                             <li class="{{ request()->segment(1) == explode('/',$submenu->url)[0] && request()->segment(2) == explode('/',$submenu->url)[1] ? 'active' : '' }}">
                                 <a href="{{ url($submenu->url) }}" class="link"><span>{{ $submenu->name }}</span></a>
                             </li>

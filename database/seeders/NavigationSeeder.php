@@ -17,7 +17,7 @@ class NavigationSeeder extends Seeder
      */
     public function run()
     {
-        $admin = Role::findByName('admin');
+        // $admin = Role::findByName('admin');
 
         $konfigurasi = Navigation::create([
             'name' => 'Konfigurasi',
@@ -26,7 +26,7 @@ class NavigationSeeder extends Seeder
             'parent_id' => null,
             'order' => Navigation::count() + 1,
         ]);
-        Permission::create(['name' => 'read konfigurasi']);
+        Permission::create(['name' => 'konfigurasi-read']);
 
         $konfigurasi->children()->create([
             'name' => 'Role',
@@ -34,7 +34,7 @@ class NavigationSeeder extends Seeder
             'icon' => null,
             'order' => Navigation::count() + 1,
         ]);
-        Permission::create(['name' => 'read konfigurasi/roles']);
+        Permission::create(['name' => 'konfigurasi/roles-read']);
 
         $konfigurasi->children()->create([
             'name' => 'Permission',
@@ -42,7 +42,15 @@ class NavigationSeeder extends Seeder
             'icon' => null,
             'order' => Navigation::count() + 1,
         ]);
-        Permission::create(['name' => 'read konfigurasi/permissions']);
+        Permission::create(['name' => 'konfigurasi/permissions-read']);
+
+        $konfigurasi->children()->create([
+            'name' => 'Role-Permission',
+            'url' => 'konfigurasi/rolepermissions',
+            'icon' => null,
+            'order' => Navigation::count() + 1,
+        ]);
+        Permission::create(['name' => 'konfigurasi/rolepermissions-read']);
 
         $konfigurasi->children()->create([
             'name' => 'Navigation',
@@ -50,7 +58,7 @@ class NavigationSeeder extends Seeder
             'icon' => null,
             'order' => Navigation::count() + 1,
         ]);
-        Permission::create(['name' => 'read konfigurasi/navigations']);
+        Permission::create(['name' => 'konfigurasi/navigations-read']);
 
         $konfigurasi->children()->create([
             'name' => 'User',
@@ -58,8 +66,8 @@ class NavigationSeeder extends Seeder
             'icon' => null,
             'order' => Navigation::count() + 1,
         ]);
-        Permission::create(['name' => 'read konfigurasi/users']);
+        Permission::create(['name' => 'konfigurasi/users-read']);
 
-        $admin->givePermissionTo(Permission::all());
+        // $admin->givePermissionTo(Permission::all());
     }
 }
