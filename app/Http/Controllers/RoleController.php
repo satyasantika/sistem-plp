@@ -24,7 +24,7 @@ class RoleController extends Controller
         Role::create($request->all());
         return response()->json([
             'success' => true,
-            'message' => 'Role berhasil ditambahkan'
+            'message' => 'Role <strong>'.$request->name.'</strong> telah ditambahkan'
         ]);
     }
 
@@ -47,16 +47,18 @@ class RoleController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Role berhasil diperbarui'
+            'message' => 'Role <strong>'.$request->name.'</strong> telah diperbarui'
         ]);
     }
 
     public function destroy(Role $role)
     {
+        $name = $role->name;
+
         $role->delete();
         return response()->json([
             'status' => 'success',
-            'message' => 'Role berhasil dihapus'
+            'message' => 'Role <strong>'.$name.'</strong> telah dihapus'
         ]);
     }
 }

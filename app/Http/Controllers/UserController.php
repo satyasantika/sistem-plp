@@ -25,7 +25,7 @@ class UserController extends Controller
         User::create($request->all())->assignRole($request->role);
         return response()->json([
             'success' => true,
-            'message' => 'Role berhasil ditambahkan'
+            'message' => 'User <strong>'.$request->name.'</strong> telah ditambahkan'
         ]);
 
     }
@@ -51,16 +51,17 @@ class UserController extends Controller
         $user->syncRoles($request->role);
         return response()->json([
             'status' => 'success',
-            'message' => 'User telah diperbarui'
+            'message' => 'User <strong>'.$request->name.'</strong> telah diperbarui'
         ]);
     }
 
     public function destroy(User $user)
     {
+        $name = $user->name;
         $user->delete();
         return response()->json([
             'status' => 'success',
-            'message' => 'User telah dihapus'
+            'message' => 'User <strong>'.$name.'</strong> telah dihapus'
         ]);
     }
 }

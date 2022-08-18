@@ -7,7 +7,7 @@
         $('.btn-add').on('click', function() {
             $.ajax({
                 method: 'GET',
-                url: `{{ url('konfigurasi/roles/create') }}`,
+                url: `{{ url('konfigurasi/permissions/create') }}`,
                 success : function(response) {
                     $('#modalAction').find('.modal-dialog').html(response)
                     modal.show()
@@ -34,7 +34,7 @@
                     processData: false,
                     contentType: false,
                     success : function(response) {
-                        window.LaravelDataTables['role-table'].ajax.reload()
+                        window.LaravelDataTables['permission-table'].ajax.reload()
                         modal.hide()
                         iziToast.success({
                             title: 'Saved!',
@@ -56,7 +56,7 @@
             })
         }
 
-        $('#role-table').on('click','.action',function() {
+        $('#permission-table').on('click','.action',function() {
             let data = $(this).data()
             let id = data.id
             let jenis = data.jenis
@@ -74,12 +74,12 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             method: 'DELETE',
-                            url: `{{ url('konfigurasi/roles/') }}/${id}`,
+                            url: `{{ url('konfigurasi/permissions/') }}/${id}`,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             success : function(response) {
-                                window.LaravelDataTables['role-table'].ajax.reload()
+                                window.LaravelDataTables['permission-table'].ajax.reload()
                                 iziToast.warning({
                                     title: 'Deleted!',
                                     message: response.message,
@@ -94,7 +94,7 @@
 
             $.ajax({
                 method: 'GET',
-                url: `{{ url('konfigurasi/roles/') }}/${id}/edit`,
+                url: `{{ url('konfigurasi/permissions/') }}/${id}/edit`,
                 success : function(response) {
                     $('#modalAction').find('.modal-dialog').html(response)
                     modal.show()
