@@ -28,7 +28,8 @@ class UserDataTable extends DataTable
             })
             ->addColumn('action', function($row){
                 $action = '';
-                $action .= '<button type="button" data-id='.$row->id.' data-jenis="edit" class="btn btn-primary btn-sm action"><i class="ti-pencil"></i></button>';
+                $action .= ' <a class="btn btn-secondary btn-sm" href="'.route('userroles.edit',$row->id).'">R</a>';
+                $action .= ' <button type="button" data-id='.$row->id.' data-jenis="edit" class="btn btn-primary btn-sm action"><i class="ti-pencil"></i></button>';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
                 return $action;
             })
@@ -75,7 +76,7 @@ class UserDataTable extends DataTable
                     ->title('')
                     ->exportable(false)
                     ->printable(false)
-                    ->width(60)
+                    ->width(100)
                     ->addClass('text-center'),
             Column::make('name'),
             Column::make('username'),

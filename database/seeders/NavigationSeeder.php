@@ -45,14 +45,6 @@ class NavigationSeeder extends Seeder
         Permission::create(['name' => 'konfigurasi/permissions-read']);
 
         $konfigurasi->children()->create([
-            'name' => 'Role-Permission',
-            'url' => 'konfigurasi/rolepermissions',
-            'icon' => null,
-            'order' => Navigation::count() + 1,
-        ]);
-        Permission::create(['name' => 'konfigurasi/rolepermissions-read']);
-
-        $konfigurasi->children()->create([
             'name' => 'Navigation',
             'url' => 'konfigurasi/navigations',
             'icon' => null,
