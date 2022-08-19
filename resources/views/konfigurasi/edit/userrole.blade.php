@@ -36,7 +36,7 @@
                                             @endforeach
                                     </div>
                                     <button type="submit" class="btn btn-primary">Save</button>
-                                    <a class="btn btn-secondary" href="{{ route('roles.index') }}">Cancel</a>
+                                    <a class="btn btn-secondary" href="{{ route('users.index') }}">Cancel</a>
                             {!! Form::close() !!}
                         </div>
                     </div>

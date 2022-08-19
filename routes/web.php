@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('konfigurasi/roles', App\Http\Controllers\RoleController::class)->except('show');
     Route::resource('konfigurasi/permissions', App\Http\Controllers\PermissionController::class)->except('show');
     Route::resource('konfigurasi/rolepermissions', App\Http\Controllers\RolePermissionController::class)->only('edit', 'update');
+    Route::resource('konfigurasi/userpermissions', App\Http\Controllers\UserPermissionController::class)->only('edit', 'update');
     Route::resource('konfigurasi/userroles', App\Http\Controllers\UserRoleController::class)->only('edit', 'update');
     Route::resource('konfigurasi/users', App\Http\Controllers\UserController::class)->except('show');
     Route::resource('konfigurasi/navigations', App\Http\Controllers\NavigationController::class)->except('show');

@@ -13,7 +13,7 @@
                     <div class="card-body">
                         <div class="col-lg-12 margin-tb">
                             <div class="pull-left">
-                                <h2>{{ $role->name }} Permissions</h2>
+                                <h2>{{ $user->name }} Roles</h2>
                             </div>
                             @if (count($errors) > 0)
                                 <div class="alert alert-danger">
@@ -26,14 +26,14 @@
                                 </div>
                             @endif
 
-                            {!! Form::model($role, ['method' => 'PATCH','route' => ['rolepermissions.update', $role->id]]) !!}
+                            {!! Form::model($user, ['method' => 'PATCH','route' => ['userpermissions.update', $user->id]]) !!}
                                     {!! Form::hidden('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
                                     <div class="form-group mb-2 p-2">
-                                        @foreach($permission as $value)
-                                            <label>{{ Form::checkbox('permission[]', $value->id, in_array($value->id, $rolePermissions) ? true : false, array('class' => 'name')) }}
-                                            {{ $value->name }}</label>
-                                        <br/>
-                                        @endforeach
+                                            @foreach($permission as $value)
+                                                <label>{{ Form::checkbox('permission[]', $value->id, in_array($value->id, $userPermissions) ? true : false, array('class' => 'name')) }}
+                                                {{ $value->name }}</label>
+                                            <br/>
+                                            @endforeach
                                     </div>
                                     <button type="submit" class="btn btn-primary">Save</button>
                                     <a class="btn btn-secondary" href="{{ route('users.index') }}">Cancel</a>
