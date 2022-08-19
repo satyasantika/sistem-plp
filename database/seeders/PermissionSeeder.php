@@ -15,16 +15,32 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        $permissions = [
-            'roles-read',
-            'roles-create',
-            'roles-edit',
-            'roles-delete',
-            'permissions-read',
-            'permissions-create',
-            'permissions-edit',
-            'permissions-delete'
+        $action = ['read', 'create', 'update', 'delete'];
+        $access = [
+            'roles',
+            'users',
+            'permissions',
+            'rolepermissions',
+            'userpermissions',
+            'konfigurasi',
+            'konfigurasi/roles',
+            'konfigurasi/permissions',
+            'konfigurasi/navigations',
+            'konfigurasi/users',
+            'konfigurasi/rolepermissions',
+            'konfigurasi/userpermissions',
+            'konfigurasi/userroles',
+            'sekolah',
+            'sekolah/schools',
+            'sekolah/coordinator-proposals',
+            'sekolah/teacher-proposals',
         ];
+        $permissions = [];
+        foreach ($access as $value1) {
+            foreach ($action as $value2) {
+                array_push($permissions,$value1.'-'.$value2);
+            }
+        }
 
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission]);

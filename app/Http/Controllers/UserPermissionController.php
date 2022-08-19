@@ -10,7 +10,7 @@ class UserPermissionController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:roles-edit|users-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:roles-update|users-update', ['only' => ['edit','update']]);
     }
 
     public function edit($id)

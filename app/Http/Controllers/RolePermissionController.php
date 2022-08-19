@@ -13,7 +13,7 @@ class RolePermissionController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:roles-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:roles-update', ['only' => ['edit','update']]);
     }
 
     public function edit($id)
