@@ -13,11 +13,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'username',
@@ -37,21 +32,15 @@ class User extends Authenticatable
         'bank'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
+    protected $dates = [
+        'birth_date',
+    ];
+
     protected $casts = [
         'email_verified_at' => 'datetime',
         'birth_date' => 'date',
@@ -60,31 +49,31 @@ class User extends Authenticatable
 
     public function subjects()
     {
-        $this->belongsTo(Subject::class);
+        return $this->belongsTo(Subject::class, 'subject_id');
     }
 
     public function headmasters()
     {
-        $this->hasMany(School::class, 'headmaster_id');
+        return $this->hasMany(School::class, 'headmaster_id');
     }
 
     public function coordinators()
     {
-        $this->hasMany(School::class, 'coordinator_id');
+        return $this->hasMany(School::class, 'coordinator_id');
     }
 
     public function students()
     {
-        $this->hasMany(Map::class, 'student_id');
+        return $this->hasMany(Map::class, 'student_id');
     }
 
     public function lectures()
     {
-        $this->hasMany(Map::class, 'lecture_id');
+        return $this->hasMany(Map::class, 'lecture_id');
     }
 
     public function teachers()
     {
-        $this->hasMany(Map::class, 'teacher_id');
+        return $this->hasMany(Map::class, 'teacher_id');
     }
 }

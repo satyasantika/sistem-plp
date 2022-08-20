@@ -4,8 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Navigation;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class NavigationSeeder extends Seeder
@@ -17,8 +15,6 @@ class NavigationSeeder extends Seeder
      */
     public function run()
     {
-        // $admin = Role::findByName('admin');
-
         $konfigurasi = Navigation::create([
             'name' => 'Konfigurasi',
             'url' => 'konfigurasi',
@@ -26,7 +22,6 @@ class NavigationSeeder extends Seeder
             'parent_id' => null,
             'order' => Navigation::count() + 1,
         ]);
-        // Permission::create(['name' => 'konfigurasi-read']);
 
         $konfigurasi->children()->create([
             'name' => 'Role',
@@ -34,7 +29,6 @@ class NavigationSeeder extends Seeder
             'icon' => null,
             'order' => Navigation::count() + 1,
         ]);
-        // Permission::create(['name' => 'konfigurasi/roles-read']);
 
         $konfigurasi->children()->create([
             'name' => 'Permission',
@@ -42,7 +36,6 @@ class NavigationSeeder extends Seeder
             'icon' => null,
             'order' => Navigation::count() + 1,
         ]);
-        // Permission::create(['name' => 'konfigurasi/permissions-read']);
 
         $konfigurasi->children()->create([
             'name' => 'Navigation',
@@ -50,7 +43,6 @@ class NavigationSeeder extends Seeder
             'icon' => null,
             'order' => Navigation::count() + 1,
         ]);
-        // Permission::create(['name' => 'konfigurasi/navigations-read']);
 
         $konfigurasi->children()->create([
             'name' => 'User',
@@ -58,8 +50,12 @@ class NavigationSeeder extends Seeder
             'icon' => null,
             'order' => Navigation::count() + 1,
         ]);
-        // Permission::create(['name' => 'konfigurasi/users-read']);
 
-        // $admin->givePermissionTo(Permission::all());
+        $konfigurasi->children()->create([
+            'name' => 'School',
+            'url' => 'konfigurasi/schools',
+            'icon' => null,
+            'order' => Navigation::count() + 1,
+        ]);
     }
 }

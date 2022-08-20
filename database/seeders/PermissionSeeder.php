@@ -20,20 +20,15 @@ class PermissionSeeder extends Seeder
             'roles',
             'users',
             'permissions',
-            'rolepermissions',
-            'userpermissions',
             'konfigurasi',
             'konfigurasi/roles',
             'konfigurasi/permissions',
-            'konfigurasi/navigations',
             'konfigurasi/users',
             'konfigurasi/rolepermissions',
-            'konfigurasi/userpermissions',
             'konfigurasi/userroles',
-            'sekolah',
-            'sekolah/schools',
-            'sekolah/coordinator-proposals',
-            'sekolah/teacher-proposals',
+            'konfigurasi/userpermissions',
+            'konfigurasi/schools',
+            'konfigurasi/navigations',
         ];
         $permissions = [];
         foreach ($access as $value1) {

@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\User;
+use App\Models\School;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -12,7 +12,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class UserDataTable extends DataTable
+class SchoolDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -23,23 +23,20 @@ class UserDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->editColumn('updated_at', function($row) {
-                return $row->updated_at->format('d/m/Y H:i:s');
-            })
             ->addColumn('action', function($row){
                 $action = '';
-                $action .= ' <a class="btn btn-secondary btn-sm my-1" href="'.route('userroles.edit',$row->id).'">R</a>';
-                $action .= ' <a class="btn btn-secondary btn-sm my-1" href="'.route('userpermissions.edit',$row->id).'">P</a>';
-                $action .= ' <button type="button" data-id='.$row->id.' data-jenis="edit" class="btn btn-primary btn-sm my-1 action"><i class="ti-pencil"></i></button>';
-                $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm my-1 action"><i class="ti-trash"></i></button>';
+                $action .= ' <button type="button" data-id='.$row->id.' data-jenis="edit" class="btn btn-primary btn-sm action"><i class="ti-pencil"></i></button>';
+                $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
                 return $action;
             })
-            ->addColumn('role', function($row){
-                return $row->getRoleNames()->implode(', ');
+            ->addColumn('headmaster', function($row){
+                if (isset($row->headmaster_id)) {
+                    return $row->headmasters->name;
+                }
             })
-            ->addColumn('mapel', function($row){
-                if (isset($row->subject_id)) {
-                    return $row->subjects->name;
+            ->addColumn('coordinator', function($row){
+                if (isset($row->coordinator_id)) {
+                    return $row->coordinators->name;
                 }
             })
             ->setRowId('id');
@@ -48,10 +45,10 @@ class UserDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\User $model
+     * @param \App\Models\School $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(User $model): QueryBuilder
+    public function query(School $model): QueryBuilder
     {
         return $model->newQuery();
     }
@@ -64,10 +61,10 @@ class UserDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('user-table')
+                    ->setTableId('school-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1, 'asc');
+                    ->orderBy(1);
     }
 
     /**
@@ -82,14 +79,12 @@ class UserDataTable extends DataTable
                     ->title('')
                     ->exportable(false)
                     ->printable(false)
-                    ->width(120)
+                    ->width(60)
                     ->addClass('text-center'),
             Column::make('name'),
-            Column::make('username'),
-            Column::make('email'),
-            Column::computed('role')->orderable(true),
-            Column::computed('mapel')->orderable(true),
-            Column::make('updated_at'),
+            Column::make('address')->title('alamat'),
+            Column::make('headmaster')->title('kepala'),
+            Column::make('coordinator')->title('koord.GP'),
         ];
     }
 
@@ -100,6 +95,6 @@ class UserDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'User_' . date('YmdHis');
+        return 'School_' . date('YmdHis');
     }
 }

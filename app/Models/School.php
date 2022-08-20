@@ -13,11 +13,6 @@ class School extends Model
 
     public $timestamps = false;
 
-    public function maps()
-    {
-        return $this->hasMany(Map::class);
-    }
-
     public function headmasters()
     {
         return $this->belongsTo(User::class,'headmaster_id');
@@ -26,6 +21,11 @@ class School extends Model
     public function coordinators()
     {
         return $this->belongsTo(User::class,'coordinator_id');
+    }
+
+    public function maps()
+    {
+        return $this->hasMany(Map::class);
     }
 
     public function teacher_proposals()
