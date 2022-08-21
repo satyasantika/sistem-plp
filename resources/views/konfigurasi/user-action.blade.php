@@ -32,17 +32,21 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="password" class="form-label">Buat Password</label>
-                        <input type="password" value="{{ $user->password }}" name="password" class="form-control" id="password" required>
+                        <input type="password" value="{{ $user->password }}" name="password" class="form-control" id="password" required {{ $user->id ? 'readonly' : '' }}>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="role" class="form-label">Tetapkan Role</label>
-                        <select id="role" class="form-control @error('role') is-invalid @enderror" name="role" required>
+                        <label for="role" class="form-label">Role</label>
+                        <select id="role" class="form-control @error('role') is-invalid @enderror" name="role" required {{ $user->id ? 'disabled' : '' }}>
+                            @if ($user->id)
+                            <option value="">{{ $user->getRoleNames()->implode(', ') }}</option>
+                            @else
                             <option value="">-- Tanpa Role --</option>
                             @foreach (App\Models\Role::all()->pluck('name')->sort() as $role)
-                                <option value="{{ $role }}" {{ $role == $user->getRoleNames()->implode(', ') ? 'selected' : '' }}>{{ Str::ucfirst($role) }}</option>
+                            <option value="{{ $role }}" {{ $role == $user->getRoleNames()->implode(', ') ? 'selected' : '' }}>{{ Str::ucfirst($role) }}</option>
                             @endforeach
+                            @endif
                         </select>
                     </div>
                 </div>
@@ -63,10 +67,21 @@
                         <input type="text" value="{{ $user->birth_place }}" name="birth_place" class="form-control" id="birth_place">
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <div class="mb-3">
                         <label for="birth_date" class="form-label">Tanggal Lahir</label>
-                        <input type="date" value="{{ $user->birth_date }}" name="birth_date" class="form-control" id="birth_date">
+                        <input type="date" value="{{ $user->birth_date ? $user->birth_date->format('Y-m-d') : '' }}" name="birth_date" class="form-control" id="birth_date">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label for="gender" class="form-label">Gender</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="gender" id="genderL" value="L" {{ $user->gender == 'L' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="genderL">Laki-laki</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="gender" id="genderP" value="P" {{ $user->gender == 'P' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="genderP">Perempuan</label>
                     </div>
                 </div>
                 <div class="col-md-6">

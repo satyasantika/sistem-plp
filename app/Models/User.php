@@ -37,10 +37,6 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $dates = [
-        'birth_date',
-    ];
-
     protected $casts = [
         'email_verified_at' => 'datetime',
         'birth_date' => 'date',
