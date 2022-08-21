@@ -51,7 +51,9 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->subject_id = $request->subject_id;
         $user->birth_place = $request->birth_place;
-        $user->birth_date = date($request->birth_date);
+        if(!is_null($request->birth_date)){
+            $user->birth_date = date($request->birth_date);
+        }
         $user->gender = $request->gender;
         $user->address = $request->address;
         $user->phone = $request->phone;
