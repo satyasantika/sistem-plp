@@ -20,10 +20,9 @@ class CoordinatorProposalController extends Controller
     public function index()
     {
         $id = auth()->id();
-        $myschool = School::where('headmaster_id',$id)->pluck('id');
-        // dd($myschool);
-        $coordinators = SchoolUserProposal::whereIn('school_id',$myschool)->get();
-        // dd($coordinators);
+        $myschool = School::where('headmaster_id',$id)->orWhere('coordinator_id',$id)->pluck('id');
+        $coordinators = SchoolUserProposal::whereIn('school_id',$myschool)->where('candidate_role','korgur')->get();
+
         return view('usulan.korgur', compact('coordinators'));
     }
 
@@ -49,26 +48,19 @@ class CoordinatorProposalController extends Controller
     public function edit(SchoolUserProposal $coordinator)
     {
         $id = auth()->id();
-        $myschool = School::where('headmaster_id',$id)->get();
-        // dd($myschool);
-        // $coordinators = SchoolUserProposal::whereIn('school_id',$myschool)->get();
+        $myschool = School::where('headmaster_id',$id)->orWhere('coordinator_id',$id)->get();
 
         return view('usulan.korgur-edit', compact('coordinator','myschool'));
     }
 
-    public function update(Request $request, SchoolUserProposal $schooluserproposal)
+    public function update(Request $request, SchoolUserProposal $coordinator)
     {
 
-        $school->candidat_name = $request->candidat_name;
-        $school->address = $request->address;
-        $school->headmaster_id = $request->headmaster_id;
-        $school->coordinator_id = $request->coordinator_id;
-        $school->save();
+        $coordinator->candidate_name = $request->candidate_name;
+        $coordinator->school_id = $request->school_id;
+        $coordinator->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'School <strong>'.$request->name.'</strong> telah diperbarui'
-        ]);
+        return $this->index();
     }
 
     public function destroy(SchoolUserProposal $coordinator)
