@@ -13,17 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('coordinator_proposals', function (Blueprint $table) {
+        // Schema::create('coordinator_proposals', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('school_id')->constrained();
+        //     $table->string('coordinator_name');
+        //     $table->boolean('registered')->default(0);
+        //     $table->timestamps();
+        // });
+        Schema::create('school_user_proposals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('school_id')->constrained();
-            $table->string('coordinator_name');
-            $table->boolean('registered')->default(0);
-            $table->timestamps();
-        });
-        Schema::create('teacher_proposals', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('school_id')->constrained();
-            $table->string('teacher_name');
+            $table->string('candidate_name');
+            $table->string('candidate_role'); // enum(guru,korgur)
             $table->string('subject_id')->nullable();
             $table->foreign('subject_id')->references('id')->on('subjects')->constrained();
             $table->integer('class_count')->nullable();
@@ -39,7 +40,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('coordinator_proposals');
-        Schema::dropIfExists('teacher_proposals');
+        // Schema::dropIfExists('coordinator_proposals');
+        // Schema::dropIfExists('teacher_proposals');
+        Schema::dropIfExists('school_user_proposals');
     }
 };

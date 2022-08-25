@@ -9,6 +9,14 @@ use App\Http\Requests\RoleRequest;
 
 class RoleController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:roles-read', ['only' => ['index','show']]);
+        $this->middleware('permission:roles-create', ['only' => ['create','store']]);
+        $this->middleware('permission:roles-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:roles-delete', ['only' => ['destroy']]);
+    }
+
     public function index(RoleDataTable $dataTable)
     {
         return $dataTable->render('konfigurasi.role');

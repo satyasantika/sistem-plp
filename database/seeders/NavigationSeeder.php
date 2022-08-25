@@ -57,5 +57,27 @@ class NavigationSeeder extends Seeder
             'icon' => null,
             'order' => Navigation::count() + 1,
         ]);
+
+        $navigation = Navigation::create([
+            'name' => 'Usulan',
+            'url' => 'usulan',
+            'icon' => '',
+            'parent_id' => null,
+            'order' => Navigation::count() + 1,
+        ]);
+
+        $navigation->children()->create([
+            'name' => 'Koordinator GP',
+            'url' => 'usulan/coordinators',
+            'icon' => '',
+            'order' => Navigation::count() + 1,
+        ]);
+
+        $navigation->children()->create([
+            'name' => 'Guru Pamong',
+            'url' => 'usulan/teachers',
+            'icon' => '',
+            'order' => Navigation::count() + 1,
+        ]);
     }
 }

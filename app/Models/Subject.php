@@ -22,8 +22,8 @@ class Subject extends Model
         return $this->hasMany(User::class);
     }
 
-    public function teacher_proposals()
+    public function schoolUserProposals()
     {
-        return $this->hasMany(TeacherProposal::class);
+        return $this->hasMany(SchoolUserProposal::class);
     }
 }

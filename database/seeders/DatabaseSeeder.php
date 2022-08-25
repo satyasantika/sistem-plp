@@ -19,11 +19,11 @@ class DatabaseSeeder extends Seeder
             SchoolSeeder::class,
             FormSeeder::class,
             FormItemSeeder::class,
-            // UserRolePermissionSeeder::class,
             // UserSeeder::class,
             NavigationSeeder::class,
             PermissionSeeder::class,
-            CreateAdminUserSeeder::class,
+            UserRolePermissionSeeder::class,
+            // CreateAdminUserSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
 

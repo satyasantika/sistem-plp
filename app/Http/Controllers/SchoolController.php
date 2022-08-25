@@ -8,6 +8,14 @@ use App\DataTables\SchoolDataTable;
 
 class SchoolController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:konfigurasi/schools-read', ['only' => ['index','show']]);
+        $this->middleware('permission:konfigurasi/schools-create', ['only' => ['create','store']]);
+        $this->middleware('permission:konfigurasi/schools-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:konfigurasi/schools-delete', ['only' => ['destroy']]);
+    }
+
     public function index(SchoolDataTable $dataTable)
     {
         return $dataTable->render('konfigurasi.school');

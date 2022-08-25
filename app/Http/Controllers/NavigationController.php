@@ -9,6 +9,14 @@ use Spatie\Permission\Models\Permission;
 
 class NavigationController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:konfigurasi/navigations-read', ['only' => ['index','show']]);
+        $this->middleware('permission:konfigurasi/navigations-create', ['only' => ['create','store']]);
+        $this->middleware('permission:konfigurasi/navigations-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:konfigurasi/navigations-delete', ['only' => ['destroy']]);
+    }
+
     public function index(NavigationDataTable $dataTable)
     {
         return $dataTable->render('konfigurasi.navigation');

@@ -32,12 +32,6 @@ class UserRolePermissionSeeder extends Seeder
                 'email' => 'admin@gmail.com'
             ], $default_user_value));
 
-            $operator = User::create(array_merge([
-                'name' => 'operator',
-                'username' => 'operator',
-                'email' => 'operator@gmail.com'
-            ], $default_user_value));
-
             $ketua = User::create(array_merge([
                 'name' => 'ketua',
                 'username' => 'ketua',
@@ -132,9 +126,9 @@ class UserRolePermissionSeeder extends Seeder
             // Permission::create(['name' => 'update konfigurasi/roles']);
             // Permission::create(['name' => 'delete konfigurasi/roles']);
 
-            // $admin_role->givePermissionTo(Permission::all());
+            $admin_role->givePermissionTo(Permission::all());
             $admin->assignRole('admin');
-            $operator->assignRole('operator');
+            // $operator->assignRole('operator');
             $dekanat->assignRole('dekanat');
             $ketua->assignRole('ketua');
             $sekretariat->assignRole('sekretariat');
