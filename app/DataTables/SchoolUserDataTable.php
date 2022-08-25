@@ -32,6 +32,11 @@ class SchoolUserDataTable extends DataTable
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm my-1 action"><i class="ti-trash"></i></button>';
                 return $action;
             })
+            ->addColumn('mapel', function($row){
+                if (isset($row->subject_id)) {
+                    return $row->subjects->name;
+                }
+            })
             ->setRowId('id');
     }
 
@@ -74,9 +79,9 @@ class SchoolUserDataTable extends DataTable
                     ->printable(false)
                     ->width(60)
                     ->addClass('text-center'),
-            Column::make('candidate_name'),
-            Column::make('candidate_role'),
-            // Column::make('created_at'),
+            Column::make('candidate_name')->title('Nama'),
+            Column::make('candidate_role')->title('Role'),
+            Column::make('mapel'),
             // Column::make('updated_at'),
         ];
     }

@@ -58,6 +58,13 @@ class NavigationSeeder extends Seeder
             'order' => Navigation::count() + 1,
         ]);
 
+        $konfigurasi->children()->create([
+            'name' => 'User Proposal',
+            'url' => 'konfigurasi/userschoolproposals',
+            'icon' => null,
+            'order' => Navigation::count() + 1,
+        ]);
+
         $navigation = Navigation::create([
             'name' => 'Usulan',
             'url' => 'usulan',
