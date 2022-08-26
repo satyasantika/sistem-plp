@@ -40,8 +40,7 @@
                             <label for="parent_id" class="form-label">Parent Menu</label>
                             <select id="parent_id" class="form-control @error('parent_id') is-invalid @enderror" name="parent_id">
                                 <option value="">-- Parent Menu --</option>
-                                {{-- @foreach (\App\Models\Navigation::whereNull('parent_id')->get() as $nav) --}}
-                                @foreach (myNavigation() as $nav)
+                                @foreach (myNav() as $nav)
                                     <option value="{{ $nav->id }}" {{ $nav->id == $navigation->parent_id ? 'selected' : '' }}>{{ $nav->name }}</option>
                                 @endforeach
                             </select>

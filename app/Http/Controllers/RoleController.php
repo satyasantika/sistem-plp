@@ -36,11 +36,6 @@ class RoleController extends Controller
         ]);
     }
 
-    public function show($id)
-    {
-        //
-    }
-
     public function edit(Role $role)
     {
         return view('konfigurasi.role-action', compact('role'));
@@ -48,10 +43,8 @@ class RoleController extends Controller
 
     public function update(RoleRequest $request, Role $role)
     {
-
-        $role->name = $request->name;
-        $role->guard_name = $request->guard_name;
-        $role->save();
+        $data = $request->all();
+        $role->fill($data)->save();
 
         return response()->json([
             'status' => 'success',

@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use App\DataTables\UserDataTable;
 use App\Http\Requests\UserRequest;
 use Spatie\Permission\Models\Role;
-// use Illuminate\Support\ValidatedInput;
 
 class UserController extends Controller
 {
@@ -27,8 +26,10 @@ class UserController extends Controller
 
     public function create()
     {
+        $user = new User();
+        
         return view('konfigurasi.user-action', array_merge(
-            [ 'user' => new User() ],
+            [ 'user' => $user ],
             $this->_dataSelection(),
         ));
     }

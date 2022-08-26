@@ -36,11 +36,6 @@ class PermissionController extends Controller
         ]);
     }
 
-    public function show($id)
-    {
-        //
-    }
-
     public function edit(Permission $permission)
     {
         return view('konfigurasi.permission-action', compact('permission'));
@@ -49,9 +44,8 @@ class PermissionController extends Controller
     public function update(PermissionRequest $request, Permission $permission)
     {
 
-        $permission->name = $request->name;
-        $permission->guard_name = $request->guard_name;
-        $permission->save();
+        $data = $request->all();
+        $permission->fill($data)->save();
 
         return response()->json([
             'status' => 'success',

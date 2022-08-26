@@ -41,11 +41,6 @@ class NavigationController extends Controller
         ]);
     }
 
-    public function show($id)
-    {
-        //
-    }
-
     public function edit(Navigation $navigation)
     {
         return view('konfigurasi.navigation-action', compact('navigation'));
@@ -53,12 +48,9 @@ class NavigationController extends Controller
 
     public function update(Request $request, Navigation $navigation)
     {
-        $navigation->name = $request->name;
-        $navigation->url = $request->url;
-        $navigation->icon = $request->icon;
-        $navigation->order = $request->order;
-        $navigation->parent_id = $request->parent_id;
-        $navigation->save();
+        $data = $request->all();
+        $navigation->fill($data)->save();
+
         return response()->json([
             'status' => 'success',
             'message' => 'Menu <strong>'.$request->name.'</strong> telah diperbarui'

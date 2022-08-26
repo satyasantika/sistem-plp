@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\School;
 use Illuminate\Http\Request;
 use App\DataTables\SchoolDataTable;
@@ -23,7 +24,11 @@ class SchoolController extends Controller
 
     public function create()
     {
-        return view('konfigurasi.school-action', ['school'=>new School()]);
+        $school = new School();
+        return view('konfigurasi.school-action', array_merge(
+            ['school'=>new School()],
+            $this->_dataSelection()
+            ));
     }
 
     public function store(Request $request)
@@ -35,24 +40,18 @@ class SchoolController extends Controller
         ]);
     }
 
-    public function show($id)
-    {
-        //
-    }
-
     public function edit(School $school)
     {
-        return view('konfigurasi.school-action', compact('school'));
+        return view('konfigurasi.school-action', array_merge(
+            ['school'=>$school],
+            $this->_dataSelection()
+            ));
     }
 
     public function update(Request $request, School $school)
     {
-
-        $school->name = $request->name;
-        $school->address = $request->address;
-        $school->headmaster_id = $request->headmaster_id;
-        $school->coordinator_id = $request->coordinator_id;
-        $school->save();
+        $data = $request->all();
+        $school->fill($data)->save();
 
         return response()->json([
             'status' => 'success',
@@ -70,4 +69,13 @@ class SchoolController extends Controller
             'message' => 'School <strong>'.$name.'</strong> telah dihapus'
         ]);
     }
+
+    private function _dataSelection()
+    {
+        return [
+            'kepsek' =>  User::role('kepsek')->select('id','name')->orderBy('name')->get(),
+            'korgur' =>  User::role('korguru')->select('id','name')->orderBy('name')->get(),
+        ];
+    }
+
 }

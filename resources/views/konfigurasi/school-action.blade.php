@@ -28,7 +28,7 @@
                         <label for="headmaster_id" class="form-label">Kepala Sekolah</label>
                         <select id="headmaster_id" class="form-control @error('headmaster_id') is-invalid @enderror" name="headmaster_id">
                             <option value="">-- Pilih nama Kepala --</option>
-                            @foreach (App\Models\User::role('kepsek')->select('id','name')->orderBy('name')->get() as $user)
+                            @foreach ($kepsek as $user)
                                 <option value="{{ $user->id }}" {{ $user->id == $school->headmaster_id ? 'selected' : '' }}>{{ Str::ucfirst($user->name) }}</option>
                             @endforeach
                         </select>
@@ -39,7 +39,7 @@
                         <label for="coordinator_id" class="form-label">Koordinator Guru Pamong</label>
                         <select id="coordinator_id" class="form-control @error('coordinator_id') is-invalid @enderror" name="coordinator_id">
                             <option value="">-- Pilih nama Koordinator --</option>
-                            @foreach (App\Models\User::role('korguru')->select('id','name')->orderBy('name')->get() as $user)
+                            @foreach ($korgur as $user)
                                 <option value="{{ $user->id }}" {{ $user->id == $school->coordinator_id ? 'selected' : '' }}>{{ Str::ucfirst($user->name) }}</option>
                             @endforeach
                         </select>
