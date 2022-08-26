@@ -29,6 +29,18 @@ class UserRequest extends FormRequest
             'username' => ['required',Rule::unique('users')->ignore($this->user)],
             'email' => ['required','email',Rule::unique('users')->ignore($this->user)],
             'password' => ['required'],
+            'subject_id' => [],
+            'birth_place' => [],
+            'birth_date' => ['date'],
+            'gender' => [],
+            'address' => [],
+            'phone' => [],
+            'provider' => [],
+            'is_pns' => [],
+            'golongan' => [],
+            'npwp' => [],
+            'nomor_rekening' => [],
+            'bank' => [],
         ];
     }
 }

@@ -43,7 +43,7 @@
                             <option value="">{{ $user->getRoleNames()->implode(', ') }}</option>
                             @else
                             <option value="">-- Tanpa Role --</option>
-                            @foreach (App\Models\Role::all()->pluck('name')->sort() as $role)
+                            @foreach ($roles as $role)
                             <option value="{{ $role }}" {{ $role == $user->getRoleNames()->implode(', ') ? 'selected' : '' }}>{{ Str::ucfirst($role) }}</option>
                             @endforeach
                             @endif
@@ -55,7 +55,7 @@
                         <label for="subject_id" class="form-label">Pilih Mapel</label>
                         <select id="subject_id" class="form-control @error('subject_id') is-invalid @enderror" name="subject_id">
                             <option value="">-- Tanpa Mapel --</option>
-                            @foreach (App\Models\Subject::select('id', 'name')->orderBy('name')->get() as $subject)
+                            @foreach ($subjects as $subject)
                                 <option value="{{ $subject->id }}" {{ $subject->id == $user->subject_id ? 'selected' : '' }}>{{ Str::ucfirst($subject->name) }}</option>
                             @endforeach
                         </select>
@@ -101,7 +101,7 @@
                         <label for="provider" class="form-label">Provider</label>
                         <select id="provider" class="form-control @error('provider') is-invalid @enderror" name="provider">
                             <option value="">-- Pilih Provider --</option>
-                            @foreach (['Telkomsel','Indosat Oreedoo'] as $provider)
+                            @foreach ($providers as $provider)
                                 <option value="{{ $provider }}" {{ $user->provider == $provider ? 'selected' : '' }}>{{ $provider }}</option>
                             @endforeach
                         </select>
@@ -111,7 +111,7 @@
                     <div class="mb-3">
                         <label for="is_pns" class="form-label">Status PNS</label>
                         <select id="is_pns" class="form-control @error('is_pns') is-invalid @enderror" name="is_pns">
-                            @foreach (['nonPNS','PNS'] as $key => $value)
+                            @foreach ($is_pns as $key => $value)
                                 <option value="{{ $key }}" {{ $user->is_pns == $key ? 'selected' : '' }}>{{ $value }}</option>
                             @endforeach
                         </select>
@@ -122,7 +122,7 @@
                         <label for="golongan" class="form-label">Golongan Kepegawaian</label>
                         <select id="golongan" class="form-control @error('golongan') is-invalid @enderror" name="golongan">
                             <option value="">-- Pilih Golongan --</option>
-                            @foreach (['I','II','III','IV'] as $golongan)
+                            @foreach ($golongans as $golongan)
                                 <option value="{{ $golongan }}" {{ $user->golongan == $golongan ? 'selected' : '' }}>Golongan {{ $golongan }}</option>
                             @endforeach
                         </select>
@@ -145,7 +145,7 @@
                         <label for="bank" class="form-label">bank</label>
                         <select id="bank" class="form-control @error('bank') is-invalid @enderror" name="bank">
                             <option value="">-- Pilih Bank untuk pencairan honor --</option>
-                            @foreach (['Mandiri','BRI','BJB','BTN', 'BCA'] as $bank)
+                            @foreach ($banks as $bank)
                                 <option value="{{ $bank }}" {{ $user->bank == $bank ? 'selected' : '' }}>bank {{ $bank }}</option>
                             @endforeach
                         </select>

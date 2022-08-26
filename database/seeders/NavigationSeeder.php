@@ -60,7 +60,7 @@ class NavigationSeeder extends Seeder
 
         $konfigurasi->children()->create([
             'name' => 'User Proposal',
-            'url' => 'konfigurasi/userschoolproposals',
+            'url' => 'konfigurasi/schooluserproposals',
             'icon' => null,
             'order' => Navigation::count() + 1,
         ]);

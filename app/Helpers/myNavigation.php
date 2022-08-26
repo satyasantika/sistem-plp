@@ -2,9 +2,16 @@
 
 use App\Models\Navigation;
 
-if (!function_exists('myNavigation')) {
-    function myNavigation()
+// if (!function_exists('myNavigation')) {
+//     function myNavigation()
+//     {
+//         return Navigation::with('children')->whereNull('parent_id')->get();
+//     }
+// }
+
+if (!function_exists('myNav')) {
+    function myNav()
     {
-        return Navigation::with('children')->whereNull('parent_id')->get();
+        return Navigation::whereNotNull('parent_id')->get();
     }
 }

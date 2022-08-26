@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Subject;
 use Illuminate\Http\Request;
 use App\DataTables\UserDataTable;
 use App\Http\Requests\UserRequest;
+use Spatie\Permission\Models\Role;
 // use Illuminate\Support\ValidatedInput;
 
 class UserController extends Controller
@@ -25,14 +27,16 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('konfigurasi.user-action',['user'=>new User()]);
+        return view('konfigurasi.user-action', array_merge(
+            [ 'user' => new User() ],
+            $this->_dataSelection(),
+        ));
     }
 
     public function store(UserRequest $request)
     {
         $data = $request->safe()->merge([
             'password'=> bcrypt($request->password),
-            'birth_date'=> date($request->birth_date),
         ]);
         User::create($data->all())->assignRole($request->role);
         return response()->json([
@@ -42,36 +46,18 @@ class UserController extends Controller
 
     }
 
-    public function show($id)
-    {
-        //
-    }
-
     public function edit(User $user)
     {
-        return view('konfigurasi.user-action', compact('user'));
+        return view('konfigurasi.user-action', array_merge(
+            [ 'user' => $user ],
+            $this->_dataSelection(),
+        ));
     }
 
     public function update(UserRequest $request, User $user)
     {
-        $user->name = $request->name;
-        $user->username = $request->username;
-        $user->email = $request->email;
-        $user->subject_id = $request->subject_id;
-        $user->birth_place = $request->birth_place;
-        if(!is_null($request->birth_date)){
-            $user->birth_date = date($request->birth_date);
-        }
-        $user->gender = $request->gender;
-        $user->address = $request->address;
-        $user->phone = $request->phone;
-        $user->provider = $request->provider;
-        $user->is_pns = $request->is_pns;
-        $user->golongan = $request->golongan;
-        $user->npwp = $request->npwp;
-        $user->nomor_rekening = $request->nomor_rekening;
-        $user->bank = $request->bank;
-        $user->save();
+        $data = $request->all();
+        $user->fill($data)->save();
         return response()->json([
             'status' => 'success',
             'message' => 'User <strong>'.$request->name.'</strong> telah diperbarui'
@@ -87,4 +73,17 @@ class UserController extends Controller
             'message' => 'User <strong>'.$name.'</strong> telah dihapus'
         ]);
     }
+
+    private function _dataSelection()
+    {
+        return [
+            'roles' =>  Role::all()->pluck('name')->sort(),
+            'subjects' =>  Subject::select('id', 'name')->orderBy('name')->get(),
+            'providers' => ['Telkomsel','Indosat Oreedoo'],
+            'is_pns' => ['nonPNS','PNS'],
+            'golongans' => ['I','II','III','IV'],
+            'banks' => ['Mandiri','BRI','BJB','BTN', 'BCA'],
+        ];
+    }
+
 }

@@ -26,7 +26,20 @@
                     </li>
 
                     {{-- add MENU from database --}}
-                    @foreach (myNavigation() as $menu)
+                    @foreach (myNav() as $menu)
+                    @can($menu->url.'-read')
+                    <li class="{{ request()->segment(2) == explode('/',$menu->url)[1] ? 'active' : '' }}">
+                        <a href="{{ url($menu->url) }}" class="link">
+                            {{-- <i class="ti-home"></i> --}}
+                            <span>{{ $menu->name }}</span>
+                        </a>
+                    </li>
+                    @endcan
+                    @endforeach
+
+
+                    {{-- add MENU from database --}}
+                    {{-- @foreach (myNavigation() as $menu)
                     @can($menu->url.'-read')
                     <li class="{{ request()->segment(1) == $menu->url ? 'active open' : '' }}">
                         <a href="#" class="main-menu has-dropdown">
@@ -44,7 +57,7 @@
                         </ul>
                     </li>
                     @endcan
-                    @endforeach
+                    @endforeach --}}
 
                 </ul>
             </div>
