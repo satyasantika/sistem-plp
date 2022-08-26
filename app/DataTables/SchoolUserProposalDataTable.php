@@ -82,6 +82,9 @@ class SchoolUserProposalDataTable extends DataTable
             Column::make('candidate_name')->title('Nama'),
             Column::make('candidate_role')->title('Role'),
             Column::make('mapel'),
+            Column::make('class_count')->title('Rombel'),
+            Column::make('registered'),
+            Column::make('updated_at'),
         ];
     }
 

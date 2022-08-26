@@ -26,7 +26,7 @@ class SchoolController extends Controller
     {
         $school = new School();
         return view('konfigurasi.school-action', array_merge(
-            ['school'=>new School()],
+            ['school'=> $school],
             $this->_dataSelection()
             ));
     }

@@ -81,7 +81,7 @@ class SchoolDataTable extends DataTable
                     ->printable(false)
                     ->width(60)
                     ->addClass('text-center'),
-            Column::make('name'),
+            Column::make('name')->orderable(true),
             Column::make('address')->title('alamat'),
             Column::make('headmaster')->title('kepala'),
             Column::make('coordinator')->title('koord.GP'),

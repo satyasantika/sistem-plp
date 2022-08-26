@@ -2,78 +2,72 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\School;
+use App\Models\Subject;
 use Illuminate\Http\Request;
-use App\DataTables\SchoolSchooluserDataTable;
+use App\Models\SchoolUserProposal;
+use App\DataTables\SchoolUserProposalDataTable;
 
-class SchoolSchooluserProposalController extends Controller
+class SchoolUserProposalController extends Controller
 {
-    public function index(SchoolSchooluserDataTable $dataTable)
+    public function index(SchoolUserProposalDataTable $dataTable)
     {
-        return $dataTable->render('usulan.schooluser');
+        return $dataTable->render('konfigurasi.schooluserproposal');
     }
 
     public function create()
     {
-        return view('usulan.schooluser-action',['schooluser'=>new Schooluser()]);
+        $schooluserproposal = new SchoolUserProposal();
+        return view('konfigurasi.schooluserproposal-action', array_merge(
+            ['schooluserproposal'=> $schooluserproposal],
+            $this->_dataSelection()
+            ));
     }
 
     public function store(Request $request)
     {
-        $data = $request->safe()->merge([
-            'password'=> bcrypt($request->password),
-            'birth_date'=> date($request->birth_date),
-        ]);
-        Schooluser::create($data->all())->assignRole($request->role);
+        SchoolUserProposal::create($request->all());
         return response()->json([
             'success' => true,
-            'message' => 'Schooluser <strong>'.$request->name.'</strong> telah ditambahkan'
+            'message' => 'Data <strong>'.$request->name.'</strong> telah ditambahkan'
         ]);
-
     }
 
-    public function show($id)
+    public function edit(SchoolUserProposal $schooluserproposal)
     {
-        //
+        return view('konfigurasi.schooluserproposal-action', array_merge(
+            ['schooluserproposal'=> $schooluserproposal],
+            $this->_dataSelection()
+            ));
     }
 
-    public function edit(Schooluser $schooluser)
+    public function update(Request $request, SchoolUserProposal $schooluserproposal)
     {
-        return view('usulan.schooluser-action', compact('schooluser'));
-    }
+        $data = $request->all();
+        $schooluserproposal->fill($data)->save();
 
-    public function update(Request $request, Schooluser $schooluser)
-    {
-        $schooluser->name = $request->name;
-        $schooluser->schoolusername = $request->schoolusername;
-        $schooluser->email = $request->email;
-        $schooluser->subject_id = $request->subject_id;
-        $schooluser->birth_place = $request->birth_place;
-        if(!is_null($request->birth_date)){
-            $schooluser->birth_date = date($request->birth_date);
-        }
-        $schooluser->gender = $request->gender;
-        $schooluser->address = $request->address;
-        $schooluser->phone = $request->phone;
-        $schooluser->provider = $request->provider;
-        $schooluser->is_pns = $request->is_pns;
-        $schooluser->golongan = $request->golongan;
-        $schooluser->npwp = $request->npwp;
-        $schooluser->nomor_rekening = $request->nomor_rekening;
-        $schooluser->bank = $request->bank;
-        $schooluser->save();
         return response()->json([
             'status' => 'success',
-            'message' => 'Schooluser <strong>'.$request->name.'</strong> telah diperbarui'
+            'message' => 'Data <strong>'.$request->name.'</strong> telah diperbarui'
         ]);
     }
 
-    public function destroy(Schooluser $schooluser)
+    public function destroy(SchoolUserProposal $schooluserproposal)
     {
-        $name = $schooluser->name;
-        $schooluser->delete();
+        $name = $schooluserproposal->candidate_name;
+        $schooluserproposal->delete();
         return response()->json([
             'status' => 'success',
-            'message' => 'Schooluser <strong>'.$name.'</strong> telah dihapus'
+            'message' => 'Data <strong>'.$name.'</strong> telah dihapus'
         ]);
     }
+
+    private function _dataSelection()
+    {
+        return [
+            'schools' =>  School::select('id','name')->orderBy('name')->get(),
+            'subjects' =>  Subject::select('id','name')->orderBy('name')->get(),
+        ];
+    }
+
 }
