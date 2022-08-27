@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('konfigurasi/navigations', App\Http\Controllers\NavigationController::class)->except('show');
     Route::resource('konfigurasi/schools', App\Http\Controllers\SchoolController::class)->except('show');
     Route::resource('konfigurasi/schooluserproposals', App\Http\Controllers\SchoolUserProposalController::class)->except('show');
+    Route::resource('konfigurasi/maps', App\Http\Controllers\MapController::class)->except('show');
     Route::resource('usulan/coordinators', App\Http\Controllers\School\CoordinatorProposalController::class)->except('show');
     Route::resource('usulan/teachers', App\Http\Controllers\School\TeacherProposalController::class)->except('show');
     // Route::get('usulan/coordinators',['App\Http\Controllers\School\CoordinatorProposalController','index']);

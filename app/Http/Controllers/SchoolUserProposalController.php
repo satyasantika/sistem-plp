@@ -10,6 +10,14 @@ use App\DataTables\SchoolUserProposalDataTable;
 
 class SchoolUserProposalController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:konfigurasi/schooluserproposals-read', ['only' => ['index','show']]);
+        $this->middleware('permission:konfigurasi/schooluserproposals-create', ['only' => ['create','store']]);
+        $this->middleware('permission:konfigurasi/schooluserproposals-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:konfigurasi/schooluserproposals-delete', ['only' => ['destroy']]);
+    }
+
     public function index(SchoolUserProposalDataTable $dataTable)
     {
         return $dataTable->render('konfigurasi.schooluserproposal');

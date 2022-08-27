@@ -15,13 +15,13 @@ return new class extends Migration
     {
         Schema::create('maps', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->constrained('users')->nullabel();
-            $table->foreignId('lecture_id')->constrained('users')->nullabel();
-            $table->foreignId('teacher_id')->constrained('users')->nullabel();
-            $table->foreignId('school_id')->constrained()->nullabel();
+            $table->foreignId('student_id')->nullable();
+            $table->foreignId('lecture_id')->nullable();
+            $table->foreignId('teacher_id')->nullable();
+            $table->foreignId('school_id')->nullable();
             $table->integer('year')->nullable();
-            $table->boolean('plp1')->default(1);
-            $table->boolean('plp2')->default(1);
+            $table->boolean('plp1')->default(0);
+            $table->boolean('plp2')->default(0);
             $table->timestamps();
         });
     }

@@ -29,6 +29,7 @@ class PermissionSeeder extends Seeder
             'konfigurasi/userpermissions',
             'konfigurasi/schools',
             'konfigurasi/userschoolproposals',
+            'konfigurasi/maps',
             'konfigurasi/navigations',
             'usulan',
             'usulan/coordinators',
