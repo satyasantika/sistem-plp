@@ -62,7 +62,7 @@ class SchoolUserDataTable extends DataTable
                     ->setTableId('schooluser-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1);
+                    ->orderBy(1, 'asc');
     }
 
     /**
@@ -82,7 +82,6 @@ class SchoolUserDataTable extends DataTable
             Column::make('candidate_name')->title('Nama'),
             Column::make('candidate_role')->title('Role'),
             Column::make('mapel'),
-            // Column::make('updated_at'),
         ];
     }
 

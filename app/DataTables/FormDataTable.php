@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\SchoolUserProposal;
+use App\Models\Form;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -12,7 +12,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class SchoolUserProposalDataTable extends DataTable
+class FormDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -23,19 +23,11 @@ class SchoolUserProposalDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->editColumn('updated_at', function($row) {
-                return $row->updated_at->format('d/m/Y H:i:s');
-            })
             ->addColumn('action', function($row){
                 $action = '';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="edit" class="btn btn-primary btn-sm my-1 action"><i class="ti-pencil"></i></button>';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm my-1 action"><i class="ti-trash"></i></button>';
                 return $action;
-            })
-            ->addColumn('mapel', function($row){
-                if (isset($row->subject_id)) {
-                    return $row->subjects->name;
-                }
             })
             ->setRowId('id');
     }
@@ -43,10 +35,10 @@ class SchoolUserProposalDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\SchoolUserProposal $model
+     * @param \App\Models\Form $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(SchoolUserProposal $model): QueryBuilder
+    public function query(Form $model): QueryBuilder
     {
         return $model->newQuery();
     }
@@ -59,7 +51,7 @@ class SchoolUserProposalDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('schooluserproposal-table')
+                    ->setTableId('form-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->orderBy(1, 'asc');
@@ -79,12 +71,11 @@ class SchoolUserProposalDataTable extends DataTable
                     ->printable(false)
                     ->width(60)
                     ->addClass('text-center'),
-            Column::make('candidate_name')->title('Nama'),
-            Column::make('candidate_role')->title('Role'),
-            Column::make('mapel'),
-            Column::make('class_count')->title('Rombel'),
-            Column::make('registered'),
-            Column::make('updated_at'),
+            Column::make('id'),
+            Column::make('name'),
+            Column::make('type'),
+            Column::make('count'),
+            Column::make('max_score'),
         ];
     }
 
@@ -95,6 +86,6 @@ class SchoolUserProposalDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'SchoolUserProposal_' . date('YmdHis');
+        return 'Form_' . date('YmdHis');
     }
 }

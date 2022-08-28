@@ -15,6 +15,26 @@ class NavigationSeeder extends Seeder
      */
     public function run()
     {
+        $konfigurasi_data = [
+            'konfigurasi/roles',
+            'konfigurasi/permissions',
+            'konfigurasi/navigations',
+            'konfigurasi/users',
+            'konfigurasi/schools',
+            'konfigurasi/schooluserproposals',
+            'konfigurasi/maps',
+            'konfigurasi/forms',
+            'konfigurasi/formitems',
+            'konfigurasi/evaluations',
+            'konfigurasi/observations',
+            'konfigurasi/diaries',
+        ];
+
+        $usulan_data = [
+            'usulan/school-coordinators',
+            'usulan/school-teachers',
+        ];
+
         $konfigurasi = Navigation::create([
             'name' => 'Konfigurasi',
             'url' => 'konfigurasi',
@@ -23,56 +43,17 @@ class NavigationSeeder extends Seeder
             'order' => Navigation::count() + 1,
         ]);
 
-        $konfigurasi->children()->create([
-            'name' => 'Role',
-            'url' => 'konfigurasi/roles',
-            'icon' => null,
-            'order' => Navigation::count() + 1,
-        ]);
+        foreach ($konfigurasi_data as $child) {
+            $part = explode('/',$child);
+            $konfigurasi->children()->create([
+                'name' => $part[1],
+                'url' => $child,
+                'icon' => 'ti-setting',
+                'order' => Navigation::count() + 1,
+            ]);
+        }
 
-        $konfigurasi->children()->create([
-            'name' => 'Permission',
-            'url' => 'konfigurasi/permissions',
-            'icon' => null,
-            'order' => Navigation::count() + 1,
-        ]);
-
-        $konfigurasi->children()->create([
-            'name' => 'Navigation',
-            'url' => 'konfigurasi/navigations',
-            'icon' => null,
-            'order' => Navigation::count() + 1,
-        ]);
-
-        $konfigurasi->children()->create([
-            'name' => 'User',
-            'url' => 'konfigurasi/users',
-            'icon' => null,
-            'order' => Navigation::count() + 1,
-        ]);
-
-        $konfigurasi->children()->create([
-            'name' => 'School',
-            'url' => 'konfigurasi/schools',
-            'icon' => null,
-            'order' => Navigation::count() + 1,
-        ]);
-
-        $konfigurasi->children()->create([
-            'name' => 'User Proposal',
-            'url' => 'konfigurasi/schooluserproposals',
-            'icon' => null,
-            'order' => Navigation::count() + 1,
-        ]);
-
-        $konfigurasi->children()->create([
-            'name' => 'Mapping',
-            'url' => 'konfigurasi/maps',
-            'icon' => null,
-            'order' => Navigation::count() + 1,
-        ]);
-
-        $navigation = Navigation::create([
+        $usulan = Navigation::create([
             'name' => 'Usulan',
             'url' => 'usulan',
             'icon' => '',
@@ -80,18 +61,14 @@ class NavigationSeeder extends Seeder
             'order' => Navigation::count() + 1,
         ]);
 
-        $navigation->children()->create([
-            'name' => 'Koordinator GP',
-            'url' => 'usulan/coordinators',
-            'icon' => '',
-            'order' => Navigation::count() + 1,
-        ]);
-
-        $navigation->children()->create([
-            'name' => 'Guru Pamong',
-            'url' => 'usulan/teachers',
-            'icon' => '',
-            'order' => Navigation::count() + 1,
-        ]);
+        foreach ($usulan_data as $child) {
+            $part = explode('/',$child);
+            $usulan->children()->create([
+                'name' => $part[1],
+                'url' => $child,
+                'icon' => '',
+                'order' => Navigation::count() + 1,
+            ]);
+        }
     }
 }

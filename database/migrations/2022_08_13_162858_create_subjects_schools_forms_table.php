@@ -28,7 +28,7 @@ return new class extends Migration
         Schema::create('forms', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('name');
-            $table->string('type')->nullable();
+            $table->string('type')->nullable(); //tipe form (max/skor_4/skro_40/yes_no)
             $table->integer('count')->default(0);
             $table->integer('max_score')->default(0);
         });

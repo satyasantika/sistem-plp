@@ -4,82 +4,76 @@ namespace App\Http\Controllers;
 
 use App\Models\Form;
 use Illuminate\Http\Request;
+use App\DataTables\FormDataTable;
 
 class FormController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    function __construct()
     {
-        //
+        // $this->middleware('permission:konfigurasi/forms-read', ['only' => ['index','show']]);
+        // $this->middleware('permission:konfigurasi/forms-create', ['only' => ['create','store']]);
+        // $this->middleware('permission:konfigurasi/forms-update', ['only' => ['edit','update']]);
+        // $this->middleware('permission:konfigurasi/forms-delete', ['only' => ['destroy']]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function index(FormDataTable $dataTable)
+    {
+        return $dataTable->render('konfigurasi.form');
+    }
+
     public function create()
     {
-        //
+        $form = new Form();
+        return view('konfigurasi.form-action', array_merge(
+            ['form'=> $form],
+            $this->_dataSelection()
+            ));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        Form::create($request->all());
+        return response()->json([
+            'success' => true,
+            'message' => 'Form <strong>'.$request->name.'</strong> telah ditambahkan'
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Form  $form
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Form $form)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Form  $form
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Form $form)
     {
-        //
+        return view('konfigurasi.form-action', array_merge(
+            ['form'=>$form],
+            $this->_dataSelection()
+            ));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Form  $form
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Form $form)
     {
-        //
+        $data = $request->all();
+        $form->fill($data)->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Form <strong>'.$request->name.'</strong> telah diperbarui'
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Form  $form
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Form $form)
     {
-        //
+        $name = $form->name;
+
+        $form->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Form <strong>'.$name.'</strong> telah dihapus'
+        ]);
     }
+
+    private function _dataSelection()
+    {
+        return [
+            'formtypes' =>  ['yes_no','skor_4','skor_40','skor_max'],
+        ];
+    }
+
 }

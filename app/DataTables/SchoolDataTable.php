@@ -64,7 +64,7 @@ class SchoolDataTable extends DataTable
                     ->setTableId('school-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1);
+                    ->orderBy(1, 'asc');
     }
 
     /**

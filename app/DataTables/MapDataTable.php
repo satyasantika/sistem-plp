@@ -82,7 +82,7 @@ class MapDataTable extends DataTable
                     ->setTableId('map-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1);
+                    ->orderBy(1, 'asc');
     }
 
     /**
@@ -106,7 +106,6 @@ class MapDataTable extends DataTable
             Column::make('plp1'),
             Column::make('plp2'),
             Column::make('year')->title('Tahun'),
-            // Column::make('updated_at'),
         ];
     }
 

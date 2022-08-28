@@ -36,9 +36,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('konfigurasi/schools', App\Http\Controllers\SchoolController::class)->except('show');
     Route::resource('konfigurasi/schooluserproposals', App\Http\Controllers\SchoolUserProposalController::class)->except('show');
     Route::resource('konfigurasi/maps', App\Http\Controllers\MapController::class)->except('show');
-    Route::resource('usulan/coordinators', App\Http\Controllers\School\CoordinatorProposalController::class)->except('show');
-    Route::resource('usulan/teachers', App\Http\Controllers\School\TeacherProposalController::class)->except('show');
-    // Route::get('usulan/coordinators',['App\Http\Controllers\School\CoordinatorProposalController','index']);
+    Route::resource('konfigurasi/diaries', App\Http\Controllers\DiaryController::class)->except('show');
+    Route::resource('konfigurasi/forms', App\Http\Controllers\FormController::class)->except('show');
+    Route::resource('konfigurasi/formitems', App\Http\Controllers\FormItemController::class)->except('show');
+    Route::resource('konfigurasi/evaluations', App\Http\Controllers\EvaluationController::class)->except('show');
+    Route::resource('konfigurasi/observations', App\Http\Controllers\ObservationController::class)->except('show');
+    Route::resource('usulan/schoolcoordinators', App\Http\Controllers\School\CoordinatorProposalController::class)->except('show');
+    Route::resource('usulan/schoolteachers', App\Http\Controllers\School\TeacherProposalController::class)->except('show');
 });
 
 

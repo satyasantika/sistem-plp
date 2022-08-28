@@ -31,9 +31,14 @@ class PermissionSeeder extends Seeder
             'konfigurasi/userschoolproposals',
             'konfigurasi/maps',
             'konfigurasi/navigations',
+            'konfigurasi/forms',
+            'konfigurasi/formitems',
+            'konfigurasi/evaluations',
+            'konfigurasi/observations',
+            'konfigurasi/diaries',
             'usulan',
-            'usulan/coordinators',
-            'usulan/teachers',
+            'usulan/school-coordinators',
+            'usulan/school-teachers',
         ];
         $permissions = [];
         foreach ($access as $value1) {
