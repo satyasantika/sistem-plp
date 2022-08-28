@@ -47,8 +47,8 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="school_id" class="form-label">Tempat Praktik</label>
-                        <select id="school_id" class="form-control @error('school_id') is-invalid @enderror" name="school_id">
-                            <option value="">-- Pilih Sekolah --</option>
+                        <select id="school_id" class="js-example-basic-single form-select @error('school_id') is-invalid @enderror" name="school_id">
+                            <option>-- Pilih Sekolah --</option>
                             @foreach ($schools as $school)
                                 <option value="{{ $school->id }}" {{ $school->id == $map->school_id ? 'selected' : '' }}>{{ Str::ucfirst($school->name) }}</option>
                             @endforeach
@@ -79,18 +79,6 @@
                         </select>
                     </div>
                 </div>
-
-                {{-- <div class="col-md-6">
-                    <label for="candidate_role" class="form-label">Dipetakan pada </label> &nbsp;
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" name="plp1" id="option1" value="1" {{ old('plp1') ? 'checked="checked"' : '' }}>
-                        <label class="form-check-label" for="option1">PLP 1</label>
-                    </div>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" name="plp2" id="option2" value="1" {{ old('plp2') ? 'checked="checked"' : '' }}>
-                        <label class="form-check-label" for="option2">PLP 2</label>
-                    </div>
-                </div> --}}
             </div>
         </div>
         <div class="modal-footer">

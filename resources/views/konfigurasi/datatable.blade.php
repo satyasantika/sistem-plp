@@ -36,6 +36,7 @@
     <script src="{{ asset('') }}vendor/jquery/dist/jquery.min.js"></script>
     <script src="{{ asset('') }}vendor/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="{{ asset('') }}vendor/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    {{-- <script src="{{ asset('') }}vendor/select2/dist/js/select2.min.js"></script> --}}
     <script src="{{ asset('') }}vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('') }}vendor/izitoast/dist/js/iziToast.min.js"></script>
     {{ $dataTable->scripts() }}

@@ -35,7 +35,7 @@ class Map extends Model
         return $this->belongsTo(School::class, 'school_id');
     }
 
-    public function dairies()
+    public function diaries()
     {
         return $this->hasMany(Diary::class);
     }
