@@ -10,10 +10,10 @@ class FormController extends Controller
 {
     function __construct()
     {
-        // $this->middleware('permission:konfigurasi/forms-read', ['only' => ['index','show']]);
-        // $this->middleware('permission:konfigurasi/forms-create', ['only' => ['create','store']]);
-        // $this->middleware('permission:konfigurasi/forms-update', ['only' => ['edit','update']]);
-        // $this->middleware('permission:konfigurasi/forms-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:konfigurasi/forms-read', ['only' => ['index','show']]);
+        $this->middleware('permission:konfigurasi/forms-create', ['only' => ['create','store']]);
+        $this->middleware('permission:konfigurasi/forms-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:konfigurasi/forms-delete', ['only' => ['destroy']]);
     }
 
     public function index(FormDataTable $dataTable)
@@ -35,7 +35,7 @@ class FormController extends Controller
         Form::create($request->all());
         return response()->json([
             'success' => true,
-            'message' => 'Form <strong>'.$request->name.'</strong> telah ditambahkan'
+            'message' => 'Form <strong>'.$request->id.'</strong> telah ditambahkan'
         ]);
     }
 
@@ -54,13 +54,13 @@ class FormController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Form <strong>'.$request->name.'</strong> telah diperbarui'
+            'message' => 'Form <strong>'.$request->id.'</strong> telah diperbarui'
         ]);
     }
 
     public function destroy(Form $form)
     {
-        $name = $form->name;
+        $name = $form->id;
 
         $form->delete();
         return response()->json([
