@@ -48,7 +48,7 @@ class NavigationSeeder extends Seeder
             $konfigurasi->children()->create([
                 'name' => $part[1],
                 'url' => $child,
-                'icon' => 'ti-setting',
+                'icon' => 'ti-settings',
                 'order' => Navigation::count() + 1,
             ]);
         }

@@ -16,7 +16,9 @@
                 <div class="card">
                     <div class="card-body">
                         <button type="button" class="btn btn-primary btn-sm mb-3 btn-add">+ {{ request()->segment(2) }}</button>
-                        {{ $dataTable->table() }}
+                        <div class="table-responsive">
+                        {{ $dataTable->table(['class' => 'display nowrap']) }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -37,5 +39,7 @@
     <script src="{{ asset('') }}vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('') }}vendor/izitoast/dist/js/iziToast.min.js"></script>
     {{ $dataTable->scripts() }}
+    <script src="{{ asset('') }}assets/js/crud-datatables.js"></script>
     @stack('jscode')
+
 @endpush
