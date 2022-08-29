@@ -97,7 +97,7 @@ class AssessmentController extends Controller
     {
         return [
             'maps' =>  Map::all(),
-            'forms' =>  Form::pluck('id')->sort(),
+            'forms' =>  Form::whereNot('type','yes_no')->pluck('id')->sort(),
             'form_order' => [1,2,3,4,5,6],
             'items' => ['score01','score02','score03','score04','score05','score06','score07','score08','score09'],
         ];

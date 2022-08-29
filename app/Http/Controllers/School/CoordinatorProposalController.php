@@ -11,10 +11,10 @@ class CoordinatorProposalController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:usulan/coordinators-read', ['only' => ['index','show']]);
-        $this->middleware('permission:usulan/coordinators-create', ['only' => ['create','store']]);
-        $this->middleware('permission:usulan/coordinators-update', ['only' => ['edit','update']]);
-        $this->middleware('permission:usulan/coordinators-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:usulan/school_coordinators-read', ['only' => ['index','show']]);
+        $this->middleware('permission:usulan/school_coordinators-create', ['only' => ['create','store']]);
+        $this->middleware('permission:usulan/school_coordinators-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:usulan/school_coordinators-delete', ['only' => ['destroy']]);
     }
 
     public function index()

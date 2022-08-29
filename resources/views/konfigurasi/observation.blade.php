@@ -2,6 +2,6 @@
 
 @push('jscode')
     <script>
-        crudDataTables('assessments','assessment-table')
+        crudDataTables('observations','observation-table')
     </script>
 @endpush

@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Diary;
+use App\Models\Observation;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -12,7 +12,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class DiaryDataTable extends DataTable
+class ObservationDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -39,9 +39,6 @@ class DiaryDataTable extends DataTable
                     return $row->maps->schools->name;
                 }
             })
-            ->editColumn('log_date', function($row) {
-                return $row->log_date->format('d/m/Y');
-            })
             ->editColumn('updated_at', function($row) {
                 return $row->updated_at->format('d/m/Y H:i:s');
             })
@@ -51,10 +48,10 @@ class DiaryDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Diary $model
+     * @param \App\Models\Observation $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Diary $model): QueryBuilder
+    public function query(Observation $model): QueryBuilder
     {
         return $model->newQuery();
     }
@@ -67,7 +64,7 @@ class DiaryDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('diary-table')
+                    ->setTableId('observation-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->orderBy(1, 'asc');
@@ -88,11 +85,8 @@ class DiaryDataTable extends DataTable
                     ->width(60)
                     ->addClass('text-center'),
             Column::make('mahasiswa'),
-            Column::make('plp_order')->title('plp'),
-            Column::make('day_order')->title('hari ke-'),
-            Column::make('log_date')->title('tanggal'),
-            Column::make('note'),
-            Column::make('verified'),
+            Column::make('sekolah'),
+            Column::make('form_id'),
             Column::make('updated_at'),
         ];
     }
@@ -104,6 +98,6 @@ class DiaryDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Diary_' . date('YmdHis');
+        return 'Observation_' . date('YmdHis');
     }
 }

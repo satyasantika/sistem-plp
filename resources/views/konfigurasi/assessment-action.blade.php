@@ -74,7 +74,7 @@
                 <div class="col-md-2">
                     <div class="mb-3">
                         <label for="{{ $item }}" class="form-label">Skor {{ $item }}</label>
-                        <input type="number" value="{{ $assessment->$item }}" name="{{ $item }}" class="form-control" id="{{ $item }}">
+                        <input type="number" value="{{ $assessment->$item }}" min="0" name="{{ $item }}" class="form-control" id="{{ $item }}">
                     </div>
                 </div>
                 @endforeach

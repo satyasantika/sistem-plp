@@ -31,8 +31,8 @@ class NavigationSeeder extends Seeder
         ];
 
         $usulan_data = [
-            'usulan/school-coordinators',
-            'usulan/school-teachers',
+            'usulan/school_coordinators',
+            'usulan/school_teachers',
         ];
 
         $konfigurasi = Navigation::create([

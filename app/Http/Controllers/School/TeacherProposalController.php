@@ -12,10 +12,10 @@ class TeacherProposalController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:usulan/teachers-read', ['only' => ['index','show']]);
-        $this->middleware('permission:usulan/teachers-create', ['only' => ['create','store']]);
-        $this->middleware('permission:usulan/teachers-update', ['only' => ['edit','update']]);
-        $this->middleware('permission:usulan/teachers-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:usulan/school_teachers-read', ['only' => ['index','show']]);
+        $this->middleware('permission:usulan/school_teachers-create', ['only' => ['create','store']]);
+        $this->middleware('permission:usulan/school_teachers-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:usulan/school_teachers-delete', ['only' => ['destroy']]);
     }
 
     public function index()

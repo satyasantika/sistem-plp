@@ -13,7 +13,7 @@ class Observation extends Model
 
     public function maps()
     {
-        return $this->belongsTo(Map::class);
+        return $this->belongsTo(Map::class,'map_id');
     }
 
     public function forms()

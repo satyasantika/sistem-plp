@@ -43,7 +43,6 @@ return new class extends Migration
             $table->foreignId('map_id')->constrained();
             $table->string('form_id')->nullable();
             $table->foreign('form_id')->references('id')->on('forms')->constrained();
-            $table->integer('form_order');
             $table->string('item01')->nullable();
             $table->string('item02')->nullable();
             $table->string('item03')->nullable();
