@@ -33,7 +33,7 @@ class PermissionSeeder extends Seeder
             'konfigurasi/navigations',
             'konfigurasi/forms',
             'konfigurasi/formitems',
-            'konfigurasi/evaluations',
+            'konfigurasi/assessments',
             'konfigurasi/observations',
             'konfigurasi/diaries',
             'usulan',

@@ -10,10 +10,13 @@ class Assessment extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+    protected $casts = [
+        'exam_date' => 'date',
+    ];
 
     public function maps()
     {
-        return $this->belongsTo(Map::class);
+        return $this->belongsTo(Map::class, 'map_id');
     }
 
     public function forms()

@@ -25,7 +25,7 @@ class NavigationSeeder extends Seeder
             'konfigurasi/maps',
             'konfigurasi/forms',
             'konfigurasi/formitems',
-            'konfigurasi/evaluations',
+            'konfigurasi/assessments',
             'konfigurasi/observations',
             'konfigurasi/diaries',
         ];

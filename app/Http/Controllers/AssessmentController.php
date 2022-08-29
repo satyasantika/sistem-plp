@@ -2,84 +2,105 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Map;
+use App\Models\Form;
 use App\Models\Assessment;
 use Illuminate\Http\Request;
+use App\DataTables\AssessmentDataTable;
 
 class AssessmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    function __construct()
     {
-        //
+        $this->middleware('permission:konfigurasi/assessments-read', ['only' => ['index','show']]);
+        $this->middleware('permission:konfigurasi/assessments-create', ['only' => ['create','store']]);
+        $this->middleware('permission:konfigurasi/assessments-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:konfigurasi/assessments-delete', ['only' => ['destroy']]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function index(AssessmentDataTable $dataTable)
+    {
+        return $dataTable->render('konfigurasi.assessment');
+    }
+
     public function create()
     {
-        //
+        $assessment = new Assessment();
+        return view('konfigurasi.assessment-action', array_merge(
+            ['assessment'=> $assessment],
+            $this->_dataSelection()
+            ));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+
+        $data = $request->merge([
+            'grade' => $request->score01
+                        + $request->score02
+                        + $request->score03
+                        + $request->score04
+                        + $request->score05
+                        + $request->score06
+                        + $request->score07
+                        + $request->score08
+                        + $request->score09
+            ,
+        ]);
+        Assessment::create($data->all());
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Penilaian telah ditambahkan'
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Assessment  $assessment
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Assessment $assessment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Assessment  $assessment
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Assessment $assessment)
     {
-        //
+        return view('konfigurasi.assessment-action', array_merge(
+            ['assessment'=>$assessment],
+            $this->_dataSelection()
+            ));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Assessment  $assessment
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Assessment $assessment)
     {
-        //
+        $data = $request->all();
+        $data['grade'] = $request->score01
+                        + $request->score02
+                        + $request->score03
+                        + $request->score04
+                        + $request->score05
+                        + $request->score06
+                        + $request->score07
+                        + $request->score08
+                        + $request->score09
+            ;
+
+        $assessment->fill($data)->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data Penilaian telah diperbarui'
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Assessment  $assessment
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Assessment $assessment)
     {
-        //
+        $assessment->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data Penilaian telah dihapus'
+        ]);
     }
+
+    private function _dataSelection()
+    {
+        return [
+            'maps' =>  Map::all(),
+            'forms' =>  Form::pluck('id')->sort(),
+            'form_order' => [1,2,3,4,5,6],
+            'items' => ['score01','score02','score03','score04','score05','score06','score07','score08','score09'],
+        ];
+    }
+
 }
