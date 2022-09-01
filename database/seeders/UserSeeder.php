@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
                     'email'     => $data[3],
                     'password'  => Hash::make($data[5]),
                     'subject_id' => $data[4],
-                    'address'   => $data[6],
+                    // 'address'   => $data[6],
                 ])->assignRole('dosen');
             }
             $transRow = false;
