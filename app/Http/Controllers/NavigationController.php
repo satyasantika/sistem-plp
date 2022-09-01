@@ -24,7 +24,13 @@ class NavigationController extends Controller
 
     public function create()
     {
-        return view('konfigurasi.navigation-action',['navigation'=>new Navigation()]);
+        $navigation = new Navigation();
+        return view('konfigurasi.navigation-action', array_merge(
+            $this->_dataSelection(),
+            [
+                'navigation'=> $navigation,
+            ],
+        ));
     }
 
     public function store(Request $request)
@@ -43,7 +49,12 @@ class NavigationController extends Controller
 
     public function edit(Navigation $navigation)
     {
-        return view('konfigurasi.navigation-action', compact('navigation'));
+        return view('konfigurasi.navigation-action', array_merge(
+            $this->_dataSelection(),
+            [
+                'navigation'=> $navigation,
+            ],
+        ));
     }
 
     public function update(Request $request, Navigation $navigation)
@@ -66,4 +77,13 @@ class NavigationController extends Controller
             'message' => 'Menu <strong>'.$name.'</strong> telah dihapus'
         ]);
     }
+
+    private function _dataSelection()
+    {
+
+        return [
+            'parent_navs' => Navigation::whereNull('parent_id')->get(),
+        ];
+    }
+
 }
