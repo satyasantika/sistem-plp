@@ -35,6 +35,12 @@ class NavigationSeeder extends Seeder
             'usulan/school_teachers',
         ];
 
+        $mapping_data = [
+            'mapping/mastermaps',
+            'mapping/departementmaps',
+            'mapping/teachermaps',
+        ];
+
         $konfigurasi = Navigation::create([
             'name' => 'Konfigurasi',
             'url' => 'konfigurasi',
@@ -64,6 +70,24 @@ class NavigationSeeder extends Seeder
         foreach ($usulan_data as $child) {
             $part = explode('/',$child);
             $usulan->children()->create([
+                'name' => $part[1],
+                'url' => $child,
+                'icon' => '',
+                'order' => Navigation::count() + 1,
+            ]);
+        }
+
+        $mapping = Navigation::create([
+            'name' => 'Mapping',
+            'url' => 'mapping',
+            'icon' => '',
+            'parent_id' => null,
+            'order' => Navigation::count() + 1,
+        ]);
+
+        foreach ($mapping_data as $child) {
+            $part = explode('/',$child);
+            $mapping->children()->create([
                 'name' => $part[1],
                 'url' => $child,
                 'icon' => '',

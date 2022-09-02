@@ -26,4 +26,9 @@ class Subject extends Model
     {
         return $this->hasMany(SchoolUserProposal::class);
     }
+
+    public function maps()
+    {
+        return $this->hasMany(Map::class);
+    }
 }

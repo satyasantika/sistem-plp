@@ -82,6 +82,7 @@ class PermissionSeeder extends Seeder
         $kajur_access = [
             'mapping',
             'mapping/mysubjects',
+            'mapping/departementmaps',
             'yudisium',
             'yudisium/first',
             'yudisium/second',
@@ -141,6 +142,20 @@ class PermissionSeeder extends Seeder
 
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission])->assignRole('mahasiswa');
+        }
+
+        $mahasiswa_access = [
+            'mapping/teachermaps',
+        ];
+        $permissions = [];
+        foreach ($mahasiswa_access as $value1) {
+            foreach ($action as $value2) {
+                array_push($permissions,$value1.'-'.$value2);
+            }
+        }
+
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission])->syncRoles(['kepsek','korguru']);
         }
 
     }

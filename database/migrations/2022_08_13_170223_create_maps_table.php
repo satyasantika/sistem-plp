@@ -19,9 +19,11 @@ return new class extends Migration
             $table->foreignId('lecture_id')->nullable();
             $table->foreignId('teacher_id')->nullable();
             $table->foreignId('school_id')->nullable();
+            $table->string('subject_id')->nullable();
+            $table->foreign('subject_id')->references('id')->on('subjects')->constrained()->nullable();
             $table->integer('year')->nullable();
-            $table->boolean('plp1')->default(0);
-            $table->boolean('plp2')->default(0);
+            $table->boolean('plp1')->default(1);
+            $table->boolean('plp2')->default(1);
             $table->timestamps();
         });
     }

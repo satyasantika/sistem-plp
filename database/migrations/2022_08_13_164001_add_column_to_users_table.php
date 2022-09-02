@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('username')->unique()->after('name');
             $table->string('subject_id')->nullable();
-            $table->foreign('subject_id')->references('id')->on('subjects')->constrained()->nullabel();
+            $table->foreign('subject_id')->references('id')->on('subjects')->constrained()->nullable();
             $table->string('gender')->nullable(); //L,P
             $table->string('birth_place')->nullable();
             $table->date('birth_date')->nullable();

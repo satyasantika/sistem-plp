@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Map;
 
-use App\Http\Controllers\Controller;
+use App\Models\Map;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class MasterMapController extends Controller
 {
@@ -17,13 +18,24 @@ class MasterMapController extends Controller
 
     public function index()
     {
-        return view('teams.data.map.master');
+        $schools = Map::select('school_id')->whereNotNull('school_id')->groupBy('school_id')->get();
+        $map_data = [];
+        foreach ($schools as  $school) {
+            $school_count = Map::where('school_id',$school->school_id)->count();
+            array_push($map_data,[
+                // 'id' => $school->id,
+                'school' => Map::find($school->school_id),
+                'count' => $school_count,
+            ]);
+        }
+        // dd($map_data);
+        return view('teams.data.map.mastermap',compact('map_data'));
     }
 
     public function create()
     {
         $map = new Map();
-        return view('konfigurasi.map-action', array_merge(
+        return view('teams.data.map.mastermap-action', array_merge(
             $this->_dataSelection(),
             [
                 'map'=> $map,

@@ -23,9 +23,9 @@ class MapDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->editColumn('updated_at', function($row) {
-                return $row->updated_at->format('d/m/Y H:i:s');
-            })
+            // ->editColumn('updated_at', function($row) {
+            //     return $row->updated_at->format('d/m/Y H:i:s');
+            // })
             ->addColumn('action', function($row){
                 $action = '';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="edit" class="btn btn-primary btn-sm my-1 action"><i class="ti-pencil"></i></button>';
@@ -103,8 +103,8 @@ class MapDataTable extends DataTable
             Column::make('DPL'),
             Column::make('GP'),
             Column::make('Sekolah'),
-            Column::make('plp1'),
-            Column::make('plp2'),
+            // Column::make('plp1'),
+            // Column::make('plp2'),
             Column::make('year')->title('Tahun'),
         ];
     }
