@@ -65,8 +65,8 @@ class UserSeeder extends Seeder
                     'username'  => $data[0],
                     'name'      => $data[1],
                     'email'     => $data[2],
-                    'password'  => Hash::make($data[3]),
-                    'subject_id' => $data[4],
+                    'subject_id' => $data[3],
+                    'password'  => Hash::make($data[4]),
                 ])->assignRole('guru');
             }
             $transRow = false;

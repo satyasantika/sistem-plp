@@ -29,6 +29,18 @@ class PermissionSeeder extends Seeder
         Role::create(['name' => 'korguru']);
         Role::create(['name' => 'kordosen']);
 
+        Permission::create(['name' => 'dashboard/dekanat-read'])->assignRole('dekanat');
+        Permission::create(['name' => 'dashboard/ketua-read'])->assignRole('ketua');
+        Permission::create(['name' => 'dashboard/sekretariat-read'])->assignRole('sekretariat');
+        Permission::create(['name' => 'dashboard/akademik-read'])->assignRole('akademik');
+        Permission::create(['name' => 'dashboard/data-read'])->assignRole('data');
+        Permission::create(['name' => 'dashboard/dosen-read'])->assignRole('dosen');
+        Permission::create(['name' => 'dashboard/guru-read'])->assignRole('guru');
+        Permission::create(['name' => 'dashboard/mahasiswa-read'])->assignRole('mahasiswa');
+        Permission::create(['name' => 'dashboard/kajur-read'])->assignRole('kajur');
+        Permission::create(['name' => 'dashboard/kepsek-read'])->assignRole('kepsek');
+        Permission::create(['name' => 'dashboard/korguru-read'])->assignRole('korguru');
+        Permission::create(['name' => 'dashboard/kordosen-read'])->assignRole('kordosen');
 
         $action = ['read', 'create', 'update', 'delete'];
         $admin_access = [

@@ -2,6 +2,7 @@
 
 @push('css')
     {{-- <link rel="stylesheet" href="{{ asset('') }}vendor/chart.js/dist/Chart.min.css"> --}}
+
 @endpush
 
 @section('content')
@@ -9,8 +10,14 @@
     <div class="title">
         Dashboard
     </div>
-    @can('mapping/departementmaps-read')
+    @can('dashboard/kajur-read')
     @include('dashboard.departement')
+    @endcan
+    @can('dashboard/dosen-read')
+    @include('dashboard.lecture')
+    @endcan
+    @can('dashboard/mahasiswa-read')
+    @include('dashboard.student')
     @endcan
 </div>
 @endsection
