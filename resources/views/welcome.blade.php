@@ -10,7 +10,6 @@
             integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
             crossorigin="anonymous" />
 
-
         <link rel="stylesheet" href="{{ asset('') }}vendor/bootstrap/dist/css/bootstrap.min.css">
 
         <link rel="stylesheet" href="{{ asset('') }}assets/css/style.css">
@@ -20,17 +19,15 @@
     </head>
 
     <body>
-        <section class="container h-100">
-            <div class="row justify-content-sm-center h-100 align-items-center">
-                <div class="card shadow-lg">
-                    <div class="card-body p-4">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <a href="{{ route('login') }}" class="btn btn-block btn-primary">Go to Login >></a>
-                                </div>
-                            </div>
-                        </div>
+        <section class="container">
+            <div class="row">
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <a href="{{ route('login') }}" class="btn btn-primary">Go to Login >></a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-3">
@@ -40,23 +37,28 @@
                                             <thead>
                                                 <tr>
                                                     <th>Mitra</th>
-                                                    <th></th>
+                                                    <th>Distribusi Peserta</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            @foreach ($schools as $key => $school)
+                                            @foreach ($schools as $school)
                                                 <tr>
-                                                    <th scope="row">{{ $school->name }}</th>
+                                                    <th>{{ $school->name }}</th>
                                                     <td>
-                                                        <span class="badge bg-light rounded-pill text-dark">B.Indonesia</span class="badge bg-light rounded-pill text-dark">
-                                                        <span class="badge bg-light rounded-pill text-dark">B.Inggris</span class="badge bg-light rounded-pill text-dark">
-                                                        <span class="badge bg-light rounded-pill text-dark">Matematika</span class="badge bg-light rounded-pill text-dark">
-                                                        <span class="badge bg-light rounded-pill text-dark">Fisika</span class="badge bg-light rounded-pill text-dark">
-                                                        <span class="badge bg-light rounded-pill text-dark">Biologi</span class="badge bg-light rounded-pill text-dark">
-                                                        <span class="badge bg-light rounded-pill text-dark">Ekonomi</span class="badge bg-light rounded-pill text-dark">
-                                                        <span class="badge bg-light rounded-pill text-dark">Geografi</span class="badge bg-light rounded-pill text-dark">
-                                                        <span class="badge bg-light rounded-pill text-dark">Sejarah</span class="badge bg-light rounded-pill text-dark">
-                                                        <span class="badge bg-light rounded-pill text-dark">Penjas</span class="badge bg-light rounded-pill text-dark">
+                                                        @php
+                                                            $subjects = App\Models\Map::select('subject_id', DB::raw('count(subject_id) as total'))
+                                                                                        ->where('school_id',$school->id)
+                                                                                        ->groupBy('subject_id')
+                                                                                        ->get();
+                                                        @endphp
+                                                        @foreach ($subjects as $subject)
+                                                        <span class="badge bg-light rounded-pill text-dark">
+                                                            {{ $subject->subjects->name }}
+                                                            <span class="badge bg-primary rounded-pill">
+                                                                {{ $subject->total }}
+                                                            </span>
+                                                        </span>
+                                                        @endforeach
                                                     </td>
                                                 </tr>
                                             @endforeach

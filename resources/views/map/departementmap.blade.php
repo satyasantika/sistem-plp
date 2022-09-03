@@ -29,7 +29,9 @@
                                         @foreach ($my_subject_maps as $map)
                                         <tr>
                                             <td class=" text-center">
+                                                @can('mapping/departementmaps-update')
                                                 <button type="button" data-id="{{ $map->id }}" data-jenis="edit" class="btn btn-outline-primary btn-sm action"><i class="ti-location-arrow"></i></button>
+                                                @endcan
                                             </td>
                                             <td>
                                                 <div class="row">
