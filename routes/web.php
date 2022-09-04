@@ -24,6 +24,7 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'showChangePasswordGet'])->name('change-password');
     Route::post('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'changePasswordPost'])->name('update-password');
+    Route::resource('profiles', App\Http\Controllers\ProfileController::class)->only(['index','edit','update']);
     Route::resource('konfigurasi/roles', App\Http\Controllers\RoleController::class)->except('show');
     Route::resource('konfigurasi/permissions', App\Http\Controllers\PermissionController::class)->except('show');
     Route::resource('konfigurasi/rolepermissions', App\Http\Controllers\RolePermissionController::class)->only('edit', 'update');

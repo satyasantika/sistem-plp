@@ -147,7 +147,7 @@
                         <a class="dropdown-item" href="#">Notifikasi</a>
                     </li> -->
                     <li class="menu-content ps-menu">
-                        <a href="#">
+                        <a href="{{ route('profiles.index') }}">
                             <div class="description">
                                 <i class="ti-user"></i> Profile
                             </div>
