@@ -21,32 +21,32 @@
                                 @forelse ($maps as $map)
                                 <tr>
                                     <td>Nama</td>
-                                    <td>{{ $map->students->name ?? '' }}</td>
+                                    <td>{{ $map->students->name ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Bidang Studi</td>
+                                    <td>{{ $map->subjects->name ?? '-' }}</td>
                                 </tr>
                                 <tr>
                                     <td>Tempat Praktik</td>
-                                    <td>{{ $map->schools->name ?? '' }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Tempat Praktik</td>
-                                    <td>{{ $map->schools->name ?? '' }}</td>
+                                    <td>{{ $map->schools->name ?? '-' }}</td>
                                 </tr>
                                 <tr>
                                     <td>Guru Pamong</td>
                                     <td>
-                                        @if ($map->teachers->phone)
+                                        @if (isset($map->teachers->phone))
                                             <a href="{{ 'http://wa.me/62'.$map->teachers->phone }}" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-whatsapp"></i></a>
                                         @endif
-                                        {{ $map->teachers->name ?? '' }}
+                                        {{ $map->teachers->name ?? '-' }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Dosen Pembimbing Lapangan</td>
                                     <td>
-                                        @if ($map->lectures->phone)
+                                        @if (isset($map->lectures->phone))
                                             <a href="{{ 'http://wa.me/62'.$map->lectures->phone }}" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-whatsapp"></i></a>
                                         @endif
-                                        {{ $map->lectures->name ?? '' }}
+                                        {{ $map->lectures->name ?? '-' }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -55,19 +55,19 @@
                                 <tr>
                                     <td>Kepala Sekolah</td>
                                     <td>
-                                        @if ($map->schools->headmasters->phone)
+                                        @if (isset($map->schools->headmasters->phone))
                                             <a href="{{ 'http://wa.me/62'.$map->schools->headmasters->phone }}" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-whatsapp"></i></a>
                                         @endif
-                                        {{ $map->schools->headmasters->name ?? '' }}
+                                        {{ $map->schools->headmasters->name ?? '-' }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Koordinator Guru Pamong</td>
                                     <td>
-                                        @if ($map->schools->coordinators->phone)
+                                        @if (isset($map->schools->coordinators->phone))
                                             <a href="{{ 'http://wa.me/62'.$map->schools->coordinators->phone }}" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-whatsapp"></i></a>
                                         @endif
-                                        {{ $map->schools->coordinators->name ?? '' }}
+                                        {{ $map->schools->coordinators->name ?? '-' }}
                                     </td>
                                 </tr>
 

@@ -19,6 +19,15 @@
     @can('dashboard/mahasiswa-read')
     @include('dashboard.student')
     @endcan
+    @can('dashboard/guru-read')
+    @include('dashboard.teacher')
+    @endcan
+    @can('dashboard/kepsek-read')
+    @include('dashboard.headmaster')
+    @endcan
+    @can('dashboard/korguru-read')
+    @include('dashboard.teachercoordinator')
+    @endcan
 </div>
 @endsection
 

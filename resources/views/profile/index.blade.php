@@ -51,7 +51,7 @@
                                     </tr>
                                     <tr>
                                         <td>Tanggal Lahir</td>
-                                        <td>{{ $user->birth_date->format('d-m-Y') ?? '-' }}</td>
+                                        <td>{{ $user->birth_date ? $user->birth_date->format('d-m-Y') : '-' }}</td>
                                     </tr>
                                     @endrole
                                     <tr>
