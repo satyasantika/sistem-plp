@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Map;
 use App\Models\User;
 use App\Models\School;
+use App\Models\Subject;
 use Illuminate\Http\Request;
 use App\DataTables\MapDataTable;
 
@@ -87,7 +88,8 @@ class MapController extends Controller
                                 ->get(),
             'lectures' => User::role('dosen')->select('id','name')->orderBy('name')->get(),
             'teachers' => User::role('guru')->select('id','name')->orderBy('name')->get(),
-            'schools' =>  School::select('id','name')->orderBy('name')->get(),
+            'schools' =>  School::select('id','name')->orderBy('id')->get(),
+            'subjects' =>  Subject::select('id','name')->orderBy('name')->get(),
         ];
     }
 

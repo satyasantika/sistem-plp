@@ -52,6 +52,11 @@ class MapDataTable extends DataTable
                     return $row->schools->name;
                 }
             })
+            ->addColumn('Mapel', function($row){
+                if (isset($row->subject_id)) {
+                    return $row->subjects->name;
+                }
+            })
             ->addColumn('year', function($row){
                 if (isset($row->year)) {
                     return $row->year;
@@ -103,6 +108,7 @@ class MapDataTable extends DataTable
             Column::make('DPL'),
             Column::make('GP'),
             Column::make('Sekolah'),
+            Column::make('Mapel'),
             // Column::make('plp1'),
             // Column::make('plp2'),
             Column::make('year')->title('Tahun'),

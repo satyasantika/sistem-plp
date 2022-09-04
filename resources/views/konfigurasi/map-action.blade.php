@@ -55,7 +55,18 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label for="subject_id" class="form-label">Tempat Praktik</label>
+                        <select id="subject_id" class="js-example-basic-single form-select @error('subject_id') is-invalid @enderror" name="subject_id">
+                            <option>-- Pilih Sekolah --</option>
+                            @foreach ($subjects as $subject)
+                                <option value="{{ $subject->id }}" {{ $subject->id == $map->subject_id ? 'selected' : '' }}>{{ Str::ucfirst($subject->name) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
                     <div class="mb-3">
                         <label for="year" class="form-label">Tahun</label>
                         <input type="text" value="{{ $map->year }}" name="year" class="form-control" id="year">
