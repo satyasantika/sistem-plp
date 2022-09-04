@@ -44,6 +44,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('usulan/school_teachers', App\Http\Controllers\School\TeacherProposalController::class)->except('show');
     Route::resource('mapping/mastermaps', App\Http\Controllers\Map\MasterMapController::class)->except('show');
     Route::resource('mapping/departementmaps', App\Http\Controllers\Map\DepartementMapController::class)->only(['index','edit','update']);
+    Route::resource('aktivitas/studentdiaries', App\Http\Controllers\School\StudentDiaryController::class)->except('show');
+    // Route::resource('aktivitas/studentobservations', App\Http\Controllers\School\StudentObservationController::class)->except('show');
+    // Route::resource('aktivitas/teacherassessments', App\Http\Controllers\School\TeacherAssessmentController::class)->except('show');
+    // Route::resource('aktivitas/lectureassessments', App\Http\Controllers\School\LectureAssessmentController::class)->except('show');
 });
 
 

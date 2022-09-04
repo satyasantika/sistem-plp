@@ -23,26 +23,6 @@ class DepartementMapController extends Controller
         return view('map.departementmap',compact('my_subject_maps'));
     }
 
-    // public function create()
-    // {
-    //     $map = new Map();
-    //     return view('map.departementmap-action', array_merge(
-    //         $this->_dataSelection(),
-    //         [
-    //             'map'=> $map,
-    //         ],
-    //         ));
-    // }
-
-    // public function store(Request $request)
-    // {
-    //     Map::create($request->all());
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Data telah ditambahkan'
-    //     ]);
-    // }
-
     public function edit(Map $departementmap)
     {
         return view('map.departementmap-action', array_merge(
@@ -64,16 +44,6 @@ class DepartementMapController extends Controller
             'message' => 'Data telah diperbarui',
         ]);
     }
-
-    // public function destroy(Map $map)
-    // {
-    //     $name = $map->candidate_name;
-    //     $map->delete();
-    //     return response()->json([
-    //         'status' => 'success',
-    //         'message' => 'Data telah dihapus'
-    //     ]);
-    // }
 
     private function _mySubjectId()
     {
