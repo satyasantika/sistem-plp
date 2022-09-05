@@ -24,19 +24,10 @@
                         </select>
                     </div>
                 </div>
-                {{-- <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="plp_order" class="form-label">PLP</label>
-                        <select id="plp_order" class="form-control @error('plp_order') is-invalid @enderror" name="plp_order">
-                            <option value="1" {{ $studentdiary->plp_order === 1 ? 'selected' : '' }} selected="selected">PLP 1</option>
-                            <option value="2" {{ $studentdiary->plp_order === 2 ? 'selected' : '' }}>PLP 2</option>
-                        </select>
-                    </div>
-                </div> --}}
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label for="log_date" class="form-label">Tanggal dicatatkan</label>
-                        <input type="date" value="{{ $studentdiary->log_date ? $studentdiary->log_date->format('Y-m-d') : '' }}" name="log_date" class="form-control" id="log_date">
+                        <input type="date" value="{{ $studentdiary->log_date ? $studentdiary->log_date->format('Y-m-d') : date('Y-m-d') }}" name="log_date" class="form-control" id="log_date">
                     </div>
                 </div>
                 <div class="col-md-12">

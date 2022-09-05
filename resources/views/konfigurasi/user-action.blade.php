@@ -70,7 +70,7 @@
                 <div class="col-md-3">
                     <div class="mb-3">
                         <label for="birth_date" class="form-label">Tanggal Lahir</label>
-                        <input type="date" value="{{ $user->birth_date ? $user->birth_date->format('Y-m-d') : '' }}" name="birth_date" class="form-control" id="birth_date">
+                        <input type="date" value="{{ $user->birth_date ? $user->birth_date->format('Y-m-d') : date('Y-m-d') }}" name="birth_date" class="form-control" id="birth_date">
                     </div>
                 </div>
                 <div class="col-md-3">

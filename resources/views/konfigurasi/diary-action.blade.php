@@ -47,7 +47,7 @@
                 <div class="col-md-3">
                     <div class="mb-3">
                         <label for="log_date" class="form-label">Tanggal</label>
-                        <input type="date" value="{{ $diary->log_date ? $diary->log_date->format('Y-m-d') : '' }}" name="log_date" class="form-control" id="log_date">
+                        <input type="date" value="{{ $diary->log_date ? $diary->log_date->format('Y-m-d') : date('Y-m-d') }}" name="log_date" class="form-control" id="log_date">
                     </div>
                 </div>
                 <div class="col-md-4">

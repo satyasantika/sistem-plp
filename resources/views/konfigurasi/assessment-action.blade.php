@@ -105,7 +105,7 @@
                 <div class="col-md-3">
                     <div class="mb-3">
                         <label for="exam_date" class="form-label">Tanggal Ujian (khusus n7)</label>
-                        <input type="date" value="{{ $assessment->exam_date ? $assessment->exam_date->format('Y-m-d') : '' }}" name="exam_date" class="form-control" id="exam_date">
+                        <input type="date" value="{{ $assessment->exam_date ? $assessment->exam_date->format('Y-m-d') : date('Y-m-d') }}" name="exam_date" class="form-control" id="exam_date">
                     </div>
                 </div>
             </div>
