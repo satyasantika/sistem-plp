@@ -31,9 +31,9 @@
                                         <tr>
                                             <td class=" text-center">
                                                 @can('aktivitas/studentdiaries-update')
-                                                <button type="button" data-id="{{ $diary->id }}" data-jenis="edit" class="btn btn-primary btn-sm mb-2 action"><i class="ti-pencil"></i></button>
+                                                <button type="button" data-id={{ $diary->id }} data-jenis="edit" class="btn btn-primary btn-sm mb-2 action"><i class="ti-pencil"></i></button>
                                                 <br>
-                                                <button type="button" data-id="{{ $diary->id }}" data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>
+                                                <button type="button" data-id={{ $diary->id }} data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>
                                                 @endcan
                                             </td>
 
@@ -72,8 +72,9 @@
     <script src="{{ asset('') }}vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('') }}vendor/izitoast/dist/js/iziToast.min.js"></script>
     <script src="{{ asset('') }}assets/js/crud2-datatables.js"></script>
+    @can('aktivitas/studentdiaries/plp1-read')
     <script>
-        crudDataTables('studentdiaries','studentdiary-table')
+        crudDataTables('plp1','studentdiary-table')
     </script>
-
+    @endcan
 @endpush

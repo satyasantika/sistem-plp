@@ -1,5 +1,5 @@
 <div class="modal-content">
-    <form id="formAction" action="{{ $studentdiary->id ? route('studentdiaries.update',$studentdiary->id) : route('studentdiaries.store') }}" method="post">
+    <form id="formAction" action="{{ $studentdiary->id ? route('studentdiaries.update',['studentdiary'=>$studentdiary->id,'plp'=>$plp]) : route('studentdiaries.store',['plp' => $plp]) }}" method="post">
         @csrf
         @if ($studentdiary->id)
             @method('PUT')
@@ -12,6 +12,7 @@
         <div class="modal-body">
             <div class="row">
                 <input type="hidden" value="{{ $myMapId }}" name="map_id" class="form-control" id="map_id" >
+                <input type="hidden" value="{{ $plp }}" name="plp_order" class="form-control" id="plp_order" >
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label for="day_order" class="form-label">Hari ke-</label>
@@ -23,7 +24,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-4">
+                {{-- <div class="col-md-4">
                     <div class="mb-3">
                         <label for="plp_order" class="form-label">PLP</label>
                         <select id="plp_order" class="form-control @error('plp_order') is-invalid @enderror" name="plp_order">
@@ -31,7 +32,7 @@
                             <option value="2" {{ $studentdiary->plp_order === 2 ? 'selected' : '' }}>PLP 2</option>
                         </select>
                     </div>
-                </div>
+                </div> --}}
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label for="log_date" class="form-label">Tanggal dicatatkan</label>

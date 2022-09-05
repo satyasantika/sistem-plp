@@ -44,10 +44,19 @@ Route::middleware('auth')->group(function () {
     Route::resource('usulan/school_teachers', App\Http\Controllers\School\TeacherProposalController::class)->except('show');
     Route::resource('mapping/mastermaps', App\Http\Controllers\Map\MasterMapController::class)->except('show');
     Route::resource('mapping/departementmaps', App\Http\Controllers\Map\DepartementMapController::class)->only(['index','edit','update']);
-    Route::resource('aktivitas/studentdiaries', App\Http\Controllers\School\StudentDiaryController::class)->except('show');
-    // Route::resource('aktivitas/studentobservations', App\Http\Controllers\School\StudentObservationController::class)->except('show');
+    // Route::resource('aktivitas/studentdiaries', App\Http\Controllers\School\StudentDiaryController::class)->except('show');
+    // Route::resource('aktivitas/{forms}studentobservations', App\Http\Controllers\School\StudentObservationController::class)->except('show');
     // Route::resource('aktivitas/teacherassessments', App\Http\Controllers\School\TeacherAssessmentController::class)->except('show');
     // Route::resource('aktivitas/lectureassessments', App\Http\Controllers\School\LectureAssessmentController::class)->except('show');
+
+    Route::controller(App\Http\Controllers\School\StudentDiaryController::class)->group(function () {
+        Route::get('aktivitas/studentdiaries/plp{plp}','index')->name('studentdiaries.index');
+        Route::get('aktivitas/studentdiaries/plp{plp}/create','create')->name('studentdiaries.create');
+        Route::post('aktivitas/studentdiaries/plp{plp}','store')->name('studentdiaries.store');
+        Route::get('aktivitas/studentdiaries/plp{plp}/{studentdiary}/edit','edit')->name('studentdiaries.edit');
+        Route::put('aktivitas/studentdiaries/plp{plp}/{studentdiary}','update')->name('studentdiaries.update');
+        Route::delete('aktivitas/studentdiaries/plp{plp}/{studentdiary}','destroy')->name('studentdiaries.destroy');
+    });
 });
 
 

@@ -17,60 +17,67 @@ class StudentDiaryController extends Controller
         $this->middleware('permission:aktivitas/studentdiaries-delete', ['only' => ['destroy']]);
     }
 
-    public function index()
+    public function index($plp)
     {
         $id = auth()->user()->id;
         $myMapId = Map::firstWhere('student_id',$id)->id;
-        $diaries = Diary::where('map_id',$myMapId)->where('plp_order',1)->orderBy('day_order')->get();
+        $diaries = Diary::where('map_id',$myMapId)->where('plp_order',$plp)->orderBy('day_order')->get();
 
         return view('aktivitas.logbook',compact('diaries'));
     }
 
-    public function create()
+    public function create($plp)
     {
         $studentdiary = new Diary();
         return view('aktivitas.logbook-action', array_merge(
-            ['studentdiary'=> $studentdiary],
+            [
+                'studentdiary'=> $studentdiary,
+                'plp'=> $plp,
+            ],
             $this->_dataSelection()
             ));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $plp)
     {
         Diary::create($request->all());
         return response()->json([
             'success' => true,
-            'message' => 'Diary <strong>'.$request->id.'</strong> telah ditambahkan'
+            'message' => 'Catatan hari ke-<strong>'.$request->day_order.'</strong> telah ditambahkan'
         ]);
     }
 
-    public function edit(Diary $studentdiary)
+    public function edit($plp, Diary $studentdiary)
     {
+        // $diary = Diary::find($studentdiary)
         return view('aktivitas.logbook-action', array_merge(
-            ['studentdiary'=>$studentdiary],
+            [
+                'studentdiary'=> $studentdiary,
+                'plp'=> $plp,
+            ],
             $this->_dataSelection()
             ));
     }
 
-    public function update(Request $request, Diary $studentdiary)
+    public function update($plp, Request $request, Diary $studentdiary)
     {
         $data = $request->all();
         $studentdiary->fill($data)->save();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Diary <strong>'.$request->id.'</strong> telah diperbarui'
+            'message' => 'Catatan hari ke-<strong>'.$request->day_order.'</strong> telah diperbarui'
         ]);
     }
 
-    public function destroy(Diary $studentdiary)
+    public function destroy($plp, Diary $studentdiary)
     {
-        $name = $studentdiary->id;
+        $name = $studentdiary->day_order;
 
         $studentdiary->delete();
         return response()->json([
             'status' => 'success',
-            'message' => 'Diary <strong>'.$name.'</strong> telah dihapus'
+            'message' => 'Catatan hari ke-<strong>'.$name.'</strong> telah dihapus'
         ]);
     }
 
