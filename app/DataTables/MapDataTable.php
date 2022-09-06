@@ -104,11 +104,11 @@ class MapDataTable extends DataTable
                     ->printable(false)
                     ->width(60)
                     ->addClass('text-center'),
+            Column::computed('Sekolah')->orderable(true)->searchable(true),
+            Column::computed('Mapel')->orderable(true)->searchable(true),
             Column::computed('Mahasiswa')->orderable(true)->searchable(true),
             Column::computed('DPL')->orderable(true)->searchable(true),
             Column::computed('GP')->orderable(true)->searchable(true),
-            Column::computed('Sekolah')->orderable(true)->searchable(true),
-            Column::computed('Mapel')->orderable(true)->searchable(true),
             // Column::make('plp1'),
             // Column::make('plp2'),
             Column::make('year')->title('Tahun'),

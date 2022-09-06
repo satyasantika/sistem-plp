@@ -42,8 +42,10 @@
                                         <td>{{ $user->email ?? '-' }}</td>
                                     </tr>
                                     <tr>
-                                        @role('guru')<td>Bidang Studi</td>@endrole
-                                        @hasanyrole('mahasiswa|dosen')<td>Jurusan</td>@endhasanyrole
+                                        <td>
+                                            @role('guru')Bidang Studi @endrole
+                                            @hasanyrole('mahasiswa|dosen')Jurusan @endhasanyrole
+                                        </td>
                                         <td>{{ $user->subjects->name ?? '-' }}</td>
                                     </tr>
                                     @role('mahasiswa')

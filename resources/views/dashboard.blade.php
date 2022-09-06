@@ -10,6 +10,9 @@
     <div class="title">
         Dashboard
     </div>
+    @can('dashboard/ketua-read')
+    @include('dashboard.chairman')
+    @endcan
     @can('dashboard/kajur-read')
     @include('dashboard.departement')
     @endcan
