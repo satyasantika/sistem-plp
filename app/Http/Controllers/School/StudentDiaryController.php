@@ -49,7 +49,6 @@ class StudentDiaryController extends Controller
 
     public function edit($plp, Diary $studentdiary)
     {
-        // $diary = Diary::find($studentdiary)
         return view('aktivitas.logbook-action', array_merge(
             [
                 'studentdiary'=> $studentdiary,

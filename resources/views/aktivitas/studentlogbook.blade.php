@@ -8,42 +8,41 @@
 @section('content')
 <div class="main-content">
     <div class="title">
-        Catatan Harian PLP
+        Catatan Harian Kegiatan PLP
     </div>
     <div class="content-wrapper">
         <div class="row same-height">
             <div class="col-md-12">
                 <div class="card">
+                    <div class="card-header">
+                        <a href="{{ route('diaryverifications.index',$plp_order) }}" class="btn btn-sm btn-outline-danger float-end">< kembali ke daftar mahasiswa</a>
+                    </div>
                     <div class="card-body">
-                        <button type="button" class="btn btn-primary btn-sm mb-3 btn-add">+ Logbook</button>
                         <div class="table-responsive">
                             <div id="role-table_wrapper" class="dataTables_wrapper no-footer">
                                 <table class="display dataTable no-footer" id="studentdiary-table" role="grid">
                                     <thead>
                                         <tr role="row">
-                                            <th></th>
-                                            <th>Waktu</th>
                                             <th>Catatan</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @forelse($diaries as $diary)
                                         <tr>
-                                            <td class=" text-center">
-                                                @can('aktivitas/studentdiaries-update')
-                                                <button type="button" data-id={{ $diary->id }} data-jenis="edit" class="btn btn-primary btn-sm mb-2 action"><i class="ti-pencil"></i></button>
-                                                <br>
-                                                <button type="button" data-id={{ $diary->id }} data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>
-                                                @endcan
-                                            </td>
-
                                             <td>
-                                                hari ke-{{ $diary->day_order ?? '' }} <br>
-                                                <span class="badge bg-primary">{{ $diary->log_date ? $diary->log_date->format('d-m-Y') : '' }}</span>
-                                                <br>
-                                                <span class="badge bg-{{ $diary->verified == 1 ? 'success' : 'danger' }}">{{ $diary->verified == 1 ? 'SUDAH' : 'BELUM' }} diverifikasi</span>
+                                                hari ke-{{ $diary->day_order ?? '' }} <span class="badge bg-secondary">{{ $diary->log_date ? $diary->log_date->format('d-m-Y') : '' }}</span>
+                                                <br>{{ $diary->note ?? '' }}
                                             </td>
-                                            <td>{{ $diary->note ?? '' }}</td>
+                                            <td>
+                                                @if ($diary->verified == 1)
+                                                    <span class="badge bg-success">sudah diverifikasi</span>
+                                                    <span class="badge bg-light text-dark">{{ $diary->updated_at->format('Y-m-d') }}</span>
+                                                @else
+                                                    <span class="badge bg-light text-dark">belum diverifikasi</span>
+                                                    <button type="button" data-id={{ $diary->id }} data-jenis="edit" class="btn btn-primary btn-sm mt-1 action">Verifikasi</button>
+                                                @endif
+                                            </td>
                                         </tr>
                                         @empty
                                         <div class="alert alert-info">Belum ada catatan</div>
@@ -71,8 +70,8 @@
     <script src="{{ asset('') }}vendor/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
     <script src="{{ asset('') }}vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('') }}vendor/izitoast/dist/js/iziToast.min.js"></script>
-    <script src="{{ asset('') }}assets/js/crud2-datatables.js"></script>
+    <script src="{{ asset('') }}assets/js/verifikasi-datatables.js"></script>
     <script>
-        crudDataTables('studentdiary-table')
+        updateOnly('studentdiary-table')
     </script>
 @endpush

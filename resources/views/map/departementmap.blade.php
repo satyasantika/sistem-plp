@@ -67,7 +67,7 @@
     <script src="{{ asset('') }}vendor/izitoast/dist/js/iziToast.min.js"></script>
     <script src="{{ asset('') }}assets/js/crud2-datatables.js"></script>
     <script>
-        crudDataTables('departementmaps','departementmap-table')
+        crudDataTables('departementmap-table')
     </script>
 
 @endpush

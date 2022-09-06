@@ -1,10 +1,10 @@
-var crudDataTables = (url,table) => {
+var crudDataTables = (table) => {
     const modal = new bootstrap.Modal($('#modalAction'))
     // let {url,table}
     $('.btn-add').on('click', function() {
         $.ajax({
             method: 'GET',
-            url: `${url}/create`,
+            url: document.URL+`/create`,
             success : function(response) {
                 $('#modalAction').find('.modal-dialog').html(response)
                 modal.show()
@@ -71,7 +71,7 @@ var crudDataTables = (url,table) => {
                 if (result.isConfirmed) {
                     $.ajax({
                         method: 'DELETE',
-                        url: `${url}/${id}`,
+                        url: document.URL+`/${id}`,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -91,7 +91,7 @@ var crudDataTables = (url,table) => {
 
         $.ajax({
             method: 'GET',
-            url: `${url}/${id}/edit`,
+            url: document.URL+`/${id}/edit`,
             success : function(response) {
                 $('#modalAction').find('.modal-dialog').html(response)
                 modal.show()

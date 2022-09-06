@@ -87,8 +87,8 @@ class UserDataTable extends DataTable
             Column::make('name'),
             Column::make('username'),
             Column::make('email'),
-            Column::computed('role')->orderable(true),
-            Column::computed('mapel')->orderable(true),
+            Column::make('role')->orderable(true),
+            Column::make('mapel')->orderable(true),
             Column::make('updated_at'),
         ];
     }

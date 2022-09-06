@@ -57,6 +57,13 @@ Route::middleware('auth')->group(function () {
         Route::put('aktivitas/studentdiaries/plp{plp}/{studentdiary}','update')->name('studentdiaries.update');
         Route::delete('aktivitas/studentdiaries/plp{plp}/{studentdiary}','destroy')->name('studentdiaries.destroy');
     });
+
+    Route::controller(App\Http\Controllers\School\DiaryVerificationController::class)->group(function () {
+        Route::get('aktivitas/diaryverifications/plp{plp_order}','index')->name('diaryverifications.index');
+        Route::get('aktivitas/diaryverifications/plp{plp_order}/{map_id}','show')->name('diaryverifications.show');
+        Route::get('aktivitas/diaryverifications/plp{plp_order}/{map_id}/{diaryverification}/edit','edit')->name('diaryverifications.edit');
+        Route::put('aktivitas/diaryverifications/plp{plp_order}/{map_id}/{diaryverification}','update')->name('diaryverifications.update');
+    });
 });
 
 

@@ -296,7 +296,7 @@ const Main = function () {
             themeHandler()
             // resizeHandler()
             navbarHandler()
-            shake()
+            // shake()
         }
     }
 }()

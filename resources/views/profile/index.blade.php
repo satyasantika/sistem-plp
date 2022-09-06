@@ -30,9 +30,11 @@
                                         <td>{{ $user->name ?? '-' }}</td>
                                     </tr>
                                     <tr>
-                                        @role('mahasiswa')<td>NPM</td>@endrole
-                                        @role('guru')<td>NIP</td>@endrole
-                                        @role('dosen')<td>NIDN</td>@endrole
+                                        <td>
+                                            @role('mahasiswa')NPM @endrole
+                                            @role('guru')NIP @endrole
+                                            @role('dosen')NIDN @endrole
+                                        </td>
                                         <td>{{ $user->username ?? '-' }}</td>
                                     </tr>
                                     <tr>
@@ -117,7 +119,7 @@
     {{-- {{ $dataTable->scripts() }} --}}
     <script src="{{ asset('') }}assets/js/crud2-datatables.js"></script>
     <script>
-        crudDataTables('profiles','profile-table')
+        crudDataTables('profile-table')
     </script>
 
 @endpush
