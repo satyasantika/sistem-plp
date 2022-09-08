@@ -44,10 +44,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('usulan/school_teachers', App\Http\Controllers\School\TeacherProposalController::class)->except('show');
     Route::resource('mapping/mastermaps', App\Http\Controllers\Map\MasterMapController::class)->except('show');
     Route::resource('mapping/departementmaps', App\Http\Controllers\Map\DepartementMapController::class)->only(['index','edit','update']);
-    // Route::resource('aktivitas/studentdiaries', App\Http\Controllers\School\StudentDiaryController::class)->except('show');
-    // Route::resource('aktivitas/{forms}studentobservations', App\Http\Controllers\School\StudentObservationController::class)->except('show');
-    // Route::resource('aktivitas/teacherassessments', App\Http\Controllers\School\TeacherAssessmentController::class)->except('show');
-    // Route::resource('aktivitas/lectureassessments', App\Http\Controllers\School\LectureAssessmentController::class)->except('show');
 
     Route::controller(App\Http\Controllers\School\StudentDiaryController::class)->group(function () {
         Route::get('aktivitas/studentdiaries/plp{plp}','index')->name('studentdiaries.index');
@@ -61,8 +57,14 @@ Route::middleware('auth')->group(function () {
     Route::controller(App\Http\Controllers\School\DiaryVerificationController::class)->group(function () {
         Route::get('aktivitas/diaryverifications/plp{plp_order}','index')->name('diaryverifications.index');
         Route::get('aktivitas/diaryverifications/plp{plp_order}/{map_id}','show')->name('diaryverifications.show');
-        Route::get('aktivitas/diaryverifications/plp{plp_order}/{map_id}/{diaryverification}/edit','edit')->name('diaryverifications.edit');
         Route::put('aktivitas/diaryverifications/plp{plp_order}/{map_id}/{diaryverification}','update')->name('diaryverifications.update');
+    });
+    Route::controller(App\Http\Controllers\School\StudentObservationController::class)->group(function () {
+        Route::get('aktivitas/studentobservations','index')->name('studentobservations.index');
+        Route::get('aktivitas/studentobservations/{form_id}/create','create')->name('studentobservations.create');
+        Route::post('aktivitas/studentobservations/{form_id}','store')->name('studentobservations.store');
+        Route::get('aktivitas/studentobservations/{form_id}/{studentobservation}/edit','edit')->name('studentobservations.edit');
+        Route::put('aktivitas/studentobservations/{form_id}/{studentobservation}','update')->name('studentobservations.update');
     });
 });
 

@@ -8,45 +8,40 @@
 @section('content')
 <div class="main-content">
     <div class="title">
-        Catatan Harian Kegiatan PLP
+        Observasi Kegiatan PLP
     </div>
     <div class="content-wrapper">
         <div class="row same-height">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">
-                        <a href="{{ route('diaryverifications.index',$plp_order) }}" class="btn btn-sm btn-outline-danger float-end">< kembali ke daftar mahasiswa</a>
-                    </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <div id="role-table_wrapper" class="dataTables_wrapper no-footer">
-                                <table class="display dataTable no-footer" id="studentlogbook-table" role="grid">
+                                <table class="display dataTable no-footer" id="form-table" role="grid">
                                     <thead>
                                         <tr role="row">
-                                            <th>Catatan</th>
-                                            <th></th>
+                                            <th>Formulir</th>
+                                            <th>Keterangan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse($diaries as $diary)
+                                        @foreach($forms as $form)
                                         <tr>
                                             <td>
-                                                hari ke-{{ $diary->day_order ?? '' }} <span class="badge bg-secondary">{{ $diary->log_date ? $diary->log_date->format('d-m-Y') : '' }}</span>
-                                                <br>{{ $diary->note ?? '' }}
-                                            </td>
-                                            <td>
-                                                @if ($diary->verified == 1)
-                                                    <span class="badge bg-success">sudah diverifikasi</span>
-                                                    <span class="badge bg-light text-dark">{{ $diary->updated_at->format('Y-m-d') }}</span>
+                                                @php
+                                                    $myObservation = App\Models\Observation::where('form_id',$form->id)->where('map_id',$map_id);
+                                                @endphp
+                                                @if ($myObservation->exists())
+                                                <button type="button" data-formid={{ $form->id }} data-id={{ $myObservation->first()->id }} data-jenis="edit" class="btn btn-success btn-sm mb-2 action">Lihat Hasil</button>
                                                 @else
-                                                    <span class="badge bg-light text-dark">belum diverifikasi</span>
-                                                    <button type="button" data-id={{ $diary->id }} data-jenis="edit" class="btn btn-primary btn-sm mt-1 action">Verifikasi</button>
+                                                <button type="button" data-formid={{ $form->id }} data-jenis="add" class="btn btn-primary btn-sm mb-3 action">Isi Form</button>
                                                 @endif
                                             </td>
+                                            <td>
+                                                {{ $form->name }}
+                                            </td>
                                         </tr>
-                                        @empty
-                                        <div class="alert alert-info">Belum ada catatan</div>
-                                        @endforelse
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -70,8 +65,8 @@
     <script src="{{ asset('') }}vendor/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
     <script src="{{ asset('') }}vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('') }}vendor/izitoast/dist/js/iziToast.min.js"></script>
-    <script src="{{ asset('') }}assets/js/verifikasi-datatables.js"></script>
+    <script src="{{ asset('') }}assets/js/observation-datatables.js"></script>
     <script>
-        updateOnly('studentlogbook-table')
+        crudDataTables('form-table')
     </script>
 @endpush

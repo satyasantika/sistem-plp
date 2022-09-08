@@ -52,7 +52,7 @@ class DepartementMapController extends Controller
 
     private function _mySubjectMap()
     {
-        return Map::where('subject_id',$this->_mySubjectId())->get();
+        return Map::where('subject_id',$this->_mySubjectId())->orderBy('school_id')->get();
 
     }
     private function _dataSelection()
