@@ -66,6 +66,13 @@ Route::middleware('auth')->group(function () {
         Route::get('aktivitas/studentobservations/{form_id}/{studentobservation}/edit','edit')->name('studentobservations.edit');
         Route::put('aktivitas/studentobservations/{form_id}/{studentobservation}','update')->name('studentobservations.update');
     });
+    Route::controller(App\Http\Controllers\School\AssessmentController::class)->group(function () {
+        Route::get('aktivitas/schoolassessments/plp{plp_order}/{form_id}','index')->name('schoolassessments.index');
+        Route::get('aktivitas/schoolassessments/plp{plp_order}/{form_id}/create','create')->name('schoolassessments.create');
+        Route::post('aktivitas/schoolassessments/plp{plp_order}/{form_id}','store')->name('schoolassessments.store');
+        Route::get('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{assessment}/edit','edit')->name('schoolassessments.edit');
+        Route::put('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{assessment}','update')->name('schoolassessments.update');
+    });
 });
 
 

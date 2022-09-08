@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Navigation;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -43,11 +44,43 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'dashboard/kordosen-read'])->assignRole('kordosen');
 
         $action = ['read', 'create', 'update', 'delete'];
-        $admin_access = [
+
+        $alone_access = [
+            'aktivitas/studentdiaries/plp1-read',
+            'aktivitas/studentdiaries/plp2-read',
+            'aktivitas/diaryverifications/plp1-read',
+            'aktivitas/diaryverifications/plp2-read',
+            'aktivitas/schoolassessments/plp1/2022N2-read',
+            'aktivitas/schoolassessments/plp1/2022N1-read',
+            'aktivitas/schoolassessments/plp2/2022N2-read',
+            'aktivitas/schoolassessments/plp2/2022N3-read',
+            'aktivitas/schoolassessments/plp2/2022N4-read',
+            'aktivitas/schoolassessments/plp2/2022N5-read',
+            'aktivitas/schoolassessments/plp2/2022N6-read',
+            'aktivitas/schoolassessments/plp2/2022N7-read',
+        ];
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission])->assignRole('admin');
+        }
+
+        // permission all complete
+        $alone_access = [
             'roles',
             'users',
             'permissions',
-            'konfigurasi',
+        ];
+        $permissions = [];
+        foreach ($alone_access as $value1) {
+            foreach ($action as $value2) {
+                array_push($permissions,$value1.'-'.$value2);
+            }
+        }
+
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission])->assignRole('admin');
+        }
+
+        $admin_access = [
             'konfigurasi/roles',
             'konfigurasi/permissions',
             'konfigurasi/users',
@@ -64,6 +97,8 @@ class PermissionSeeder extends Seeder
             'konfigurasi/observations',
             'konfigurasi/diaries',
         ];
+
+        // Role Admin
         $permissions = [];
         foreach ($admin_access as $value1) {
             foreach ($action as $value2) {
@@ -75,8 +110,26 @@ class PermissionSeeder extends Seeder
             Permission::create(['name' => $permission])->assignRole('admin');
         }
 
+        $konfigurasi = Navigation::create([
+            'name' => 'Konfigurasi',
+            'url' => 'konfigurasi',
+            'icon' => 'ti-settings',
+            'parent_id' => null,
+            'order' => Navigation::count() + 1,
+        ]);
+
+        foreach ($admin_access as $child) {
+            $part = explode('/',$child);
+            $konfigurasi->children()->create([
+                'name' => $part[1],
+                'url' => $child,
+                'icon' => 'ti-settings',
+                'order' => Navigation::count() + 1,
+            ]);
+        }
+
+        // Role Kepsek
         $kepsek_access = [
-            'usulan',
             'usulan/school_coordinators',
             'usulan/school_teachers',
         ];
@@ -91,11 +144,59 @@ class PermissionSeeder extends Seeder
             Permission::create(['name' => $permission])->assignRole('kepsek');
         }
 
+        $usulan = Navigation::create([
+            'name' => 'Usulan',
+            'url' => 'usulan',
+            'icon' => '',
+            'parent_id' => null,
+            'order' => Navigation::count() + 1,
+        ]);
+
+        foreach ($kepsek_access as $child) {
+            $part = explode('/',$child);
+            $usulan->children()->create([
+                'name' => $part[1],
+                'url' => $child,
+                'icon' => '',
+                'order' => Navigation::count() + 1,
+            ]);
+        }
+
+        // Role Kajur
         $kajur_access = [
-            'mapping',
             'mapping/mysubjects',
             'mapping/departementmaps',
-            'yudisium',
+        ];
+        $permissions = [];
+        foreach ($kajur_access as $value1) {
+            foreach ($action as $value2) {
+                array_push($permissions,$value1.'-'.$value2);
+            }
+        }
+
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission])->assignRole('kajur');
+        }
+
+        $mapping = Navigation::create([
+            'name' => 'Mapping',
+            'url' => 'mapping',
+            'icon' => '',
+            'parent_id' => null,
+            'order' => Navigation::count() + 1,
+        ]);
+
+        foreach ($kajur_access as $child) {
+            $part = explode('/',$child);
+            $mapping->children()->create([
+                'name' => $part[1],
+                'url' => $child,
+                'icon' => '',
+                'order' => Navigation::count() + 1,
+            ]);
+        }
+
+        $kajur_access = [
             'yudisium/first',
             'yudisium/second',
         ];
@@ -110,11 +211,27 @@ class PermissionSeeder extends Seeder
             Permission::create(['name' => $permission])->assignRole('kajur');
         }
 
+        $yudisium = Navigation::create([
+            'name' => 'Yudisium',
+            'url' => 'yudisium',
+            'icon' => '',
+            'parent_id' => null,
+            'order' => Navigation::count() + 1,
+        ]);
+
+        foreach ($kajur_access as $child) {
+            $part = explode('/',$child);
+            $yudisium->children()->create([
+                'name' => $part[1],
+                'url' => $child,
+                'icon' => '',
+                'order' => Navigation::count() + 1,
+            ]);
+        }
+
+        // Role Dosen, Guru
         $nilai_access = [
-            'nilai',
-            'nilai/resumes',
-            'aktivitas',
-            'aktivitas/assessments',
+            'aktivitas/schoolassessments',
         ];
         $permissions = [];
         foreach ($nilai_access as $value1) {
@@ -127,8 +244,27 @@ class PermissionSeeder extends Seeder
             Permission::create(['name' => $permission])->syncRoles(['dosen','guru']);
         }
 
+        $aktivitas = Navigation::create([
+            'name' => 'Aktivitas',
+            'url' => 'aktivitas',
+            'icon' => '',
+            'parent_id' => null,
+            'order' => Navigation::count() + 1,
+        ]);
+
+        foreach ($nilai_access as $child) {
+            $part = explode('/',$child);
+            $aktivitas->children()->create([
+                'name' => $part[1],
+                'url' => $child,
+                'icon' => '',
+                'order' => Navigation::count() + 1,
+            ]);
+        }
+
         $dosen_access = [
             'aktivitas/lecturemonitors',
+            'aktivitas/diaryverifications',
         ];
         $permissions = [];
         foreach ($dosen_access as $value1) {
@@ -139,6 +275,16 @@ class PermissionSeeder extends Seeder
 
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission])->assignRole('dosen');
+        }
+
+        foreach ($dosen_access as $child) {
+            $part = explode('/',$child);
+            $aktivitas->children()->create([
+                'name' => $part[1],
+                'url' => $child,
+                'icon' => '',
+                'order' => Navigation::count() + 1,
+            ]);
         }
 
         $mahasiswa_access = [
@@ -156,11 +302,21 @@ class PermissionSeeder extends Seeder
             Permission::create(['name' => $permission])->assignRole('mahasiswa');
         }
 
-        $mahasiswa_access = [
+        foreach ($mahasiswa_access as $child) {
+            $part = explode('/',$child);
+            $aktivitas->children()->create([
+                'name' => $part[1],
+                'url' => $child,
+                'icon' => '',
+                'order' => Navigation::count() + 1,
+            ]);
+        }
+
+        $sekolah_access = [
             'mapping/teachermaps',
         ];
         $permissions = [];
-        foreach ($mahasiswa_access as $value1) {
+        foreach ($sekolah_access as $value1) {
             foreach ($action as $value2) {
                 array_push($permissions,$value1.'-'.$value2);
             }
@@ -168,6 +324,16 @@ class PermissionSeeder extends Seeder
 
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission])->syncRoles(['kepsek','korguru']);
+        }
+
+        foreach ($sekolah_access as $child) {
+            $part = explode('/',$child);
+            $aktivitas->children()->create([
+                'name' => $part[1],
+                'url' => $child,
+                'icon' => '',
+                'order' => Navigation::count() + 1,
+            ]);
         }
 
     }

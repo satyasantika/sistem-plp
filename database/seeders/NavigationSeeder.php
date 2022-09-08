@@ -41,10 +41,11 @@ class NavigationSeeder extends Seeder
             'mapping/teachermaps',
         ];
 
-        $kegiatan_data = [
-            'kegiatan/studentdiaries',
-            // 'kegiatan/teacherassessment',
-            // 'kegiatan/lectureassessment',
+        $aktivitas_data = [
+            'aktivitas/studentdiaries',
+            'aktivitas/diaryverifications',
+            'aktivitas/studentobservations',
+            'aktivitas/schoolassessments',
         ];
 
         $konfigurasi = Navigation::create([
@@ -100,17 +101,17 @@ class NavigationSeeder extends Seeder
                 'order' => Navigation::count() + 1,
             ]);
         }
-        $kegiatan = Navigation::create([
-            'name' => 'Kegiatan',
-            'url' => 'kegiatan',
+        $aktivitas = Navigation::create([
+            'name' => 'Aktivitas',
+            'url' => 'aktivitas',
             'icon' => '',
             'parent_id' => null,
             'order' => Navigation::count() + 1,
         ]);
 
-        foreach ($kegiatan_data as $child) {
+        foreach ($aktivitas_data as $child) {
             $part = explode('/',$child);
-            $kegiatan->children()->create([
+            $aktivitas->children()->create([
                 'name' => $part[1],
                 'url' => $child,
                 'icon' => '',
