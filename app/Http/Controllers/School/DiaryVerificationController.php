@@ -11,8 +11,8 @@ class DiaryVerificationController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:aktivitas/diaryverifications-read', ['only' => ['index','show']]);
-        $this->middleware('permission:aktivitas/diaryverifications-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:aktivitas/diaryverifications/plp1-read|aktivitas/diaryverifications/plp2-read', ['only' => ['index','show']]);
+        $this->middleware('permission:aktivitas/diaryverifications/plp1-update|aktivitas/diaryverifications/plp2-update', ['only' => ['edit','update']]);
     }
 
     public function index($plp_order)

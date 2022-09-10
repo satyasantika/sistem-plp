@@ -45,24 +45,6 @@ class PermissionSeeder extends Seeder
 
         $action = ['read', 'create', 'update', 'delete'];
 
-        $alone_access = [
-            'aktivitas/studentdiaries/plp1-read',
-            'aktivitas/studentdiaries/plp2-read',
-            'aktivitas/diaryverifications/plp1-read',
-            'aktivitas/diaryverifications/plp2-read',
-            'aktivitas/schoolassessments/plp1/2022N2-read',
-            'aktivitas/schoolassessments/plp1/2022N1-read',
-            'aktivitas/schoolassessments/plp2/2022N2-read',
-            'aktivitas/schoolassessments/plp2/2022N3-read',
-            'aktivitas/schoolassessments/plp2/2022N4-read',
-            'aktivitas/schoolassessments/plp2/2022N5-read',
-            'aktivitas/schoolassessments/plp2/2022N6-read',
-            'aktivitas/schoolassessments/plp2/2022N7-read',
-        ];
-        foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission])->assignRole('admin');
-        }
-
         // permission all complete
         $alone_access = [
             'roles',
@@ -232,6 +214,8 @@ class PermissionSeeder extends Seeder
         // Role Dosen, Guru
         $nilai_access = [
             'aktivitas/schoolassessments',
+            'aktivitas/schoolassessments/plp2/2022N6',
+            'aktivitas/schoolassessments/plp2/2022N7',
         ];
         $permissions = [];
         foreach ($nilai_access as $value1) {
@@ -239,7 +223,6 @@ class PermissionSeeder extends Seeder
                 array_push($permissions,$value1.'-'.$value2);
             }
         }
-
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission])->syncRoles(['dosen','guru']);
         }
@@ -262,9 +245,49 @@ class PermissionSeeder extends Seeder
             ]);
         }
 
+        // Role Guru
+        $nilai_access = [
+            'aktivitas/schoolassessments/plp2/2022N1',
+            'aktivitas/schoolassessments/plp2/2022N3',
+            'aktivitas/schoolassessments/plp2/2022N4',
+            'aktivitas/schoolassessments/plp2/2022N5',
+        ];
+        $permissions = [];
+        foreach ($nilai_access as $value1) {
+            foreach ($action as $value2) {
+                array_push($permissions,$value1.'-'.$value2);
+            }
+        }
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission])->assignRole('guru');
+        }
+
+        $aktivitas = Navigation::create([
+            'name' => 'Aktivitas',
+            'url' => 'aktivitas',
+            'icon' => '',
+            'parent_id' => null,
+            'order' => Navigation::count() + 1,
+        ]);
+
+        foreach ($nilai_access as $child) {
+            $part = explode('/',$child);
+            $aktivitas->children()->create([
+                'name' => $part[1],
+                'url' => $child,
+                'icon' => '',
+                'order' => Navigation::count() + 1,
+            ]);
+        }
+
+        // Role Dosen
         $dosen_access = [
             'aktivitas/lecturemonitors',
-            'aktivitas/diaryverifications',
+            'aktivitas/diaryverifications/plp1',
+            'aktivitas/diaryverifications/plp2',
+            'aktivitas/schoolassessments/plp1/2022N2',
+            'aktivitas/schoolassessments/plp2/2022N2',
+            'aktivitas/schoolassessments/plp1/2022N8',
         ];
         $permissions = [];
         foreach ($dosen_access as $value1) {
@@ -289,7 +312,9 @@ class PermissionSeeder extends Seeder
 
         $mahasiswa_access = [
             'aktivitas/studentobservations',
-            'aktivitas/studentdiaries',
+            'aktivitas/studentdiaries/plp1',
+            'aktivitas/studentdiaries/plp2',
+            'aktivitas/teachingrespons',
         ];
         $permissions = [];
         foreach ($mahasiswa_access as $value1) {

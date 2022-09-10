@@ -36,15 +36,15 @@ class AssessmentController extends Controller
     {
 
         $data = $request->merge([
-            'grade' => $request->score01
-                        + $request->score02
-                        + $request->score03
-                        + $request->score04
-                        + $request->score05
-                        + $request->score06
-                        + $request->score07
-                        + $request->score08
-                        + $request->score09
+            'grade' => $request->score1
+                        + $request->score2
+                        + $request->score3
+                        + $request->score4
+                        + $request->score5
+                        + $request->score6
+                        + $request->score7
+                        + $request->score8
+                        + $request->score9
             ,
         ]);
         Assessment::create($data->all());

@@ -11,10 +11,10 @@ class StudentDiaryController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:aktivitas/studentdiaries-read', ['only' => ['index','show']]);
-        $this->middleware('permission:aktivitas/studentdiaries-create', ['only' => ['create','store']]);
-        $this->middleware('permission:aktivitas/studentdiaries-update', ['only' => ['edit','update']]);
-        $this->middleware('permission:aktivitas/studentdiaries-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:aktivitas/studentdiaries/plp1-read|aktivitas/studentdiaries/plp2-read', ['only' => ['index','show']]);
+        $this->middleware('permission:aktivitas/studentdiaries/plp1-create|aktivitas/studentdiaries/plp2-create', ['only' => ['create','store']]);
+        $this->middleware('permission:aktivitas/studentdiaries/plp1-update|aktivitas/studentdiaries/plp2-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:aktivitas/studentdiaries/plp1-delete|aktivitas/studentdiaries/plp2-delete', ['only' => ['destroy']]);
     }
 
     public function index($plp)

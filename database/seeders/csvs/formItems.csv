@@ -83,10 +83,10 @@ form_id,component,component_order,name,max_score
 2022N6,petunjuk,5,"Untuk catatan tambahan, mohon dituliskan pada tempat yang disediakan.",4
 2022N6,item,1,"Kesesuaian rumusan tujuan pencapaian dengan kompetensi dasar",4
 2022N6,item,2,"Ketepatan pemilihan metode pembelajaran",4
-2022N6,item,5,"Kesesuaian langkah-langkah pembelajaran",4
-2022N6,item,6,"Kesesuaian teknik penilaian dengan tujuan yang ditetapkan",4
-2022N6,item,7,"Kesesuaian instrumen penilaian dengan teknik penilaian",4
-2022N6,item,8,"Ketepatan pemilihan Media Pembelajaran ",4
+2022N6,item,3,"Kesesuaian langkah-langkah pembelajaran",4
+2022N6,item,4,"Kesesuaian teknik penilaian dengan tujuan yang ditetapkan",4
+2022N6,item,5,"Kesesuaian instrumen penilaian dengan teknik penilaian",4
+2022N6,item,6,"Ketepatan pemilihan Media Pembelajaran ",4
 2022N6,tambahan,1,"Catatan RPP",0
 2022N7,petunjuk,1,"Berilah skor pada aspek yang diamati dengan cara memberi tanda centang (√) pada kolom skor sesuai penilaian dengan kriteria sebagai berikut :",0
 2022N7,petunjuk,2,"Skor 1: sangat kurang, skor 2: kurang, skor 3: baik, skor 4: sangat baik",0

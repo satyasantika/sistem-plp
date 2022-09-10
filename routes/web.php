@@ -67,11 +67,12 @@ Route::middleware('auth')->group(function () {
         Route::put('aktivitas/studentobservations/{form_id}/{studentobservation}','update')->name('studentobservations.update');
     });
     Route::controller(App\Http\Controllers\School\AssessmentController::class)->group(function () {
-        Route::get('aktivitas/schoolassessments/plp{plp_order}/{form_id}','index')->name('schoolassessments.index');
-        Route::get('aktivitas/schoolassessments/plp{plp_order}/{form_id}/create','create')->name('schoolassessments.create');
-        Route::post('aktivitas/schoolassessments/plp{plp_order}/{form_id}','store')->name('schoolassessments.store');
-        Route::get('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{assessment}/edit','edit')->name('schoolassessments.edit');
-        Route::put('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{assessment}','update')->name('schoolassessments.update');
+        Route::get('aktivitas/schoolassessments/plp{plp_order}','index')->name('schoolassessments.index');
+        Route::get('aktivitas/schoolassessments/plp{plp_order}/{form_id}/','show')->name('schoolassessments.show');
+        Route::get('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{form_order}/{map_id}/create','create')->name('schoolassessments.create');
+        Route::post('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{form_order}/{map_id}','store')->name('schoolassessments.store');
+        Route::get('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{form_order}/{map_id}/{schoolassessment}/edit','edit')->name('schoolassessments.edit');
+        Route::put('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{form_order}/{map_id}/{schoolassessment}','update')->name('schoolassessments.update');
     });
 });
 

@@ -12,6 +12,6 @@ use App\Models\Navigation;
 if (!function_exists('myNav')) {
     function myNav()
     {
-        return Navigation::whereNotNull('parent_id')->get();
+        return Navigation::whereNotNull('parent_id')->orderBy('order')->get();
     }
 }

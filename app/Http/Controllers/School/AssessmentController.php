@@ -13,52 +13,85 @@ class AssessmentController extends Controller
 {
     function __construct()
     {
-        // $this->middleware('permission:aktivitas/guruassessments-read || aktivitas/dosenassessments-read', ['only' => ['index','show']]);
-        // $this->middleware('permission:aktivitas/guruassessments-create || aktivitas/dosenassessments-create', ['only' => ['create','store']]);
-        // $this->middleware('permission:aktivitas/guruassessments-update || aktivitas/dosenassessments-update', ['only' => ['edit','update']]);
-        // $this->middleware('permission:aktivitas/guruassessments-delete || aktivitas/dosenassessments-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:aktivitas/schoolassessments-read', ['only' => ['index','show']]);
+        $this->middleware('permission:aktivitas/schoolassessments-create', ['only' => ['create','store']]);
+        $this->middleware('permission:aktivitas/schoolassessments-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:aktivitas/schoolassessments-delete', ['only' => ['destroy']]);
     }
 
-    public function index($plp_order,$form_id)
+    public function index($plp_order)
     {
-        $my_id = auth()->user()->id;
-        $maps = Map::where('teacher_id',$my_id)
-                ->orWhere('lecture_id',$my_id)
-                ->get();
+        $maps = $this->_myMap(2022,$plp_order);
 
-        return view('aktivitas.assessment',compact('plp_order','maps','form_id'));
+        if (auth()->user()->hasrole('dosen'))
+        {
+            $forms = ['2022N2','2022N6','2022N7','2022N8'];
+        } else {
+            $forms = ['2022N1','2022N3','2022N4','2002N5','2022N6','2022N7'];
+        }
+
+        return view('aktivitas.assessment-resume',compact('maps','forms'));
     }
 
-    public function create($form_id)
+    public function create($plp_order, $form_id, $form_order, $map_id)
     {
-        $assessment = new assessment();
+        $schoolassessment = new Assessment();
         return view('aktivitas.assessment-action', array_merge(
-            ['assessment'=> $assessment],
-            $this->_dataSelection($form_id)
+            ['schoolassessment'=> $schoolassessment],
+            $this->_dataSelection($plp_order, $form_id, $form_order, $map_id)
             ));
     }
 
-    public function store($form_id, Request $request)
+    public function store($plp_order, $form_id, $form_order, $map_id, Request $request)
     {
-        assessment::create($request->all());
+        $form = Form::find($form_id);
+        $grade = 0;
+        for ($i=0; $i < $form->count; $i++) {
+            $score = 'score'.$i+1;
+            $grade += $request->$score;
+        }
+        $final_grade = ($form->type == 'skor_4') ? round(100 * $grade/(4*$form->count),2) : $grade;
+
+        $data = $request->merge([
+            'grade' => $final_grade,
+        ]);
+        Assessment::create($data->all());
         return response()->json([
             'success' => true,
             'message' => 'assessment <strong>'.$request->id.'</strong> telah ditambahkan'
         ]);
     }
 
-    public function edit($form_id, assessment $assessment)
+    public function show($plp_order, $form_id)
+    {
+        $maps = $this->_myMap(2022,$plp_order);
+
+        return view('aktivitas.assessment',compact('plp_order','maps','form_id'));
+    }
+
+    public function edit($plp_order, $form_id, $form_order, $map_id, Assessment $schoolassessment)
     {
         return view('aktivitas.assessment-action', array_merge(
-            ['assessment'=>$assessment],
-            $this->_dataSelection($form_id)
+            ['schoolassessment'=>$schoolassessment],
+            $this->_dataSelection($plp_order, $form_id, $form_order, $map_id)
             ));
     }
 
-    public function update($form_id, Request $request, assessment $assessment)
+    public function update($plp_order, $form_id, $form_order, $map_id, Request $request, Assessment $schoolassessment)
     {
         $data = $request->all();
-        $assessment->fill($data)->save();
+
+        $form = Form::find($form_id);
+        $grade = 0;
+        for ($i=0; $i < $form->count; $i++) {
+            $score = 'score'.$i+1;
+            $grade += $request->$score;
+        }
+
+        $final_grade = ($form->type == 'skor_4') ? round(100 * $grade/(4*$form->count),2) : $grade;
+        $schoolassessment->grade = $final_grade;
+
+        $schoolassessment->fill($data)->save();
 
         return response()->json([
             'status' => 'success',
@@ -66,31 +99,38 @@ class AssessmentController extends Controller
         ]);
     }
 
-    public function destroy(assessment $assessment)
-    {
-        $name = $assessment->id;
-
-        $assessment->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'assessment <strong>'.$name.'</strong> telah dihapus'
-        ]);
-    }
-
-    private function _dataSelection($form_id)
+    private function _dataSelection($plp_order, $form_id, $form_order, $map_id)
     {
         return [
-            'map_id' => Map::firstWhere('student_id', auth()->user()->id)->id,
             'form' => Form::find($form_id),
             'form_guides' => $this->_formByComponent($form_id,'petunjuk'),
             'form_items' => $this->_formByComponent($form_id,'item'),
             'form_extras' => $this->_formByComponent($form_id,'tambahan'),
+            'kebaikan' => ['sangat kurang','kurang','baik', 'sangat baik'],
+            'keterpenuhan' => ['tidak terpenuhi semua aspek','hanya 1 aspek ada','2 aspek ada', '3 aspek ada'],
+            'parameters' => [
+                'form_id'=>$form_id,
+                'plp_order' => $plp_order,
+                'form_order' => $form_order,
+                'map_id' => $map_id,
+                ]
         ];
     }
 
     private function _formByComponent($form_id, $component)
     {
         return FormItem::where('form_id',$form_id)->where('component',$component)->orderBy('component_order')->get();
+    }
+
+    private function _myMap($year, $plp_order)
+    {
+        $my_id = auth()->user()->id;
+        $plp = 'plp'.$plp_order;
+        return  Map::where('year',$year)
+                ->where($plp,1)
+                ->where('teacher_id',$my_id)
+                ->orWhere('lecture_id',$my_id)
+                ->get();
     }
 
 }
