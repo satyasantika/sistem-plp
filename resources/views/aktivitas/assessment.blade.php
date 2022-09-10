@@ -57,8 +57,7 @@
                                                 @endphp
                                                 @if ($assessment->exists())
                                                 {{ $assessment->first()->grade }} &nbsp;
-                                                <button
-                                                    type="button"
+                                                <button type="button"
                                                     data-id={{ $assessment->first()->id }}
                                                     data-form_order="{{ $i+1 }}"
                                                     data-map_id="{{ $map->id }}"

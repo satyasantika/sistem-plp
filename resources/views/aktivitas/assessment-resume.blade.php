@@ -35,11 +35,11 @@
                                             </td>
                                             @foreach ($forms as $form)
                                             @php
-                                                $assessment = App\Models\Assessment::where('form_id',$form)->where('plp_order',2)->where('map_id',$map->id);
+                                                $assessment = App\Models\Assessment::where('form_id',$form)->where('plp_order',1)->where('map_id',$map->id);
                                             @endphp
                                             <td>
                                                 @if ($assessment->exists())
-                                                <a href="{{ route('schoolassessments.show',['plp_order' => $assessment->plp_order, 'form_id' => $form]) }}" class="btn btn-outline-success btn-sm mb-2">{{ $assessment->grade }}</a>
+                                                <a href="{{ route('schoolassessments.show',['plp_order' => $assessment->first()->plp_order, 'form_id' => $form]) }}" class="btn btn-success btn-sm mb-2">{{ $assessment->first()->grade }}</a>
                                                 @else
                                                 <a href="{{ route('schoolassessments.show',['plp_order' => substr(request()->segment(3),-1), 'form_id' => $form]) }}" class="btn btn-outline-danger btn-sm mb-2">{{ 0 }}</a>
                                                 @endif

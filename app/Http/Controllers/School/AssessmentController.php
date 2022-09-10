@@ -13,10 +13,10 @@ class AssessmentController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:aktivitas/schoolassessments-read', ['only' => ['index','show']]);
-        $this->middleware('permission:aktivitas/schoolassessments-create', ['only' => ['create','store']]);
-        $this->middleware('permission:aktivitas/schoolassessments-update', ['only' => ['edit','update']]);
-        $this->middleware('permission:aktivitas/schoolassessments-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:aktivitas/schoolassessments/plp1-read|aktivitas/schoolassessments/plp2-read', ['only' => ['index','show']]);
+        $this->middleware('permission:aktivitas/schoolassessments/plp1-create|aktivitas/schoolassessments/plp2-create', ['only' => ['create','store']]);
+        $this->middleware('permission:aktivitas/schoolassessments/plp1-update|aktivitas/schoolassessments/plp2-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:aktivitas/schoolassessments/plp1-delete|aktivitas/schoolassessments/plp2-delete', ['only' => ['destroy']]);
     }
 
     public function index($plp_order)
@@ -25,7 +25,7 @@ class AssessmentController extends Controller
 
         if (auth()->user()->hasrole('dosen'))
         {
-            $forms = ['2022N2','2022N6','2022N7','2022N8'];
+            $forms = ($plp_order == 1) ? ['2022N2','2022N8'] : ['2022N2','2022N6','2022N7'] ;
         } else {
             $forms = ['2022N1','2022N3','2022N4','2002N5','2022N6','2022N7'];
         }

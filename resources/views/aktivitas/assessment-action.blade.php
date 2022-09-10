@@ -64,22 +64,29 @@
                                 >{{ $option }}</label>
                             @endforeach
                         @else
-                            <input
-                                type="range"
-                                class="form-control-range"
-                                id="{{ $item_order }}"
-                                name="{{ $item_order }}"
-                                min="0"
-                                max="{{ $item->max_score }}"
-                                step="1"
-                                oninput="{{ $item_order }}out.value={{ $item_order }}.value"
-                                value="{{ $schoolassessment->$item_order ?? 0 }}">
-                            <output class="btn btn-outline-dark disabled"
-                                id="{{ $item_order }}out"
-                                name="{{ $item_order }}out"
-                                for="{{ $item_order }}"
-                                >{{ $schoolassessment->$item_order ?? 0 }}</output>
-                            <small class="text-danger">(maks. {{ $item->max_score }})</small>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input
+                                        type="range"
+                                        class="form-range"
+                                        id="{{ $item_order }}"
+                                        name="{{ $item_order }}"
+                                        min="0"
+                                        max="{{ $item->max_score }}"
+                                        step="1"
+                                        oninput="{{ $item_order }}out.value={{ $item_order }}.value"
+                                        value="{{ $schoolassessment->$item_order ?? 0 }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <output
+                                        class="btn btn-outline-dark disabled"
+                                        id="{{ $item_order }}out"
+                                        name="{{ $item_order }}out"
+                                        for="{{ $item_order }}"
+                                        >{{ $schoolassessment->$item_order ?? 0 }}</output>
+                                    <small class="text-danger">(maks. {{ $item->max_score }})</small>
+                                </div>
+                            </div>
                         @endif
                     </div>
                 </div>

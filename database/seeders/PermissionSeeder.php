@@ -63,35 +63,34 @@ class PermissionSeeder extends Seeder
         }
 
         $admin_access = [
-            'konfigurasi/roles',
-            'konfigurasi/permissions',
-            'konfigurasi/users',
-            'konfigurasi/rolepermissions',
-            'konfigurasi/userroles',
-            'konfigurasi/userpermissions',
-            'konfigurasi/schools',
-            'konfigurasi/schooluserproposals',
-            'konfigurasi/maps',
-            'konfigurasi/navigations',
-            'konfigurasi/forms',
-            'konfigurasi/formitems',
-            'konfigurasi/assessments',
-            'konfigurasi/observations',
-            'konfigurasi/diaries',
+            ['role','konfigurasi/roles'],
+            ['permission','konfigurasi/permissions'],
+            ['user','konfigurasi/users'],
+            ['role permission','konfigurasi/rolepermissions'],
+            ['user role','konfigurasi/userroles'],
+            ['user permission','konfigurasi/userpermissions'],
+            ['school','konfigurasi/schools'],
+            ['school user proposal','konfigurasi/schooluserproposals'],
+            ['map','konfigurasi/maps'],
+            ['navigation','konfigurasi/navigations'],
+            ['form','konfigurasi/forms'],
+            ['form item','konfigurasi/formitems'],
+            ['assessment','konfigurasi/assessments'],
+            ['observation','konfigurasi/observations'],
+            ['diary','konfigurasi/diaries'],
         ];
 
         // Role Admin
         $permissions = [];
         foreach ($admin_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions,$value1.'-'.$value2);
+                array_push($permissions,$value1[1].'-'.$value2);
             }
         }
-
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission])->assignRole('admin');
         }
-
+        // MENU konfigurasi
         $konfigurasi = Navigation::create([
             'name' => 'Konfigurasi',
             'url' => 'konfigurasi',
@@ -99,12 +98,11 @@ class PermissionSeeder extends Seeder
             'parent_id' => null,
             'order' => Navigation::count() + 1,
         ]);
-
         foreach ($admin_access as $child) {
-            $part = explode('/',$child);
+            // $part = explode('/',$child);
             $konfigurasi->children()->create([
-                'name' => $part[1],
-                'url' => $child,
+                'name' => $child[0],
+                'url' => $child[1],
                 'icon' => 'ti-settings',
                 'order' => Navigation::count() + 1,
             ]);
@@ -112,13 +110,13 @@ class PermissionSeeder extends Seeder
 
         // Role Kepsek
         $kepsek_access = [
-            'usulan/school_coordinators',
-            'usulan/school_teachers',
+            ['Usulan Koor GP','usulan/school_coordinators'],
+            ['Usulan Guru','usulan/school_teachers'],
         ];
         $permissions = [];
         foreach ($kepsek_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions,$value1.'-'.$value2);
+                array_push($permissions,$value1[1].'-'.$value2);
             }
         }
 
@@ -135,10 +133,10 @@ class PermissionSeeder extends Seeder
         ]);
 
         foreach ($kepsek_access as $child) {
-            $part = explode('/',$child);
+            // $part = explode('/',$child);
             $usulan->children()->create([
-                'name' => $part[1],
-                'url' => $child,
+                'name' => $child[0],
+                'url' => $child[1],
                 'icon' => '',
                 'order' => Navigation::count() + 1,
             ]);
@@ -146,13 +144,13 @@ class PermissionSeeder extends Seeder
 
         // Role Kajur
         $kajur_access = [
-            'mapping/mysubjects',
-            'mapping/departementmaps',
+            // ['mysubject','mapping/mysubjects'],
+            ['Mapping Jurusan','mapping/departementmaps'],
         ];
         $permissions = [];
         foreach ($kajur_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions,$value1.'-'.$value2);
+                array_push($permissions,$value1[1].'-'.$value2);
             }
         }
 
@@ -169,23 +167,23 @@ class PermissionSeeder extends Seeder
         ]);
 
         foreach ($kajur_access as $child) {
-            $part = explode('/',$child);
+            // $part = explode('/',$child);
             $mapping->children()->create([
-                'name' => $part[1],
-                'url' => $child,
+                'name' => $child[0],
+                'url' => $child[1],
                 'icon' => '',
                 'order' => Navigation::count() + 1,
             ]);
         }
 
         $kajur_access = [
-            'yudisium/first',
-            'yudisium/second',
+            ['Yudisium PLP 1','yudisium/plp1'],
+            ['Yudisium PLP 2','yudisium/plp2'],
         ];
         $permissions = [];
         foreach ($kajur_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions,$value1.'-'.$value2);
+                array_push($permissions,$value1[1].'-'.$value2);
             }
         }
 
@@ -202,10 +200,10 @@ class PermissionSeeder extends Seeder
         ]);
 
         foreach ($kajur_access as $child) {
-            $part = explode('/',$child);
+            // $part = explode('/',$child);
             $yudisium->children()->create([
-                'name' => $part[1],
-                'url' => $child,
+                'name' => $child[0],
+                'url' => $child[1],
                 'icon' => '',
                 'order' => Navigation::count() + 1,
             ]);
@@ -213,14 +211,15 @@ class PermissionSeeder extends Seeder
 
         // Role Dosen, Guru
         $nilai_access = [
-            'aktivitas/schoolassessments',
-            'aktivitas/schoolassessments/plp2/2022N6',
-            'aktivitas/schoolassessments/plp2/2022N7',
+            ['Rekap Nilai PLP 1','aktivitas/schoolassessments/plp1'],
+            ['Rekap Nilai PLP 2','aktivitas/schoolassessments/plp2'],
+            ['Nilai N6','aktivitas/schoolassessments/plp2/2022N6'],
+            ['Nilai N7','aktivitas/schoolassessments/plp2/2022N7'],
         ];
         $permissions = [];
         foreach ($nilai_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions,$value1.'-'.$value2);
+                array_push($permissions,$value1[1].'-'.$value2);
             }
         }
         foreach ($permissions as $permission) {
@@ -236,10 +235,10 @@ class PermissionSeeder extends Seeder
         ]);
 
         foreach ($nilai_access as $child) {
-            $part = explode('/',$child);
+            // $part = explode('/',$child);
             $aktivitas->children()->create([
-                'name' => $part[1],
-                'url' => $child,
+                'name' => $child[0],
+                'url' => $child[1],
                 'icon' => '',
                 'order' => Navigation::count() + 1,
             ]);
@@ -247,15 +246,15 @@ class PermissionSeeder extends Seeder
 
         // Role Guru
         $nilai_access = [
-            'aktivitas/schoolassessments/plp2/2022N1',
-            'aktivitas/schoolassessments/plp2/2022N3',
-            'aktivitas/schoolassessments/plp2/2022N4',
-            'aktivitas/schoolassessments/plp2/2022N5',
+            ['Nilai N1','aktivitas/schoolassessments/plp2/2022N1'],
+            ['Nilai N3','aktivitas/schoolassessments/plp2/2022N3'],
+            ['Nilai N4','aktivitas/schoolassessments/plp2/2022N4'],
+            ['Nilai N5','aktivitas/schoolassessments/plp2/2022N5'],
         ];
         $permissions = [];
         foreach ($nilai_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions,$value1.'-'.$value2);
+                array_push($permissions,$value1[1].'-'.$value2);
             }
         }
         foreach ($permissions as $permission) {
@@ -271,10 +270,10 @@ class PermissionSeeder extends Seeder
         ]);
 
         foreach ($nilai_access as $child) {
-            $part = explode('/',$child);
+            // $part = explode('/',$child);
             $aktivitas->children()->create([
-                'name' => $part[1],
-                'url' => $child,
+                'name' => $child[0],
+                'url' => $child[1],
                 'icon' => '',
                 'order' => Navigation::count() + 1,
             ]);
@@ -282,17 +281,17 @@ class PermissionSeeder extends Seeder
 
         // Role Dosen
         $dosen_access = [
-            'aktivitas/lecturemonitors',
-            'aktivitas/diaryverifications/plp1',
-            'aktivitas/diaryverifications/plp2',
-            'aktivitas/schoolassessments/plp1/2022N2',
-            'aktivitas/schoolassessments/plp2/2022N2',
-            'aktivitas/schoolassessments/plp1/2022N8',
+            ['Monitoring','aktivitas/lecturemonitors'],
+            ['Verifikasi Logbook 1','aktivitas/diaryverifications/plp1'],
+            ['Verifikasi Logbook 2','aktivitas/diaryverifications/plp2'],
+            ['Nilai N2.1','aktivitas/schoolassessments/plp1/2022N2'],
+            ['Nilai N2.2','aktivitas/schoolassessments/plp2/2022N2'],
+            ['Nilai N8','aktivitas/schoolassessments/plp1/2022N8'],
         ];
         $permissions = [];
         foreach ($dosen_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions,$value1.'-'.$value2);
+                array_push($permissions,$value1[1].'-'.$value2);
             }
         }
 
@@ -301,25 +300,25 @@ class PermissionSeeder extends Seeder
         }
 
         foreach ($dosen_access as $child) {
-            $part = explode('/',$child);
+            // $part = explode('/',$child);
             $aktivitas->children()->create([
-                'name' => $part[1],
-                'url' => $child,
+                'name' => $child[0],
+                'url' => $child[1],
                 'icon' => '',
                 'order' => Navigation::count() + 1,
             ]);
         }
 
         $mahasiswa_access = [
-            'aktivitas/studentobservations',
-            'aktivitas/studentdiaries/plp1',
-            'aktivitas/studentdiaries/plp2',
-            'aktivitas/teachingrespons',
+            ['Observasi','aktivitas/studentobservations'],
+            ['Logbook 1','aktivitas/studentdiaries/plp1'],
+            ['Logbook 2','aktivitas/studentdiaries/plp2'],
+            ['Catatan Ujian','aktivitas/teachingrespons'],
         ];
         $permissions = [];
         foreach ($mahasiswa_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions,$value1.'-'.$value2);
+                array_push($permissions,$value1[1].'-'.$value2);
             }
         }
 
@@ -328,22 +327,22 @@ class PermissionSeeder extends Seeder
         }
 
         foreach ($mahasiswa_access as $child) {
-            $part = explode('/',$child);
+            // $part = explode('/',$child);
             $aktivitas->children()->create([
-                'name' => $part[1],
-                'url' => $child,
+                'name' => $child[0],
+                'url' => $child[1],
                 'icon' => '',
                 'order' => Navigation::count() + 1,
             ]);
         }
 
         $sekolah_access = [
-            'mapping/teachermaps',
+            ['Mapping Guru','mapping/teachermaps'],
         ];
         $permissions = [];
         foreach ($sekolah_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions,$value1.'-'.$value2);
+                array_push($permissions,$value1[1].'-'.$value2);
             }
         }
 
@@ -352,10 +351,10 @@ class PermissionSeeder extends Seeder
         }
 
         foreach ($sekolah_access as $child) {
-            $part = explode('/',$child);
+            // $part = explode('/',$child);
             $aktivitas->children()->create([
-                'name' => $part[1],
-                'url' => $child,
+                'name' => $child[0],
+                'url' => $child[1],
                 'icon' => '',
                 'order' => Navigation::count() + 1,
             ]);

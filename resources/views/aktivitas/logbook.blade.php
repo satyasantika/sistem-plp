@@ -30,11 +30,13 @@
                                         @forelse($diaries as $diary)
                                         <tr>
                                             <td class=" text-center">
-                                                @can('aktivitas/studentdiaries-update')
+                                                @canany('aktivitas/studentdiaries/plp1-update','aktivitas/studentdiaries/plp1-update')
+                                                @if ($diary->verified == 0)
                                                 <button type="button" data-id={{ $diary->id }} data-jenis="edit" class="btn btn-primary btn-sm mb-2 action"><i class="ti-pencil"></i></button>
                                                 <br>
                                                 <button type="button" data-id={{ $diary->id }} data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>
-                                                @endcan
+                                                @endif
+                                                @endcanany
                                             </td>
 
                                             <td>

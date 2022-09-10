@@ -28,7 +28,7 @@
                     {{-- add MENU from database --}}
                     @foreach (myNav() as $menu)
                     @can($menu->url.'-read')
-                    <li class="{{ request()->segment(2) == explode('/',$menu->url)[1] ? 'active' : '' }}">
+                    <li class="{{ request()->url() == url($menu->url) ? 'active' : '' }}">
                         <a href="{{ url($menu->url) }}" class="link">
                             {{-- <i class="ti-home"></i> --}}
                             <span>{{ $menu->name }}</span>

@@ -65,15 +65,15 @@ class AssessmentController extends Controller
     public function update(Request $request, Assessment $assessment)
     {
         $data = $request->all();
-        $data['grade'] = $request->score01
-                        + $request->score02
-                        + $request->score03
-                        + $request->score04
-                        + $request->score05
-                        + $request->score06
-                        + $request->score07
-                        + $request->score08
-                        + $request->score09
+        $data['grade'] = $request->score1
+                        + $request->score2
+                        + $request->score3
+                        + $request->score4
+                        + $request->score5
+                        + $request->score6
+                        + $request->score7
+                        + $request->score8
+                        + $request->score9
             ;
 
         $assessment->fill($data)->save();
@@ -99,7 +99,7 @@ class AssessmentController extends Controller
             'maps' =>  Map::all(),
             'forms' =>  Form::whereNot('type','yes_no')->pluck('id')->sort(),
             'form_order' => [1,2,3,4,5,6],
-            'items' => ['score01','score02','score03','score04','score05','score06','score07','score08','score09'],
+            'items' => ['score1','score2','score3','score4','score5','score6','score7','score8','score9'],
         ];
     }
 
