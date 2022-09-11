@@ -74,6 +74,9 @@ Route::middleware('auth')->group(function () {
         Route::get('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{form_order}/{map_id}/{schoolassessment}/edit','edit')->name('schoolassessments.edit');
         Route::put('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{form_order}/{map_id}/{schoolassessment}','update')->name('schoolassessments.update');
     });
+    Route::get('aktivitas/teachingrespons',function(){
+        return view('aktivitas.teachingrespon-list');
+    });
 });
 
 
