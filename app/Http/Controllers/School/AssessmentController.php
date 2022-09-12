@@ -19,13 +19,16 @@ class AssessmentController extends Controller
         $this->middleware('permission:aktivitas/schoolassessments/plp1-delete|aktivitas/schoolassessments/plp2-delete', ['only' => ['destroy']]);
     }
 
+    // Rekap Penilaian
     public function index($plp_order)
     {
         $maps = $this->_myMap(2022,$plp_order);
 
         if (auth()->user()->hasrole('dosen'))
         {
-            $forms = ($plp_order == 1) ? ['2022N2','2022N8'] : ['2022N2','2022N6','2022N7'] ;
+            $plp1_dosen_menus = ['2022N2','2022N8'];
+            $plp2_dosen_menus = ['2022N2','2022N6','2022N7'];
+            $forms = ($plp_order == 1) ? $plp1_dosen_menus : $plp2_dosen_menus ;
         } else {
             $forms = ['2022N1','2022N3','2022N4','2002N5','2022N6','2022N7'];
         }
@@ -62,6 +65,7 @@ class AssessmentController extends Controller
         ]);
     }
 
+    // Menu Setiap Form
     public function show($plp_order, $form_id)
     {
         $maps = $this->_myMap(2022,$plp_order);

@@ -15,8 +15,7 @@
                         <table class="table small-font table-striped table-hover table-sm">
                             <tbody>
                                 @php
-                                    $maps = App\Models\Map::where('student_id',auth()->user()->id)
-                                                            ->get();
+                                    $maps = App\Models\Map::where('student_id',auth()->user()->id)->get();
                                 @endphp
                                 @forelse ($maps as $map)
                                 <tr>
@@ -96,20 +95,27 @@
                         <table class="table small-font table-striped table-hover table-sm">
                             <tbody>
                                 @php
-                                    $student = App\Models\Map::where('student_id',auth()->user()->id)->first();
-                                    $maps = App\Models\Map::where('school_id',$student->school_id)->get();
+                                $students = App\Models\Map::where('student_id',auth()->user()->id)->get();
                                 @endphp
-                                @forelse ($maps as $map)
-                                <tr>
-                                    <td>
-                                        @if (isset($map->students->phone))
-                                            <a href="{{ 'http://wa.me/62'.$map->students->phone }}" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-whatsapp"></i></a>
-                                        @endif
-                                        {{ $map->students->name ?? '-' }} <span class="badge bg-light text-dark">{{ $map->students->subjects->name ?? '-' }}</span>
-                                    </td>
-                                </tr>
+                                @forelse ($students as $student)
+                                    @php
+                                    $maps = App\Models\Map::where('school_id',$student->school_id)->get();
+                                    @endphp
+                                    @forelse ($maps as $map)
+                                    <tr>
+                                        <td>
+                                            @if (isset($map->students->phone))
+                                                <a href="{{ 'http://wa.me/62'.$map->students->phone }}" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-whatsapp"></i></a>
+                                            @endif
+                                            {{ $map->students->name ?? '-' }} <span class="badge bg-light text-dark">{{ $map->students->subjects->name ?? '-' }}</span>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <div class="alert alert-info">Kelompok belum ada</div>
+                                    @endforelse
+
                                 @empty
-                                <div class="alert alert-info">Kelompok belum ada</div>
+                                <div class="alert alert-info">Anda belum diplot oleh Jurusan</div>
                                 @endforelse
                             </tbody>
                         </table>

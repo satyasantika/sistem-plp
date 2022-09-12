@@ -1,5 +1,7 @@
 <?php
 
+use App\Exports\ExportMap;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\RoleController;
 
@@ -83,3 +85,9 @@ Route::middleware('auth')->group(function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+Route::get('/export-maps',function(){
+    $file_name = 'mapping'.date('YmdHis').'.xlsx';
+    return Excel::download(new ExportMap, $file_name);
+});

@@ -24,6 +24,7 @@
                                     <thead>
                                         <tr role="row">
                                             <th>Mahasiswa</th>
+                                            {{-- PERULANGAN JENIS FORM --}}
                                             @foreach ($forms as $form) <th>{{ substr($form,-2) }}</th> @endforeach
                                         </tr>
                                     </thead>
@@ -34,14 +35,32 @@
                                                 {{ $map->students->name ?? '' }}
                                             </td>
                                             @foreach ($forms as $form)
+                                            {{-- PERULANGAN FORM YANG DINILAI --}}
                                             @php
-                                                $assessment = App\Models\Assessment::where('form_id',$form)->where('plp_order',1)->where('map_id',$map->id);
+                                                $plp_order = substr(request()->segment(3),-1);
+                                                $assessments = App\Models\Assessment::where('form_id',$form)
+                                                                                    ->where('plp_order',$plp_order)
+                                                                                    ->where('map_id',$map->id)
+                                                                                    ;
                                             @endphp
                                             <td>
-                                                @if ($assessment->exists())
-                                                <a href="{{ route('schoolassessments.show',['plp_order' => $assessment->first()->plp_order, 'form_id' => $form]) }}" class="btn btn-success btn-sm mb-2">{{ $assessment->first()->grade }}</a>
+                                                @if ($assessments->exists())
+                                                @php
+                                                    $grade = $assessments->sum('grade');
+                                                    $form_times = App\Models\Form::find($form)->times;
+                                                    $grade = round($grade/$form_times,0);
+                                                @endphp
+                                                <a
+                                                    href="{{ route('schoolassessments.show',['plp_order' => $plp_order, 'form_id' => $form]) }}"
+                                                    class="btn btn-success btn-sm mb-2">
+                                                    {{ $grade }}
+                                                </a>
                                                 @else
-                                                <a href="{{ route('schoolassessments.show',['plp_order' => substr(request()->segment(3),-1), 'form_id' => $form]) }}" class="btn btn-outline-danger btn-sm mb-2">{{ 0 }}</a>
+                                                <a
+                                                    href="{{ route('schoolassessments.show',['plp_order' => substr(request()->segment(3),-1), 'form_id' => $form]) }}"
+                                                    class="btn btn-outline-danger btn-sm mb-2">
+                                                    {{ 0 }}
+                                                </a>
                                                 @endif
                                             </td>
                                             @endforeach
