@@ -17,6 +17,7 @@ class StudentObservationController extends Controller
         $this->middleware('permission:aktivitas/studentobservations-create', ['only' => ['create','store']]);
         $this->middleware('permission:aktivitas/studentobservations-update', ['only' => ['edit','update']]);
         $this->middleware('permission:aktivitas/studentobservations-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:plp1-read');
     }
 
     public function index()

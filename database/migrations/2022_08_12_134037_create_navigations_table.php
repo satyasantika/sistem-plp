@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('url')->nullable();
             $table->string('icon')->nullable();
             $table->bigInteger('parent_id')->nullable();
-            $table->integer('order')->nullable();
+            $table->string('order')->nullable();
             // $table->timestamps();
         });
     }

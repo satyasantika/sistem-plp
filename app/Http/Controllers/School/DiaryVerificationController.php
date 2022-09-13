@@ -13,6 +13,7 @@ class DiaryVerificationController extends Controller
     {
         $this->middleware('permission:aktivitas/diaryverifications/plp1-read|aktivitas/diaryverifications/plp2-read', ['only' => ['index','show']]);
         $this->middleware('permission:aktivitas/diaryverifications/plp1-update|aktivitas/diaryverifications/plp2-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:'.request()->segment(3).'-read');
     }
 
     public function index($plp_order)

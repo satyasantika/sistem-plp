@@ -7,6 +7,7 @@ use App\Models\Form;
 use App\Models\FormItem;
 use App\Models\Assessment;
 use Illuminate\Http\Request;
+// use Illuminate\Auth\Access\Gate;
 use App\Http\Controllers\Controller;
 
 class AssessmentController extends Controller
@@ -17,6 +18,7 @@ class AssessmentController extends Controller
         $this->middleware('permission:aktivitas/schoolassessments/plp1-create|aktivitas/schoolassessments/plp2-create', ['only' => ['create','store']]);
         $this->middleware('permission:aktivitas/schoolassessments/plp1-update|aktivitas/schoolassessments/plp2-update', ['only' => ['edit','update']]);
         $this->middleware('permission:aktivitas/schoolassessments/plp1-delete|aktivitas/schoolassessments/plp2-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:'.request()->segment(3).'-read');
     }
 
     // Rekap Penilaian
