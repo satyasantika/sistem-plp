@@ -16,13 +16,11 @@ class UserPermissionController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        $permission = Permission::get();
-        $userPermissions = DB::table("model_has_permissions")->where("model_has_permissions.model_id",$id)
-            ->pluck('model_has_permissions.permission_id','model_has_permissions.permission_id')
-            ->all();
+        $permissions = Permission::orderBy('name')->pluck('name','id');
         $userPermissions = $user->getAllPermissions()->pluck('id','id')->all();
 
-        return view('konfigurasi.edit.userpermission',compact('user','permission','userPermissions'));
+
+        return view('konfigurasi.edit.userpermission',compact('user','permissions','userPermissions'));
     }
 
     public function update(Request $request, $id)

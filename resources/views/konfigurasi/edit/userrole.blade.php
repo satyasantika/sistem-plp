@@ -15,28 +15,23 @@
                             <div class="pull-left">
                                 <h2>{{ $user->name }} Roles</h2>
                             </div>
-                            @if (count($errors) > 0)
-                                <div class="alert alert-danger">
-                                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                                    <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                    </ul>
-                                </div>
-                            @endif
 
                             {!! Form::model($user, ['method' => 'PATCH','route' => ['userroles.update', $user->id]]) !!}
-                                    {!! Form::hidden('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
-                                    <div class="form-group mb-2 p-2">
-                                            @foreach($roles as $value)
-                                                <label>{{ Form::checkbox('roles[]', $value->id, in_array($value->id, $userRoles) ? true : false, array('class' => 'name')) }}
-                                                {{ $value->name }}</label>
-                                            <br/>
-                                            @endforeach
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                    <a class="btn btn-secondary" href="{{ route('users.index') }}">Cancel</a>
+                                {!! Form::hidden('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
+                                <div class="row mb-2">
+                                    @foreach ($roles as $value)
+                                        <div class="col-md-3">
+                                            <div class="input-group mb-2">
+                                                <div class="input-group-text light">
+                                                    {{ Form::checkbox('roles[]', $value->id, in_array($value->id, $userRoles) ? true : false, array('class' => 'form-check-input mt-0')) }}
+                                                </div>
+                                                <input type="text" class="form-control" value="{{ $value->name }}" aria-label="Text input with checkbox">
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                                <a class="btn btn-secondary" href="{{ route('users.index') }}">Cancel</a>
                             {!! Form::close() !!}
                         </div>
                     </div>

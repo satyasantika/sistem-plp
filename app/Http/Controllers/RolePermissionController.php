@@ -19,12 +19,12 @@ class RolePermissionController extends Controller
     public function edit($id)
     {
         $role = Role::find($id);
-        $permission = Permission::get();
+        $permissions = Permission::orderBy('name')->pluck('name','id');
         $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
             ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
             ->all();
 
-        return view('konfigurasi.edit.rolepermission',compact('role','permission','rolePermissions'));
+        return view('konfigurasi.edit.rolepermission',compact('role','permissions','rolePermissions'));
     }
 
     public function update(Request $request, $id)
