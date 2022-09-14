@@ -24,7 +24,7 @@ class UserRoleController extends Controller
             ->pluck('model_has_roles.role_id','model_has_roles.role_id')
             ->all();
 
-        return view('konfigurasi.edit.userrole',compact('user','roles','userRoles'));
+        return view('konfigurasi.userrole-action',compact('user','roles','userRoles'));
     }
 
     public function update(Request $request, $id)
@@ -32,8 +32,10 @@ class UserRoleController extends Controller
         DB::table('model_has_roles')->where('model_id',$id)->delete();
         User::find($id)->assignRole($request->roles);
 
-        return to_route('users.index')
-                        ->with('success','User updated successfully');
+        return response()->json([
+            'success' => true,
+            'message' => 'Role untuk <strong>'.$request->name.'</strong> telah diperbarui'
+        ]);
     }
 
 }

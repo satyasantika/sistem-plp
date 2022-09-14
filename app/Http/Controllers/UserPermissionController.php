@@ -20,7 +20,7 @@ class UserPermissionController extends Controller
         $userPermissions = $user->getAllPermissions()->pluck('id','id')->all();
 
 
-        return view('konfigurasi.edit.userpermission',compact('user','permissions','userPermissions'));
+        return view('konfigurasi.userpermission-action',compact('user','permissions','userPermissions'));
     }
 
     public function update(Request $request, $id)
@@ -28,7 +28,9 @@ class UserPermissionController extends Controller
         DB::table('model_has_permissions')->where('model_id',$id)->delete();
         User::find($id)->givePermissionTo($request->permission);
 
-        return to_route('users.index')
-                        ->with('success','User updated successfully');
+        return response()->json([
+            'success' => true,
+            'message' => 'Permission untuk <strong>'.$request->name.'</strong> telah diperbarui'
+        ]);
     }
 }

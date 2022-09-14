@@ -24,15 +24,17 @@ class RolePermissionController extends Controller
             ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
             ->all();
 
-        return view('konfigurasi.edit.rolepermission',compact('role','permissions','rolePermissions'));
+        return view('konfigurasi.rolepermission-action',compact('role','permissions','rolePermissions'));
     }
 
     public function update(Request $request, $id)
     {
         Role::find($id)->syncPermissions($request->permission);
 
-        return to_route('roles.index')
-                        ->with('success','Role updated successfully');
+        return response()->json([
+            'success' => true,
+            'message' => 'Permission untuk <strong>'.$request->name.'</strong> telah diperbarui'
+        ]);
     }
 
 }
