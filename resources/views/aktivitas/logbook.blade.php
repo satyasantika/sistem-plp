@@ -29,7 +29,7 @@
                                     <tbody>
                                         @forelse($diaries as $diary)
                                         <tr>
-                                            <td class=" text-center">
+                                            <td class="text-center align-top">
                                                 @canany('aktivitas/studentdiaries/plp1-update','aktivitas/studentdiaries/plp1-update')
                                                 @if ($diary->verified == 0)
                                                 <button type="button" data-id={{ $diary->id }} data-jenis="edit" class="btn btn-primary btn-sm mb-2 action"><i class="ti-pencil"></i></button>
@@ -39,7 +39,7 @@
                                                 @endcanany
                                             </td>
 
-                                            <td>
+                                            <td class="align-top">
                                                 hari ke-{{ $diary->day_order ?? '' }} <br>
                                                 <span class="badge bg-primary">{{ $diary->log_date ? $diary->log_date->format('d-m-Y') : '' }}</span>
                                                 <br>
