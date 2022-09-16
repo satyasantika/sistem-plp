@@ -3,7 +3,7 @@
 @section('content')
 <div class="main-content">
     <div class="title">
-        Distribusi Peserta
+        Distribusi Peserta PLP 1 dan PLP 2
     </div>
     <div class="content-wrapper">
         <div class="row">
@@ -30,7 +30,7 @@
                                         @endforeach
                                     </tr>
                                     <tr class="text-primary">
-                                        <th></th>
+                                        <th class="text-end">Total:</th>
                                         <th>{{ App\Models\Map::where('year',2022)->where('plp1',1)->count() }}</th>
                                         @foreach ($subjects as $subject)
                                             @php

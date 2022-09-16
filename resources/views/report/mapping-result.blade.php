@@ -68,7 +68,7 @@
                             $filled = App\Models\Map::where('subject_id',$subject->subjects->id)->whereNotNull('student_id')->count();
                             $percent = round($filled/$quota * 100,2)
                         @endphp
-                        <div class="accordion accordion-space" id="accordion{{ $subject->subjects->id }}">
+                        <div class="accordion mb-3" id="departement-accordion">
                             <div class="accordion-item">
                                 <div class="progress-wrapper">
                                     <div class="progress progress-bar-small">
@@ -80,12 +80,12 @@
                                 <h2 class="accordion-header" id="heading{{ $subject->subjects->id }}">
                                     <button class="accordion-button collapsed" type="button"
                                         data-bs-toggle="collapse" data-bs-target="#collapse{{ $subject->subjects->id }}"
-                                        aria-expanded="true" aria-controls="collapse{{ $subject->subjects->id }}">
+                                        aria-expanded="false" aria-controls="collapse{{ $subject->subjects->id }}">
                                         DPL  {{ $subject->subjects->departement }} (Progress {{ $percent.'%' }})
                                     </button>
                                 </h2>
                                 <div id="collapse{{ $subject->subjects->id }}" class="accordion-collapse collapse"
-                                    aria-labelledby="heading{{ $subject->subjects->id }}" data-bs-parent="#accordion{{ $subject->subjects->id }}">
+                                    aria-labelledby="heading{{ $subject->subjects->id }}" data-bs-parent="#departement-accordion">
                                     <div class="accordion-body">
                                         <div class="table-responsive">
                                             <table class="table small-font table-striped table-hover table-sm">
@@ -97,7 +97,10 @@
                                                 </thead>
                                                 <tbody>
                                                     @php
-                                                        $lectures = App\Models\User::role('dosen')->where('subject_id',$subject->subjects->id)->get()
+                                                        $lectures = App\Models\User::role('dosen')
+                                                                                    ->where('subject_id',$subject->subjects->id)
+                                                                                    ->orderBy('name')
+                                                                                    ->get()
                                                     @endphp
                                                     @foreach ($lectures as $lecture)
                                                     <tr>
