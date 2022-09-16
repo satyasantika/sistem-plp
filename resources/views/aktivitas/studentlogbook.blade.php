@@ -34,7 +34,7 @@
                                                 hari ke-{{ $diary->day_order ?? '' }} <span class="badge bg-secondary">{{ $diary->log_date ? $diary->log_date->format('d-m-Y') : '' }}</span>
                                                 <br>{{ $diary->note ?? '' }}
                                             </td>
-                                            <td>
+                                            <td class="align-top">
                                                 @if ($diary->verified == 1)
                                                     <span class="badge bg-success">sudah diverifikasi</span>
                                                     <span class="badge bg-light text-dark">{{ $diary->updated_at->format('Y-m-d') }}</span>

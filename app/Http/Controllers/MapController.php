@@ -28,15 +28,8 @@ class MapController extends Controller
     {
         $map = new Map();
         return view('konfigurasi.map-action', array_merge(
-            $this->_dataSelection(),
-            [
-                'map'=> $map,
-                'students' => User::role('mahasiswa')
-                                ->select('id','name')
-                                ->whereNotIn('id',Map::pluck('student_id'))
-                                ->orderBy('name')
-                                ->get(),
-            ],
+            ['map'=> $map],
+            $this->_dataSelection()
             ));
     }
 
@@ -53,7 +46,7 @@ class MapController extends Controller
     {
         return view('konfigurasi.map-action', array_merge(
             ['map'=> $map],
-            $this->_dataSelection()
+            $this->_dataSelection($map->subject_id),
             ));
     }
 
@@ -78,16 +71,23 @@ class MapController extends Controller
         ]);
     }
 
-    private function _dataSelection()
+    private function _dataSelection($subject_id = '')
     {
+        $student_in_map = Map::whereNotNull('student_id')->where('subject_id',$subject_id)->pluck('student_id');
+        $students = User::role('mahasiswa')->where('subject_id',$subject_id)->whereNotIn('id',$student_in_map);
+        $lectures = User::role('dosen')->where('subject_id',$subject_id);
+        $teachers = User::role('guru')->where('subject_id',$subject_id);
+        if ($subject_id == '') {
+            $student_in_map = Map::whereNotNull('student_id')->pluck('student_id');
+            $students = User::role('mahasiswa')->whereNotIn('id',$student_in_map);
+            $lectures = User::role('dosen');
+            $teachers = User::role('guru');
+        }
 
         return [
-            'students' => User::role('mahasiswa')
-                                ->select('id','name')
-                                ->orderBy('name')
-                                ->get(),
-            'lectures' => User::role('dosen')->select('id','name')->orderBy('name')->get(),
-            'teachers' => User::role('guru')->select('id','name')->orderBy('name')->get(),
+            'students' => $students->select('id','name')->orderBy('name')->get(),
+            'lectures' => $lectures->select('id','name')->orderBy('name')->get(),
+            'teachers' => $teachers->select('id','name')->orderBy('name')->get(),
             'schools' =>  School::select('id','name')->orderBy('id')->get(),
             'subjects' =>  Subject::select('id','name')->orderBy('name')->get(),
         ];

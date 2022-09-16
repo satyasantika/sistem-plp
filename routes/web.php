@@ -80,6 +80,9 @@ Route::middleware('auth')->group(function () {
     Route::get('aktivitas/teachingrespons',function(){
         return view('aktivitas.teachingrespon-list');
     });
+    Route::get('report/mappingresult',function(){
+        return view('report.mapping-result');
+    });
 });
 
 
