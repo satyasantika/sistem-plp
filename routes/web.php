@@ -83,6 +83,9 @@ Route::middleware('auth')->group(function () {
     Route::get('report/mappingresult',function(){
         return view('report.mapping-result');
     });
+    Route::get('report/mappingquota',function(){
+        return view('report.mapping-quota');
+    });
 });
 
 
