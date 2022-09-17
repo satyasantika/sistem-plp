@@ -15,7 +15,9 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
+                        @can('usulan/schoolcoordinators-create')
                         <button type="button" class="btn btn-primary btn-sm mb-3 btn-add">+ Koordinator Guru Pamong</button>
+                        @endcan
                         <div class="table-responsive">
                             <div id="role-table_wrapper" class="dataTables_wrapper no-footer">
                                 <table class="display nowrap dataTable no-footer" id="schoolcoordinator-table" role="grid">

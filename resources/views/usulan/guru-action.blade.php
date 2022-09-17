@@ -29,7 +29,8 @@
                             id="school_id"
                             class="form-control"
                             name="school_id"
-                            @if (auth()->user()->hasrole('korguru')) disabled @endif
+                            {{-- @if (auth()->user()->hasrole('korguru')) disabled @endif --}}
+                            @disabled(true)
                             >
                             <option value="">-- Pilih Sekolah --</option>
                             @foreach ($myschool as $school)
@@ -54,6 +55,7 @@
                             id="subject_id"
                             class="form-control"
                             name="subject_id"
+                            @disabled(true)
                             >
                             <option value="">-- Pilih Mapel --</option>
                             @foreach ($subjects as $subject)

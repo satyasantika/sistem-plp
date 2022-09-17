@@ -73,7 +73,7 @@ class SchoolUserProposalController extends Controller
     private function _dataSelection()
     {
         return [
-            'schools' =>  School::select('id','name')->orderBy('name')->get(),
+            'schools' =>  School::select('id','name')->orderBy('id')->get(),
             'subjects' =>  Subject::select('id','name')->orderBy('name')->get(),
         ];
     }

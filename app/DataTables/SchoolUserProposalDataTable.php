@@ -37,6 +37,11 @@ class SchoolUserProposalDataTable extends DataTable
                     return $row->subjects->name;
                 }
             })
+            ->addColumn('sekolah', function($row){
+                if (isset($row->school_id)) {
+                    return $row->schools->name;
+                }
+            })
             ->setRowId('id');
     }
 
@@ -79,10 +84,12 @@ class SchoolUserProposalDataTable extends DataTable
                     ->printable(false)
                     ->width(60)
                     ->addClass('text-center'),
+            Column::make('sekolah'),
+            Column::make('mapel'),
             Column::make('name')->title('Nama'),
             Column::make('role')->title('Role'),
-            Column::make('usernama')->title('NIP'),
-            Column::make('mapel'),
+            Column::make('nip')->title('NIP'),
+            Column::make('phone')->title('NIP'),
             Column::make('class_count')->title('Rombel'),
             Column::make('registered'),
             Column::make('updated_at'),

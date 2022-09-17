@@ -15,7 +15,9 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
+                        @can('usulan/schoolteachers-create')
                         <button type="button" class="btn btn-primary btn-sm mb-3 btn-add">+ Guru Pamong</button>
+                        @endcan
                         <div class="table-responsive">
                             <div id="role-table_wrapper" class="dataTables_wrapper no-footer">
                                 <table class="display dataTable no-footer" id="schoolteacher-table" role="grid">
@@ -31,7 +33,7 @@
                                         <tr>
                                             <td class="text-center align-top">
                                                 @can('usulan/schoolteachers-update')
-                                                <button type="button" data-id="{{ $teacher->id }}" data-jenis="edit" class="btn btn-primary btn-sm action"><i class="ti-pencil"></i></button>
+                                                <button type="button" data-id="{{ $teacher->id }}" data-jenis="edit" class="btn btn-primary btn-sm action">Edit</button>
                                                 @endcan
                                                 @can('usulan/schoolteachers-delete')
                                                 <button type="button" data-id="{{ $teacher->id }}" data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>
