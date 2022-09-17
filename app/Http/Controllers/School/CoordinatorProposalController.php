@@ -11,61 +11,72 @@ class CoordinatorProposalController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:usulan/school_coordinators-read', ['only' => ['index','show']]);
-        $this->middleware('permission:usulan/school_coordinators-create', ['only' => ['create','store']]);
-        $this->middleware('permission:usulan/school_coordinators-update', ['only' => ['edit','update']]);
-        $this->middleware('permission:usulan/school_coordinators-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:usulan/schoolcoordinators-read', ['only' => ['index','show']]);
+        $this->middleware('permission:usulan/schoolcoordinators-create', ['only' => ['create','store']]);
+        $this->middleware('permission:usulan/schoolcoordinators-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:usulan/schoolcoordinators-delete', ['only' => ['destroy']]);
     }
 
     public function index()
     {
         $id = auth()->id();
         $myschool = School::where('headmaster_id',$id)->orWhere('coordinator_id',$id)->pluck('id');
-        $coordinators = SchoolUserProposal::whereIn('school_id',$myschool)->where('candidate_role','korgur')->get();
+        $coordinators = SchoolUserProposal::whereIn('school_id',$myschool)
+                        ->where('role','korguru')->get();
 
-        return view('usulan.korgur', compact('coordinators'));
+        return view('usulan.korguru', compact('coordinators'));
     }
 
     public function create()
     {
-        $id = auth()->id();
-        $myschool = School::where('headmaster_id',$id)->get();
-
-        return view('usulan.korgur-create',compact('myschool'));
+        $schoolcoordinator = new SchoolUserProposal();
+        return view('usulan.korguru-action', array_merge(
+            [
+                'schoolcoordinator'=> $schoolcoordinator,
+                'myschool'=> School::where('headmaster_id',auth()->id())->get(),
+            ]
+        ));
     }
 
     public function store(Request $request)
     {
         SchoolUserProposal::create($request->all());
-        return $this->index();
+        return response()->json([
+            'success' => true,
+            'message' => 'Usulan <strong>'.$request->name.'</strong> telah ditambahkan'
+        ]);
     }
 
-    public function show($id)
+
+    public function edit(SchoolUserProposal $schoolcoordinator)
     {
-        //
+        return view('usulan.korguru-action', array_merge(
+            [
+                'schoolcoordinator'=> $schoolcoordinator,
+                'myschool'=> School::where('headmaster_id',auth()->id())->get(),
+            ]
+        ));
     }
 
-    public function edit(SchoolUserProposal $coordinator)
+    public function update(Request $request, SchoolUserProposal $schoolcoordinator)
     {
-        $id = auth()->id();
-        $myschool = School::where('headmaster_id',$id)->orWhere('coordinator_id',$id)->get();
+        $data = $request->all();
+        $schoolcoordinator->fill($data)->save();
 
-        return view('usulan.korgur-edit', compact('coordinator','myschool'));
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Usulan <strong>'.$request->name.'</strong> telah diperbarui'
+        ]);
     }
 
-    public function update(Request $request, SchoolUserProposal $coordinator)
+    public function destroy(SchoolUserProposal $schoolcoordinator)
     {
+        $name = $schoolcoordinator->name;
 
-        $coordinator->candidate_name = $request->candidate_name;
-        $coordinator->school_id = $request->school_id;
-        $coordinator->save();
-
-        return $this->index();
-    }
-
-    public function destroy(SchoolUserProposal $coordinator)
-    {
-        $coordinator->delete();
-        return $this->index();
+        $schoolcoordinator->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Usulan <strong>'.$name.'</strong> telah dihapus'
+        ]);
     }
 }

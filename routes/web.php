@@ -42,8 +42,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('konfigurasi/formitems', App\Http\Controllers\FormItemController::class)->except('show');
     Route::resource('konfigurasi/assessments', App\Http\Controllers\AssessmentController::class)->except('show');
     Route::resource('konfigurasi/observations', App\Http\Controllers\ObservationController::class)->except('show');
-    Route::resource('usulan/school_coordinators', App\Http\Controllers\School\CoordinatorProposalController::class)->except('show');
-    Route::resource('usulan/school_teachers', App\Http\Controllers\School\TeacherProposalController::class)->except('show');
+    Route::resource('usulan/schoolcoordinators', App\Http\Controllers\School\CoordinatorProposalController::class)->except('show');
+    Route::resource('usulan/schoolteachers', App\Http\Controllers\School\TeacherProposalController::class)->except('show');
     Route::resource('mapping/mastermaps', App\Http\Controllers\Map\MasterMapController::class)->except('show');
     Route::resource('mapping/departementmaps', App\Http\Controllers\Map\DepartementMapController::class)->only(['index','edit','update']);
 

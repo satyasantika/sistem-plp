@@ -79,8 +79,9 @@ class SchoolUserProposalDataTable extends DataTable
                     ->printable(false)
                     ->width(60)
                     ->addClass('text-center'),
-            Column::make('candidate_name')->title('Nama'),
-            Column::make('candidate_role')->title('Role'),
+            Column::make('name')->title('Nama'),
+            Column::make('role')->title('Role'),
+            Column::make('usernama')->title('NIP'),
             Column::make('mapel'),
             Column::make('class_count')->title('Rombel'),
             Column::make('registered'),
