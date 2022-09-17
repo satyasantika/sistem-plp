@@ -39,7 +39,7 @@
                                             </td>
                                             <td>
                                                 {{ $coordinator->name }} <span class="badge bg-light text-dark">{{ $coordinator->nip }}</span>
-                                                <br>{{ $coordinator->schools->name }}
+                                                {{ $coordinator->schools->name }} <span class="badge bg-light text-dark">{{ $coordinator->phone }}</span>
                                             </td>
                                             <td>{{ $coordinator->registered ? 'sudah' : 'belum'}}</td>
                                         </tr>

@@ -20,9 +20,12 @@ class CoordinatorProposalController extends Controller
     public function index()
     {
         $id = auth()->id();
-        $myschool = School::where('headmaster_id',$id)->orWhere('coordinator_id',$id)->pluck('id');
+        $myschool = School::where('headmaster_id',$id)
+                        ->orWhere('coordinator_id',$id)
+                        ->pluck('id');
         $coordinators = SchoolUserProposal::whereIn('school_id',$myschool)
-                        ->where('role','korguru')->get();
+                        ->where('role','korguru')
+                        ->get();
 
         return view('usulan.korguru', compact('coordinators'));
     }

@@ -23,9 +23,10 @@ return new class extends Migration
         Schema::create('school_user_proposals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('school_id')->constrained();
-            $table->string('name');
-            $table->string('role'); // enum(guru,korgur)
-            $table->string('username')->nullable();
+            $table->string('name')->nullable();
+            $table->string('role')->nullable(); // enum(guru,korgur)
+            $table->string('nip')->nullable();
+            $table->string('phone')->nullable();
             $table->string('subject_id')->nullable();
             $table->foreign('subject_id')->references('id')->on('subjects')->constrained();
             $table->integer('class_count')->nullable();

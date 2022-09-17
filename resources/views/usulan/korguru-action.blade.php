@@ -57,6 +57,17 @@
                             id="nip">
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">no. WA (Gunakan format: 81XXXXX)</label>
+                        <input
+                            type="text"
+                            value="{{ $schoolcoordinator->phone }}"
+                            name="phone"
+                            class="form-control"
+                            id="phone">
+                    </div>
+                </div>
             </div>
         </div>
         <div class="modal-footer">

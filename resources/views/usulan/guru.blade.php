@@ -8,46 +8,49 @@
 @section('content')
 <div class="main-content">
     <div class="title">
-        {{ ucFirst(request()->segment(1)) }} {{ ucFirst(request()->segment(2)) }}
+        Usulan Guru Pamong
     </div>
     <div class="content-wrapper">
         <div class="row same-height">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <a href="{{ route('teachers.create') }}" class="btn btn-primary btn-sm mb-3 btn-add">+ {{ request()->segment(2) }}</a>
-                        <table class="table table-hover table-responsive" id="teacher-table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nama Sekolah</th>
-                                    <th scope="col">Nama Koordinator GP</th>
-                                    <th scope="col">Mapel</th>
-                                    <th scope="col">Persetujuan</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($teachers as $teacher)
-                                <tr>
-                                    <td scope="row">
-                                        <a href="{{ route('teachers.edit',$teacher) }}" class="btn btn-primary btn-sm"><i class="ti-pencil"></i></a>
-                                        <a href="{{ route('teachers.destroy',$teacher->id) }}" onclick="event.preventDefault();document.getElementById('delete-form').submit();" class="btn btn-danger btn-sm"><i class="ti-trash"></i></a>
-                                        @can('usulan/teachers-delete')
-                                        <form id="delete-form" action="{{ route('teachers.destroy',$teacher->id) }}" method="POST"
-                                            style="display: none;">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
-                                        @endcan
-                                    </td>
-                                    <td>{{ $teacher->candidate_name }}</td>
-                                    <td>{{ isset($teacher->subject_id) ? $teacher->subjects->name : '' }}</td>
-                                    <td>{{ $teacher->schools->name }}</td>
-                                    <td>{{ $teacher->registered }}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                        <button type="button" class="btn btn-primary btn-sm mb-3 btn-add">+ Guru Pamong</button>
+                        <div class="table-responsive">
+                            <div id="role-table_wrapper" class="dataTables_wrapper no-footer">
+                                <table class="display dataTable no-footer" id="schoolteacher-table" role="grid">
+                                    <thead>
+                                        <tr role="row">
+                                            <th scope="col">#</th>
+                                            <th scope="col">Nama Guru</th>
+                                            <th scope="col">Persetujuan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($teachers as $teacher)
+                                        <tr>
+                                            <td class="text-center align-top">
+                                                @can('usulan/schoolteachers-update')
+                                                <button type="button" data-id="{{ $teacher->id }}" data-jenis="edit" class="btn btn-primary btn-sm action"><i class="ti-pencil"></i></button>
+                                                @endcan
+                                                @can('usulan/schoolteachers-delete')
+                                                <button type="button" data-id="{{ $teacher->id }}" data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>
+                                                @endcan
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-primary">{{ $teacher->subjects->name }}</span>
+                                                {{ $teacher->name }} <span class="badge bg-light text-dark">{{ $teacher->nip }}</span>
+                                                {{ $teacher->schools->name }} <span class="badge bg-light text-dark">{{ $teacher->phone }}</span>
+                                            </td>
+                                            <td class="text-center align-top">{{ $teacher->registered ? 'sudah' : 'belum'}}</td>
+                                        </tr>
+                                        @empty
+                                            <div class="alert alert-info">Belum Mengusulkan</div>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -67,4 +70,8 @@
     <script src="{{ asset('') }}vendor/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
     <script src="{{ asset('') }}vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('') }}vendor/izitoast/dist/js/iziToast.min.js"></script>
+    <script src="{{ asset('') }}assets/js/crud2-datatables.js"></script>
+    <script>
+        crudDataTables('schoolteacher-table')
+    </script>
 @endpush
