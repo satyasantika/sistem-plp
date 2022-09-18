@@ -53,7 +53,7 @@
                                                         @endphp
                                                         @foreach ($subjects as $subject)
                                                         <span class="badge bg-light rounded-pill text-dark">
-                                                            {{ $subject->subjects->name }}
+                                                            {{ ucwords($subject->subjects->abbreviation) }}
                                                             <span class="badge bg-primary rounded-pill">
                                                                 {{ $subject->total }}
                                                             </span>

@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Configuration;
 
 use App\Models\Map;
 use App\Models\Diary;
 use Illuminate\Http\Request;
 use App\DataTables\DiaryDataTable;
+use App\Http\Controllers\Controller;
 
 class DiaryController extends Controller
 {

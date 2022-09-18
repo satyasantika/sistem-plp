@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Configuration;
 
 use App\Models\School;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use App\Models\SchoolUserProposal;
+use App\Http\Controllers\Controller;
 use App\DataTables\SchoolUserProposalDataTable;
 
 class SchoolUserProposalController extends Controller

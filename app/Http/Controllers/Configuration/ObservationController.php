@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Configuration;
 
 use App\Models\Map;
 use App\Models\Form;
 use App\Models\Observation;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\DataTables\ObservationDataTable;
 
 class ObservationController extends Controller

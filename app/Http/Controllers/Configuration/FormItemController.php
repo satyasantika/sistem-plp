@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Configuration;
 
 use App\Models\Form;
 use App\Models\FormItem;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\DataTables\FormItemDataTable;
 
 class FormItemController extends Controller

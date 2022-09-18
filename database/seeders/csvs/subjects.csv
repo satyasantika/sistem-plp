@@ -1,11 +1,11 @@
-id,name,departement
-03,penmas,Pendidikan Masyarakat
-21,b.indonesia,Pendidikan Bahasa Indonesia
-22,b.inggris,Pendidikan Bahasa Inggris
-51,matematika,Pendidikan Matematika
-53,fisika,Pendidikan Fisika
-54,biologi,Pendidikan Biologi
-65,ekonomi,Pendidikan Ekonomi
-70,geografi,Pendidikan Geografi
-71,sejarah,Pendidikan Sejarah
-91,penjas,Pendidikan Jasmani
+id,name,departement,abbreviation
+03,penmas,Pendidikan Masyarakat,mas
+21,b.indonesia,Pendidikan Bahasa Indonesia,ind
+22,b.inggris,Pendidikan Bahasa Inggris,ing
+51,matematika,Pendidikan Matematika,mat
+53,fisika,Pendidikan Fisika,fis
+54,biologi,Pendidikan Biologi,bio
+65,ekonomi,Pendidikan Ekonomi,eko
+70,geografi,Pendidikan Geografi,geo
+71,sejarah,Pendidikan Sejarah,sej
+91,penjas,Pendidikan Jasmani,jas

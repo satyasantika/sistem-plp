@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Configuration;
 
 use App\Models\User;
 use App\Models\School;
 use Illuminate\Http\Request;
 use App\DataTables\SchoolDataTable;
+use App\Http\Controllers\Controller;
 
 class SchoolController extends Controller
 {

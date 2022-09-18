@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Configuration;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
 use App\DataTables\RoleDataTable;
 use App\Http\Requests\RoleRequest;
+use App\Http\Controllers\Controller;
 
 class RoleController extends Controller
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Configuration;
 
 use App\Models\User;
 use App\Models\Subject;
@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\DataTables\UserDataTable;
 use App\Http\Requests\UserRequest;
 use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
@@ -27,7 +28,7 @@ class UserController extends Controller
     public function create()
     {
         $user = new User();
-        
+
         return view('konfigurasi.user-action', array_merge(
             [ 'user' => $user ],
             $this->_dataSelection(),

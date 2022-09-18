@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Configuration;
 
 use App\Models\Map;
 use App\Models\User;
@@ -8,6 +8,7 @@ use App\Models\School;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use App\DataTables\MapDataTable;
+use App\Http\Controllers\Controller;
 
 class MapController extends Controller
 {

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('id')->primary();
             $table->string('name');
             $table->string('departement');
+            $table->string('abbreviation');
         });
         Schema::create('schools', function (Blueprint $table) {
             $table->id();
