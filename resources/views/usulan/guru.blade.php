@@ -41,8 +41,13 @@
                                             </td>
                                             <td>
                                                 <span class="badge bg-primary">{{ $teacher->subjects->name }}</span>
-                                                {{ $teacher->name }} <span class="badge bg-light text-dark">{{ $teacher->nip }}</span>
-                                                {{ $teacher->schools->name }} <span class="badge bg-light text-dark">{{ $teacher->phone }}</span>
+                                                {{ $teacher->name }} <span class="badge bg-light text-dark">{{ $teacher->nip }}</span><br>
+                                                {{ $teacher->schools->name }} <span
+                                                @class([
+                                                    'badge',
+                                                    'bg-light',
+                                                    (isset($teacher->phone)) ? 'text-dark' : 'text-danger'
+                                                ])>{{ $teacher->phone ?? 'no.WA belum ada, mohon diisi' }}</span>
                                             </td>
                                             <td class="text-center align-top">{{ $teacher->registered ? 'sudah' : 'belum'}}</td>
                                         </tr>

@@ -89,6 +89,9 @@ Route::middleware('auth')->group(function () {
     Route::get('report/summary',function(){
         return view('report.summary');
     });
+    Route::get('report/schooluserproposal',function(){
+        return view('report.user-propose');
+    });
 });
 
 

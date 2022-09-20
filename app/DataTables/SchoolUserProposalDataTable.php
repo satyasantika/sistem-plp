@@ -89,7 +89,7 @@ class SchoolUserProposalDataTable extends DataTable
             Column::make('name')->title('Nama'),
             Column::make('role')->title('Role'),
             Column::make('nip')->title('NIP'),
-            Column::make('phone')->title('NIP'),
+            Column::make('phone'),
             Column::make('class_count')->title('Rombel'),
             Column::make('registered'),
             Column::make('updated_at'),
