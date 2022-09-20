@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -35,5 +36,18 @@ class PasswordChangeController extends Controller
         $user->save();
 
         return redirect()->back()->with("success","Password sudah diubah!");
+    }
+
+    public function resetPasswordPost($id)
+    {
+        //Change Password
+        $user = User::find($id);
+        $user->password = bcrypt($user->username);
+        $user->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Password untuk <strong>'.$user->name.'</strong> telah direset'
+        ]);
     }
 }

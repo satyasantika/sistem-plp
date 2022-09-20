@@ -30,6 +30,7 @@ class UserDataTable extends DataTable
                 $action = '';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="userrole" class="btn btn-secondary btn-sm my-1 rolepermission-action">R</button>';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="userpermission" class="btn btn-secondary btn-sm my-1 rolepermission-action">P</button>';
+                $action .= ' <button type="button" data-id='.$row->id.' data-jenis="reset" class="btn btn-danger btn-sm my-1 reset">R-</button>';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="edit" class="btn btn-primary btn-sm my-1 action"><i class="ti-pencil"></i></button>';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm my-1 action"><i class="ti-trash"></i></button>';
                 return $action;

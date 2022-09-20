@@ -55,7 +55,7 @@
         ]
     @endphp
     @include('pdf.cover',$data)
-    @include('pdf.pengesahan',$data)
     @include('pdf.cover-back',$data)
+    @include('pdf.pengesahan',$data)
 </body>
 </html>
