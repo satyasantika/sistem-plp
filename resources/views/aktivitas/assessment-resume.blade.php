@@ -26,6 +26,8 @@
                                             <th>Mahasiswa</th>
                                             {{-- PERULANGAN JENIS FORM --}}
                                             @foreach ($forms as $form) <th>{{ substr($form,-2) }}</th> @endforeach
+                                            <th class="text-center">Angka</th>
+                                            <th class="text-center">Huruf</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -34,6 +36,10 @@
                                             <td>
                                                 {{ $map->students->name ?? '' }}
                                             </td>
+                                            @php
+                                                $count_form = 0;
+                                                $total_grade = 0;
+                                            @endphp
                                             @foreach ($forms as $form)
                                             {{-- PERULANGAN FORM YANG DINILAI --}}
                                             @php
@@ -55,6 +61,12 @@
                                                     class="btn btn-success btn-sm mb-2">
                                                     {{ $grade }}
                                                 </a>
+                                                @php
+                                                    // hitung banyaknya form
+                                                    $count_form += $assessments->count();
+                                                    //hitung nilai total form
+                                                    $total_grade += $grade;
+                                                @endphp
                                                 @else
                                                 <a
                                                     href="{{ route('schoolassessments.show',['plp_order' => substr(request()->segment(3),-1), 'form_id' => $form]) }}"
@@ -64,6 +76,46 @@
                                                 @endif
                                             </td>
                                             @endforeach
+                                            @php
+                                                $plp_order = substr(request()->segment(3),-1);
+                                                if (auth()->user()->hasrole('dosen'))
+                                                {
+                                                    $plp1_dosen_menus = ['2022N2','2022N8'];
+                                                    $plp2_dosen_menus = ['2022N2','2022N6','2022N7'];
+                                                    $forms = ($plp_order == 1) ? $plp1_dosen_menus : $plp2_dosen_menus ;
+                                                } else {
+                                                    $forms = ['2022N1','2022N3','2022N4','2002N5','2022N6','2022N7'];
+                                                }
+                                                $assessor = 'guru';
+                                                if(auth()->user()->hasrole('dosen')){
+                                                    $assessor = 'dosen';
+                                                }
+                                                $assessments = App\Models\Assessment::where('assessor',$assessor)
+                                                                                    ->where('plp_order',$plp_order)
+                                                                                    ->where('map_id',$map->id)
+                                                                                    ;
+                                            @endphp
+                                                @if ($assessments->exists())
+                                                @php
+                                                    $grade = round($total_grade/count($forms),0);
+                                                    if ($grade < 56) {
+                                                        $letter = 'E';
+                                                    } elseif ($grade < 66) {
+                                                        $letter = 'D';
+                                                    } elseif ($grade < 76) {
+                                                        $letter = 'C';
+                                                    } elseif ($grade < 86) {
+                                                        $letter = 'B';
+                                                    } else {
+                                                        $letter = 'A';
+                                                    }
+                                                @endphp
+                                                <td class="text-center">{{ $grade }}</td>
+                                                <td class="text-center">{{ $letter }}</td>
+                                                @else
+                                                <td></td>
+                                                <td></td>
+                                                @endif
                                         </tr>
                                         @endforeach
                                     </tbody>
