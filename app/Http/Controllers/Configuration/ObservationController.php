@@ -74,8 +74,7 @@ class ObservationController extends Controller
     {
         return [
             'maps' =>  Map::all(),
-            'forms' =>  Form::where('type','yes_no')->pluck('id')->sort(),
-            'items' => ['item01','item02','item03','item04','item05','item06','item07','item08'],
+            'forms' =>  Form::where('type','yes_no'),
             'options' => ['baik','kurang','tidak']
         ];
     }
