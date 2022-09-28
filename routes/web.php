@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('konfigurasi/formitems', App\Http\Controllers\Configuration\FormItemController::class)->except('show');
     Route::resource('konfigurasi/assessments', App\Http\Controllers\Configuration\AssessmentController::class)->except('show');
     Route::resource('konfigurasi/observations', App\Http\Controllers\Configuration\ObservationController::class)->except('show');
+    Route::resource('data/cleaningassessments', App\Http\Controllers\School\CleaningAssessmentController::class)->only(['index','destroy']);
     Route::resource('usulan/schoolcoordinators', App\Http\Controllers\School\CoordinatorProposalController::class)->except('show');
     Route::resource('usulan/schoolteachers', App\Http\Controllers\School\TeacherProposalController::class)->except('show');
     Route::resource('mapping/mastermaps', App\Http\Controllers\Map\MasterMapController::class)->except('show');
@@ -93,6 +94,10 @@ Route::middleware('auth')->group(function () {
     Route::get('report/schooluserproposal',function(){
         return view('report.user-propose');
     });
+
+    // Route::controller(App\Http\Controllers\School\CleaningAssessmentController::class)->group(function(){
+    //     Route::get('data/cleaningassessments','index')->name('cleaningassessment.index');
+    // });
 });
 
 
