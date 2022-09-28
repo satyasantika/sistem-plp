@@ -94,10 +94,10 @@ Route::middleware('auth')->group(function () {
     Route::get('report/schooluserproposal',function(){
         return view('report.user-propose');
     });
+    Route::get('yudisium/plp{plp_order}',function($plp_order){
+        return view('report.yudisium',compact('plp_order'));
+    });
 
-    // Route::controller(App\Http\Controllers\School\CleaningAssessmentController::class)->group(function(){
-    //     Route::get('data/cleaningassessments','index')->name('cleaningassessment.index');
-    // });
 });
 
 

@@ -54,7 +54,7 @@
                                             <td>{{ $assessment->updated_at }}</td>
                                         </tr>
                                         @empty
-                                            <div class="alert alert-info">Belum Ada Data</div>
+                                            <div class="alert alert-info">Penilaian duplikat belum ada</div>
                                         @endforelse
                                     </tbody>
                                 </table>
