@@ -97,6 +97,9 @@ Route::middleware('auth')->group(function () {
     Route::get('yudisium/plp{plp_order}',function($plp_order){
         return view('report.yudisium',compact('plp_order'));
     });
+    Route::get('data/progress/plp{plp_order}',function($plp_order){
+        return view('report.assessment-result',compact('plp_order'));
+    });
 
 });
 
