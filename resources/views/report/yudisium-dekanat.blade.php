@@ -7,11 +7,11 @@
             <tr>
                 <th>Jurusan</th>
                 <th class="text-end">Peserta</th>
-                <th class="text-end">A</th>
-                <th class="text-end">B</th>
-                <th class="text-end">C</th>
-                <th class="text-end">D</th>
-                <th class="text-end">E</th>
+                <th class="text-end px-3">A</th>
+                <th class="text-end px-3">B</th>
+                <th class="text-end px-3">C</th>
+                <th class="text-end px-3">D</th>
+                <th class="text-end px-3">E</th>
                 <th class="text-end">Belum Dinilai</th>
             </tr>
         </thead>
@@ -52,55 +52,80 @@
                     $grade_C = 0;
                     $grade_D = 0;
                     $grade_E = 0;
+                    // $arrayku = []
                     $remain = $students->count();
                     foreach ($students as $map) {
+                    $lecture_assessment = 0;
+                    $teacher_assessment = 0;
 
                         $lecture = App\Models\Assessment::where([
-                                'map_id'=>$map->id,
-                                'plp_order'=>$plp_order,
-                                'assessor' => 'dosen'
-                            ]);
-                        $teacher = App\Models\Assessment::where([
-                                'map_id'=>$map->id,
-                                'plp_order'=>$plp_order,
-                                'assessor' => 'guru'
-                                ]);
-                        if ($lecture->exists() or $teacher->exists()) {
+                            'map_id'=>$map->id,
+                            'plp_order'=>$plp_order,
+                            'assessor' => 'dosen'
+                        ]);
+                        // dd($lecture->get()->maps->id);
+                        // $teacher = App\Models\Assessment::where([
+                        //         'map_id'=>$map->id,
+                        //         'plp_order'=>$plp_order,
+                        //         'assessor' => 'guru'
+                        //     ]);
+                        // if ($lecture->exists() or $teacher->exists()) {
+                        if ($lecture->exists()) {
                             $remain -= 1;
+
+                            $lecture_assessment += $lecture->sum('grade');
+                            // $teacher_assessment += $teacher->sum('grade');
+
+                            // if ($plp_order == 1) {
+                                $lecture_assessment /= $lecture_form_plp1_count;
+                                // }
+
+                            // if ($plp_order == 2) {
+                            //     $lecture_assessment /= $lecture_form_plp2_count;
+                            //     $teacher_assessment /= $teacher_form_plp2_count;
+                            //     $lecture_assessment *= $lecture_percent;
+                            //     $teacher_assessment *= $teacher_percent;
+                            //     $lecture_assessment += $teacher_assessment;
+                            // }
+
+                            $grade = $lecture_assessment;
+
+                            // if ($lecture_assessment < 56) {
+                            //     $grade_E += 1;
+                            // } elseif ($lecture_assessment < 66) {
+                            //     $grade_D += 1;
+                            // } elseif ($lecture_assessment < 76) {
+                            //     $grade_C += 1;
+                            // } elseif ($lecture_assessment < 86) {
+                            //     $grade_B += 1;
+                            // } else {
+                            //     $grade_A += 1;
+                            // }
+
+                            if ($grade >= 86) {
+                                $grade_A += 1;
+                                // dd($grade_E);
+                            } else if ($grade >= 76) {
+                                $grade_B += 1;
+                            } else if ($grade >= 66) {
+                                $grade_C += 1;
+                            } else if ($grade >= 56) {
+                                $grade_D += 1;
+                            } else {
+                                $grade_E += 1;
+                            }
                         } else {
                             continue;
-                        }
-                        $lecture_assessment += $lecture->sum('grade');
-                        $teacher_assessment += $teacher->sum('grade');
-                        if ($plp_order == 1) {
-                            $lecture_assessment /= $lecture_form_plp1_count;
-                        }
-                        if ($plp_order == 2) {
-                            $lecture_assessment /= $lecture_form_plp2_count;
-                            $teacher_assessment /= $teacher_form_plp2_count;
-                            $teacher_assessment *= $teacher_percent;
-                            $lecture_assessment += $teacher_assessment;
-                        }
-                        $grade = $lecture_assessment;
-                        if ($grade >= 86) {
-                            $grade_A += 1;
-                        } elseif ($grade >= 76) {
-                            $grade_B += 1;
-                        } elseif ($grade >= 66) {
-                            $grade_C += 1;
-                        } elseif ($grade >= 56) {
-                            $grade_D += 1;
-                        } else {
-                            $grade_E += 1;
                         }
                     }
                 @endphp
                 <td class="text-end">{{ $grade_A }}</td>
                 <td class="text-end">{{ $grade_B }}</td>
-                <td class="text-end">{{ $grade_C }}</td>
-                <td class="text-end">{{ $grade_D }}</td>
-                <td class="text-end">{{ $grade_E }}</td>
+                <td class="text-end text-danger">{{ $grade_C }}</td>
+                <td class="text-end text-danger">{{ $grade_D }}</td>
+                <td class="text-end text-danger">{{ $grade_E }}</td>
                 <td class="text-end">{{ $remain }}</td>
+                {{-- @dd($remain) --}}
             </tr>
             @php
                 $total_student += $students->count();
@@ -117,9 +142,9 @@
                 <th class="text-end">{{ $total_student }}</th>
                 <th class="text-end">{{ $total_A }}</th>
                 <th class="text-end">{{ $total_B }}</th>
-                <th class="text-end">{{ $total_C }}</th>
-                <th class="text-end">{{ $total_D }}</th>
-                <th class="text-end">{{ $total_E }}</th>
+                <th class="text-end text-danger">{{ $total_C }}</th>
+                <th class="text-end text-danger">{{ $total_D }}</th>
+                <th class="text-end text-danger">{{ $total_E }}</th>
                 <th class="text-end">{{ $total_remain }}</th>
             </tr>
         </tbody>

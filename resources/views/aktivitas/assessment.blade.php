@@ -57,6 +57,7 @@
                                                 @endphp
                                                 @if ($assessment->exists())
                                                 {{ $assessment->first()->grade }} &nbsp;
+                                                @canany(['aktivitas/schoolassessments/plp1-update','aktivitas/schoolassessments/plp2-update'])
                                                 <button type="button"
                                                     data-id={{ $assessment->first()->id }}
                                                     data-form_order="{{ $i+1 }}"
@@ -64,6 +65,7 @@
                                                     data-jenis="edit"
                                                     class="btn btn-success btn-sm mb-2 action"
                                                 >Edit</button>
+                                                @endcanany
                                                 @else
                                                 <button
                                                     type="button"
