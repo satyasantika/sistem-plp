@@ -1,41 +1,16 @@
 @extends('layouts.master')
 
-@push('css')
-    {{-- <link rel="stylesheet" href="{{ asset('') }}vendor/chart.js/dist/Chart.min.css"> --}}
-
-@endpush
-
 @section('content')
 <div class="main-content">
     <div class="title">
         Dashboard
     </div>
-    @can('dashboard/ketua-read')
-    @include('dashboard.chairman')
-    @endcan
-    @can('dashboard/kajur-read')
-    @include('dashboard.departement')
-    @endcan
-    @can('dashboard/dosen-read')
-    @include('dashboard.lecture')
-    @endcan
-    @can('dashboard/mahasiswa-read')
-    @include('dashboard.student')
-    @endcan
-    @can('dashboard/guru-read')
-    @include('dashboard.teacher')
-    @endcan
-    @can('dashboard/kepsek-read')
-    @include('dashboard.headmaster')
-    @endcan
-    @can('dashboard/korguru-read')
-    @include('dashboard.teachercoordinator')
-    @endcan
+    @includeWhen(auth()->user()->can('dashboard/ketua-read'),'dashboard.chairman')
+    @includeWhen(auth()->user()->can('dashboard/kajur-read'),'dashboard.departement')
+    @includeWhen(auth()->user()->can('dashboard/dosen-read'),'dashboard.lecture')
+    @includeWhen(auth()->user()->can('dashboard/mahasiswa-read'),'dashboard.student')
+    @includeWhen(auth()->user()->can('dashboard/guru-read'),'dashboard.teacher')
+    @includeWhen(auth()->user()->can('dashboard/kepsek-read'),'dashboard.headmaster')
+    @includeWhen(auth()->user()->can('dashboard/korguru-read'),'dashboard.coordinator')
 </div>
 @endsection
-
-@push('js')
-    {{-- <script src="{{ asset('') }}vendor/chart.js/dist/Chart.min.js"></script> --}}
-    {{-- <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> --}}
-    {{-- <script src="{{ asset('') }}assets/js/page/index.js"></script> --}}
-@endpush

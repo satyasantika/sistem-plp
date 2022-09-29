@@ -81,25 +81,25 @@ Route::middleware('auth')->group(function () {
     Route::get('aktivitas/reportprint/plp{plp_order}', [App\Http\Controllers\School\ReportPrintController::class, 'generateCover'])->name('generateCover');
     Route::get('aktivitas/teachingrespons',function(){
         return view('aktivitas.teachingrespon-list');
-    });
+    })->middleware('permission:aktivitas/teachingrespons-read');
     Route::get('report/mappingresult',function(){
         return view('report.mapping-result');
-    });
+    })->middleware('permission:report/mappingresult-read');
     Route::get('report/mappingquota',function(){
         return view('report.mapping-quota');
-    });
+    })->middleware('permission:report/mappingquota-read');
     Route::get('report/summary',function(){
         return view('report.summary');
-    });
+    })->middleware('permission:report/summary-read');
     Route::get('report/schooluserproposal',function(){
         return view('report.user-propose');
-    });
+    })->middleware('permission:report/schooluserproposal-read');
     Route::get('yudisium/plp{plp_order}',function($plp_order){
         return view('report.yudisium',compact('plp_order'));
-    });
+    })->middleware('permission:yudisium/plp1-read|yudisium/plp2-read');
     Route::get('data/progress/plp{plp_order}',function($plp_order){
         return view('report.assessment-result',compact('plp_order'));
-    });
+    })->middleware('permission:data/progress/plp1-read|data/progress/plp2-read');
 
 });
 
