@@ -19,7 +19,7 @@ class UserPermissionController extends Controller
     {
         $user = User::find($id);
         $permissions = Permission::orderBy('name')->pluck('name','id');
-        $userPermissions = $user->getAllPermissions()->pluck('id','id')->all();
+        $userPermissions = $user->permissions->pluck('id','id')->all();
 
 
         return view('konfigurasi.userpermission-action',compact('user','permissions','userPermissions'));
