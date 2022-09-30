@@ -55,7 +55,7 @@
                                         @if ($assessment_by_assessor->exists())
                                         @php
                                             $total_grade += $assessment_by_assessor->sum('grade');
-                                            $grade = round($total_grade/count($forms),0);
+                                            $grade = $total_grade/count($forms);
                                             if ($grade < 56) {
                                                 $letter = 'E';
                                             } elseif ($grade < 66) {
@@ -69,9 +69,16 @@
                                             }
                                         @endphp
                                         <td class="text-center">
-                                            @php $status = $grade < 76 ? 'danger' : 'primary'; @endphp
+                                            @php
+                                                $status = 'danger';
+                                                if($grade >= 86){
+                                                    $status = 'primary';
+                                                }elseif ($grade >= 76) {
+                                                    $status = 'dark';
+                                                }
+                                            @endphp
                                             <span class="badge bg-{{ $status }}">
-                                                {{ $letter }} <span class="badge bg-light text-dark rounded-pill">{{ $grade }}</span>
+                                                {{ $letter }} <span class="badge bg-light text-dark rounded-pill">{{ round($grade,1) }}</span>
                                             </span>
                                         </td>
                                         @else

@@ -32,7 +32,18 @@
                                     $total_D = 0;
                                     $total_E = 0;
                                     $total_remain = 0;
+                                    $penmas = 99;
                                 @endphp
+                                <tr>
+                                    <td>penmas</td>
+                                    <td class="text-end">{{ $penmas }}</td>
+                                    <td class="text-end"><span class="badge bg-primary">{{ $penmas }}</span></td>
+                                    <td class="text-end"><span class="badge bg-dark">{{ 0 }}</span></td>
+                                    <td class="text-end text-danger">{{ 0 }}</td>
+                                    <td class="text-end text-danger">{{ 0 }}</td>
+                                    <td class="text-end text-danger">{{ 0 }}</td>
+                                    <td class="text-end">{{ 0 }}</td>
+                                </tr>
                                 @foreach ($subjects as $subject)
                                 @continue($subject->id == '03')
                                 <tr>
@@ -63,8 +74,8 @@
                                         // $arrayku = []
                                         $remain = $students->count();
                                         foreach ($students as $map) {
-                                        $lecture_assessment = 0;
-                                        $teacher_assessment = 0;
+                                        // $lecture_assessment = 0;
+                                        // $teacher_assessment = 0;
 
                                             $lecture = App\Models\Assessment::where([
                                                 'map_id'=>$map->id,
@@ -112,7 +123,6 @@
 
                                                 if ($grade >= 86) {
                                                     $grade_A += 1;
-                                                    // dd($grade_E);
                                                 } else if ($grade >= 76) {
                                                     $grade_B += 1;
                                                 } else if ($grade >= 66) {
@@ -122,13 +132,17 @@
                                                 } else {
                                                     $grade_E += 1;
                                                 }
+                                                $lecture_assessment = 0;
+                                                $teacher_assessment = 0;
+
+
                                             } else {
                                                 continue;
                                             }
                                         }
                                     @endphp
-                                    <td class="text-end">{{ $grade_A }}</td>
-                                    <td class="text-end">{{ $grade_B }}</td>
+                                    <td class="text-end"><span class="badge bg-primary">{{ $grade_A }}</span></td>
+                                    <td class="text-end"><span class="badge bg-dark">{{ $grade_B }}</span></td>
                                     <td class="text-end text-danger">{{ $grade_C }}</td>
                                     <td class="text-end text-danger">{{ $grade_D }}</td>
                                     <td class="text-end text-danger">{{ $grade_E }}</td>

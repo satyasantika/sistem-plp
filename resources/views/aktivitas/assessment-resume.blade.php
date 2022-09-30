@@ -97,7 +97,7 @@
                                             @endphp
                                                 @if ($assessments->exists())
                                                 @php
-                                                    $grade = round($total_grade/count($forms),0);
+                                                    $grade = $total_grade/count($forms);
                                                     if ($grade < 56) {
                                                         $letter = 'E';
                                                     } elseif ($grade < 66) {
@@ -110,7 +110,7 @@
                                                         $letter = 'A';
                                                     }
                                                 @endphp
-                                                <td class="text-center">{{ $grade }}</td>
+                                                <td class="text-center">{{ round($grade,1) }}</td>
                                                 <td class="text-center">{{ $letter }}</td>
                                                 @else
                                                 <td></td>

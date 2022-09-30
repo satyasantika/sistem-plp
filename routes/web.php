@@ -1,6 +1,7 @@
 <?php
 
 use App\Exports\ExportMap;
+use App\Exports\ExportYudisium;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\RoleController;
@@ -112,5 +113,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/export-maps',function(){
     $file_name = 'mapping'.date('YmdHis').'.xlsx';
     return Excel::download(new ExportMap, $file_name);
+});
+Route::get('/export-yudisium',function(){
+    $file_name = 'yudisium-plp1-'.date('YmdHis').'.xlsx';
+    return Excel::download(new ExportYudisium, $file_name);
 });
 
