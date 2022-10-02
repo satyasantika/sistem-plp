@@ -52,6 +52,6 @@ class TeacherMapController extends Controller
     private function _mySchoolId()
     {
         $id = auth()->user()->id;
-        return School::where('headmaster_id',$id)->orWhere('headmaster_id',$id)->first()->id;
+        return School::where('headmaster_id',$id)->orWhere('coordinator_id',$id)->first()->id;
     }
 }
