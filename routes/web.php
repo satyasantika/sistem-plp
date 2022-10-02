@@ -49,6 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('usulan/schoolteachers', App\Http\Controllers\School\TeacherProposalController::class)->except('show');
     Route::resource('mapping/mastermaps', App\Http\Controllers\Map\MasterMapController::class)->except('show');
     Route::resource('mapping/departementmaps', App\Http\Controllers\Map\DepartementMapController::class)->only(['index','edit','update']);
+    Route::resource('mapping/teachermaps', App\Http\Controllers\Map\TeacherMapController::class)->only(['index','edit','update']);
 
     Route::controller(App\Http\Controllers\School\StudentDiaryController::class)->group(function () {
         Route::get('aktivitas/studentdiaries/plp{plp}','index')->name('studentdiaries.index');
@@ -101,6 +102,8 @@ Route::middleware('auth')->group(function () {
     Route::get('data/progress/plp{plp_order}',function($plp_order){
         return view('report.assessment-result',compact('plp_order'));
     })->middleware('permission:data/progress/plp1-read|data/progress/plp2-read');
+    //TMP
+    Route::get('data/schooluserapprovals',[App\Http\Controllers\School\SchoolUserController::class, 'index']);
 
 });
 

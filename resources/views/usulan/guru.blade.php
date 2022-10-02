@@ -32,15 +32,29 @@
                                         @forelse ($teachers as $teacher)
                                         <tr>
                                             <td class="text-center align-top">
-                                                @can('usulan/schoolteachers-update')
-                                                <button type="button" data-id="{{ $teacher->id }}" data-jenis="edit" class="btn btn-primary btn-sm action">Edit</button>
-                                                @endcan
-                                                @can('usulan/schoolteachers-delete')
-                                                <button type="button" data-id="{{ $teacher->id }}" data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>
-                                                @endcan
+                                                @if (!$teacher->registered)
+                                                    @can('usulan/schoolteachers-update')
+                                                    <button
+                                                        type="button"
+                                                        data-id="{{ $teacher->id }}"
+                                                        data-jenis="edit"
+                                                        class="btn btn-primary btn-sm action">
+                                                        Edit
+                                                    </button>
+                                                    @endcan
+                                                    @can('usulan/schoolteachers-delete')
+                                                    <button
+                                                        type="button"
+                                                        data-id="{{ $teacher->id }}"
+                                                        data-jenis="delete"
+                                                        class="btn btn-danger btn-sm action">
+                                                        <i class="ti-trash"></i>
+                                                    </button>
+                                                    @endcan
+                                                @endif
                                             </td>
                                             <td>
-                                                <span class="badge bg-primary">{{ $teacher->subjects->name }}</span>
+                                                <span class="badge bg-dark">{{ $teacher->subjects->name }}</span>
                                                 {{ $teacher->name }} <span class="badge bg-light text-dark">{{ $teacher->nip }}</span><br>
                                                 {{ $teacher->schools->name }} <span
                                                 @class([
@@ -49,7 +63,18 @@
                                                     (isset($teacher->phone)) ? 'text-dark' : 'text-danger'
                                                 ])>{{ $teacher->phone ?? 'no.WA belum ada, mohon diisi' }}</span>
                                             </td>
-                                            <td class="text-center align-top">{{ $teacher->registered ? 'sudah' : 'belum'}}</td>
+                                            <td class="text-center align-top">
+                                                {{ $teacher->registered ? 'sudah' : 'belum'}}
+                                                @can('')
+                                                    <button
+                                                        type="button"
+                                                        data-id="{{ $teacher->id }}"
+                                                        data-jenis="edit"
+                                                        class="btn btn-primary btn-sm action">
+                                                        Edit
+                                                    </button>
+                                                @endcan
+                                            </td>
                                         </tr>
                                         @empty
                                             <div class="alert alert-info">Belum Mengusulkan</div>
