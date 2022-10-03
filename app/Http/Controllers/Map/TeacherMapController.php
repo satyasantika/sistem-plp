@@ -21,6 +21,7 @@ class TeacherMapController extends Controller
     {
         $my_subject_maps = Map::where('school_id',$this->_mySchoolId())
                                 ->where('year',2022)
+                                ->where('plp2',1)
                                 ->orderBy('subject_id')
                                 ->get();
         return view('map.teachermap',compact('my_subject_maps'));

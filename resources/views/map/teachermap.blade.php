@@ -21,7 +21,7 @@
                                     <thead>
                                         <tr role="row">
                                             <th></th>
-                                            <th>Sekolah</th>
+                                            <th>Proses Pemetaan</th>
                                         </tr>
                                     </thead>
                                     <tbody>

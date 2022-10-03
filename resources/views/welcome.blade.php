@@ -48,6 +48,7 @@
                                                         @php
                                                             $subjects = App\Models\Map::select('subject_id', DB::raw('count(subject_id) as total'))
                                                                                         ->where('school_id',$school->id)
+                                                                                        ->where('plp2',1)
                                                                                         ->groupBy('subject_id')
                                                                                         ->get();
                                                         @endphp

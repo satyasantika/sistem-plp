@@ -21,13 +21,14 @@
                         <div class="table-responsive">
                             <div id="role-table_wrapper" class="dataTables_wrapper no-footer">
                                 <table class="display dataTable no-footer" id="assessment-table" role="grid">
+                                    @php $plp_order = substr(request()->segment(3),-1); @endphp
                                     <thead>
                                         <tr role="row">
                                             <th>Mahasiswa</th>
                                             {{-- PERULANGAN JENIS FORM --}}
                                             @foreach ($forms as $form) <th>{{ substr($form,-2) }}</th> @endforeach
-                                            <th class="text-center">Angka</th>
-                                            <th class="text-center">Huruf</th>
+                                            <th class="text-center">Nilai</th>
+                                            @if ($plp_order == 1) <th class="text-center">Huruf</th> @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -43,7 +44,6 @@
                                             @foreach ($forms as $form)
                                             {{-- PERULANGAN FORM YANG DINILAI --}}
                                             @php
-                                                $plp_order = substr(request()->segment(3),-1);
                                                 $assessments = App\Models\Assessment::where('form_id',$form)
                                                                                     ->where('plp_order',$plp_order)
                                                                                     ->where('map_id',$map->id)
@@ -111,7 +111,7 @@
                                                     }
                                                 @endphp
                                                 <td class="text-center">{{ round($grade,1) }}</td>
-                                                <td class="text-center">{{ $letter }}</td>
+                                                @if ($plp_order == 1) <td class="text-center">{{ $letter }}</td> @endif
                                                 @else
                                                 <td></td>
                                                 <td></td>
