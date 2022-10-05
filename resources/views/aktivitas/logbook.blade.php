@@ -30,7 +30,7 @@
                                         @forelse($diaries as $diary)
                                         <tr>
                                             <td class="text-center align-top">
-                                                @canany('aktivitas/studentdiaries/plp1-update','aktivitas/studentdiaries/plp1-update')
+                                                @canany(['aktivitas/studentdiaries/plp1-update','aktivitas/studentdiaries/plp2-update'])
                                                 @if ($diary->verified == 0)
                                                 <button
                                                     type="button"
