@@ -101,7 +101,7 @@ Route::middleware('auth')->group(function () {
     })->middleware('permission:yudisium/plp1-read|yudisium/plp2-read');
     Route::get('data/progress/plp{plp_order}',function($plp_order){
         return view('report.assessment-result',compact('plp_order'));
-    })->middleware('permission:data/progress/plp1-read|data/progress/plp2-read');
+    })->middleware('permission:data/progress/plp1-read|data/progress/plp2-read|'.request()->segment(3).'-read');
     //TMP
     Route::get('data/schooluserapprovals',[App\Http\Controllers\School\SchoolUserController::class, 'index']);
 
