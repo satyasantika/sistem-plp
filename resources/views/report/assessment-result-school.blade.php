@@ -1,5 +1,10 @@
+
 @php
     $schools = App\Models\School::all();
+    if (auth()->user()->hasAnyRole('kepsek','korguru')) {
+        $id = auth()->user()->id;
+        $schools = App\Models\School::where('headmaster_id',$id)->orWhere('coordinator_id',$id)->get();
+    }
     $forms = ['2022N1','2022N3','2022N4','2022N5','2022N6','2022N7'];
 @endphp
 <div class="col-auto">
@@ -28,7 +33,7 @@
                         continue;
                     }
                 }
-                $percent = round($assessed/$quota->count() * 100,2)
+                $percent = round($assessed/(13*$quota->count()) * 100,2)
             @endphp
             <div class="accordion mb-3" id="school-accordion">
                 <div class="accordion-item">
@@ -46,7 +51,7 @@
                             {{ $school->name }} (Progress {{ $percent.'%' }})
                         </button>
                     </h2>
-                    <div id="collapse{{ $school->id }}" class="accordion-collapse collapse"
+                    <div id="collapse{{ $school->id }}" class="accordion-collapse collapse {{ auth()->user()->hasAnyRole('kepsek','korguru') ? 'show' : '' }}"
                         aria-labelledby="heading{{ $school->id }}" data-bs-parent="#school-accordion">
                         <div class="accordion-body">
                             <div class="table-responsive">
@@ -60,65 +65,65 @@
                                     <tbody>
                                         @php
                                             // List guru
-                                            $teachers = App\Models\SchoolUserProposal::where('school_id',$school->id)
-                                                                        ->orderBy('name')
-                                                                        ->get();
-                                                                        // dd($teachers);
-                                            @endphp
-                                        @foreach ($teachers as $teacher)
+                                            $school_maps = App\Models\Map::distinct()
+                                                                        ->where('school_id',$school->id)
+                                                                        ->pluck('teacher_id');
+                                        @endphp
+                                        @foreach ($school_maps as $teacher)
                                         <tr>
                                             @php
                                                 // guru dalam mapping
                                                 $quota = App\Models\Map::where([
-                                                                            'teacher_id'=>App\Models\User::where('username',$teacher->nip)->first()->id,
+                                                                            'teacher_id'=>$teacher,
                                                                             'year'=>2022,
                                                                             request()->segment(3)=>1,
                                                                             'school_id'=>$school->id,
                                                                         ])->whereNotNull('student_id')
                                                                         ->get();
-                                                $assessed = 0;
-                                                $form_id = [];
-                                                // untuk setiap guru dalam mapping
-                                                foreach ($quota as $map) {
-                                                    // cek kesudahan guru menilai form
-                                                    foreach ($forms as $form) {
-                                                        $assessment = App\Models\Assessment::where([
-                                                                                    'map_id'=>$map->id,
-                                                                                    'plp_order'=>$plp_order,
-                                                                                    'assessor' => 'guru',
-                                                                                    'form_id' => $form,
-                                                                                    // 'form_order' => 1
-                                                                                    ]);
-                                                        if ($assessment->exists())
-                                                        {
-                                                            $form_id[$form] = 1;
-                                                            $assessed += 1/count($forms);
-                                                        } else {
-                                                            $form_id[$form] = 0;
-                                                            continue;
-                                                        }
-                                                    }
-                                                }
-                                                $percent = round($assessed/$quota->count() * 100,2)
+                                                $user = App\Models\User::find($teacher);
                                             @endphp
                                             <td>
-                                                @if ($map->teachers->phone)
-                                                    <a href="{{ 'http://wa.me/62'.$map->teachers->phone }}" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-whatsapp"></i></a>
+                                                @if (isset($user->phone))
+                                                    <a href="{{ 'http://wa.me/62'.$user->phone }}" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-whatsapp"></i></a>
                                                 @endif
 
-                                                {{ $map->teachers->name ?? '' }}
+                                                {{ $user->name ?? '' }}
                                             </td>
                                             <td class="text-end">
                                                 @foreach ($forms as $form)
-                                                    {{-- @foreach ($form_ids as $form_id) --}}
-                                                        @if ($form_id[$form] == 1)
-                                                        <span class="badge bg-primary rounded-pill"><i class="ti-check"></i> {{ substr($form,-2) }}</span>
+                                                    @php
+                                                        $form_times = App\Models\Form::find($form)->times;
+                                                    @endphp
+                                                    @for ($i = 1; $i <= $form_times; $i++)
+                                                        @php $assessed = 0; @endphp
+                                                        @foreach ($quota as $map)
+                                                            @php
+                                                                $assessment = App\Models\Assessment::where([
+                                                                                            'map_id'=>$map->id,
+                                                                                            'plp_order'=>$plp_order,
+                                                                                            'assessor' => 'guru',
+                                                                                            'form_id' => $form,
+                                                                                            'form_order' => $i
+                                                                                            ]);
+                                                                if ($assessment->doesntExist()) {
+                                                                    continue;
+                                                                }
+                                                                $assessed += 1/($form_times * $quota->count());
+                                                            @endphp
+                                                        @endforeach
+                                                    @endfor
+                                                    @for ($i = 1; $i <= $form_times; $i++)
+                                                        @php $form_name  = ($form_times == 1) ? substr($form,-2) : substr($form,-2).'.'.$i ;
+                                                        @endphp
+                                                        @if ($assessed == 1)
+                                                            <span class="badge bg-success rounded-pill"><i class="ti-check"></i> {{ $form_name }}</span>
+                                                        @elseif ($assessed > 0)
+                                                            <span class="badge bg-warning rounded-pill"><i class="ti-reload"></i> {{ $form_name }}</span>
                                                         @else
-                                                        <span class="badge bg-danger rounded-pill"><i class="ti-close"></i> {{ substr($form,-2) }}</span>
+                                                            <span class="badge bg-danger rounded-pill"><i class="ti-close"></i> {{ $form_name }}</span>
                                                         @endif
-                                                    {{-- @endforeach --}}
+                                                    @endfor
                                                 @endforeach
-                                                {{ $percent.'%' }}
                                             </td>
                                         </tr>
                                         @endforeach
