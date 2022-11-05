@@ -7,6 +7,11 @@
         <th>Jurusan</th>
         <th>Tempat Praktik</th>
         <th>DPL</th>
+        @if (request()->segment(2) == 'plp2')
+            <th>GP</th>
+            <th>Nilai DPL</th>
+            <th>Nilai GP</th>
+        @endif
         <th>Nilai Angka</th>
         <th>Nilai Huruf</th>
         <th>Keterangan</th>
@@ -15,11 +20,29 @@
     <tbody>
     @foreach($maps as $index => $map)
         @php
-            $letter = '';
-            $grade = App\Models\Assessment::where([
-                    'plp_order' => 1,
+            $teacher_grade = App\Models\Assessment::where([
+                    'assessor' => 'guru',
+                    'plp_order' => 2,
                     'map_id' => $map->id,
-                ])->sum('grade')/2;
+                ])->sum('grade')/13;
+
+            $lecture_grade = App\Models\Assessment::where([
+                    'assessor' => 'dosen',
+                    'plp_order' => 2,
+                    'map_id' => $map->id,
+                ])->sum('grade')/3;
+
+            $grade = App\Models\Assessment::where([
+                    'plp_order' => 2,
+                    'map_id' => $map->id,
+                ])->sum('grade')/16;
+
+                if (request()->segment(2) == 'plp1') {
+                    $grade = App\Models\Assessment::where([
+                        'plp_order' => 1,
+                        'map_id' => $map->id,
+                    ])->sum('grade')/2;
+                }
 
             if ($grade >= 86) {
                 $letter = 'A';
@@ -48,6 +71,11 @@
             <td>{{ $map->subjects->departement ?? '' }}</td>
             <td>{{ $map->schools->name ?? '' }}</td>
             <td>{{ $map->lectures->name ?? '' }}</td>
+            @if (request()->segment(2) == 'plp2')
+                <td>{{ $map->teachers->name ?? '' }}</td>
+                <td>{{ $lecture_grade ?? '' }}</td>
+                <td>{{ $teacher_grade ?? '' }}</td>
+            @endif
             <td>{{ $grade }}</td>
             <td>{{ $letter }}</td>
             <td>{{ $description }}</td>

@@ -10,8 +10,10 @@ class ExportYudisium implements FromView
 {
     public function view(): View
     {
+        $plp_order = request()->segment(2);
+        // dd($plp_order);
         return view('exports.yudisium', [
-            'maps' => Map::where('year',2022)->where('plp1',1)->orderBy('subject_id')->get(),
+            'maps' => Map::where('year',2022)->where($plp_order,1)->orderBy('subject_id')->get(),
         ]);
     }
 

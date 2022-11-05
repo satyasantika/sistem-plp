@@ -117,8 +117,8 @@ Route::get('/export-maps',function(){
     $file_name = 'mapping'.date('YmdHis').'.xlsx';
     return Excel::download(new ExportMap, $file_name);
 });
-Route::get('/export-yudisium',function(){
-    $file_name = 'yudisium-plp1-'.date('YmdHis').'.xlsx';
+Route::get('/export-yudisium/{plp_order}',function($plp_order){
+    $file_name = 'yudisium-'.$plp_order.'-'.date('YmdHis').'.xlsx';
     return Excel::download(new ExportYudisium, $file_name);
 });
 
