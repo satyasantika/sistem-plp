@@ -32,7 +32,7 @@ class AssessmentController extends Controller
             $plp2_dosen_menus = ['2022N2','2022N6','2022N7'];
             $forms = ($plp_order == 1) ? $plp1_dosen_menus : $plp2_dosen_menus ;
         } else {
-            $forms = ['2022N1','2022N3','2022N4','2002N5','2022N6','2022N7'];
+            $forms = ['2022N1','2022N3','2022N4','2022N5','2022N6','2022N7'];
         }
 
         return view('aktivitas.assessment-resume',compact('maps','forms'));

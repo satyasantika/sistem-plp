@@ -69,7 +69,7 @@
                                                 @endphp
                                                 @else
                                                 <a
-                                                    href="{{ route('schoolassessments.show',['plp_order' => substr(request()->segment(3),-1), 'form_id' => $form]) }}"
+                                                    href="{{ route('schoolassessments.show',['plp_order' => $plp_order, 'form_id' => $form]) }}"
                                                     class="btn btn-outline-danger btn-sm mb-2">
                                                     {{ 0 }}
                                                 </a>
@@ -84,7 +84,7 @@
                                                     $plp2_dosen_menus = ['2022N2','2022N6','2022N7'];
                                                     $forms = ($plp_order == 1) ? $plp1_dosen_menus : $plp2_dosen_menus ;
                                                 } else {
-                                                    $forms = ['2022N1','2022N3','2022N4','2002N5','2022N6','2022N7'];
+                                                    $forms = ['2022N1','2022N3','2022N4','2022N5','2022N6','2022N7'];
                                                 }
                                                 $assessor = 'guru';
                                                 if(auth()->user()->hasrole('dosen')){
