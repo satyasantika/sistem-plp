@@ -108,11 +108,9 @@
                                                                 if ($assessment->doesntExist()) {
                                                                     continue;
                                                                 }
-                                                                $assessed += 1/($form_times * $quota->count());
+                                                                $assessed += 1/($assessment->count() * $quota->count());
                                                             @endphp
                                                         @endforeach
-                                                    @endfor
-                                                    @for ($i = 1; $i <= $form_times; $i++)
                                                         @php $form_name  = ($form_times == 1) ? substr($form,-2) : substr($form,-2).'.'.$i ;
                                                         @endphp
                                                         @if ($assessed == 1)
