@@ -44,9 +44,14 @@
                                             @foreach ($forms as $form)
                                             {{-- PERULANGAN FORM YANG DINILAI --}}
                                             @php
+                                                $assessor = 'guru';
+                                                if(auth()->user()->hasrole('dosen')){
+                                                    $assessor = 'dosen';
+                                                }
                                                 $assessments = App\Models\Assessment::where('form_id',$form)
                                                                                     ->where('plp_order',$plp_order)
                                                                                     ->where('map_id',$map->id)
+                                                                                    ->where('assessor',$assessor)
                                                                                     ;
                                             @endphp
                                             <td>

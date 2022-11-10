@@ -17,12 +17,12 @@ class CleaningAssessmentController extends Controller
 
     public function index()
     {
-        $code = Assessment::selectRaw("CONCAT_WS('-',`map_id`,`plp_order`,`form_id`,`form_order`) AS code")
+        $code = Assessment::selectRaw("CONCAT_WS('-',`map_id`,`plp_order`,`form_id`,`form_order`,`assessor`) AS code")
                             ->selectRaw("COUNT(*) AS Total")
                             ->groupBy('code')
                             ->havingRaw('Total > ?',[1])
                             ->pluck('code');
-        $assessments = Assessment::whereIn(DB::raw("CONCAT_WS('-',`map_id`,`plp_order`,`form_id`,`form_order`)"),$code)->get();
+        $assessments = Assessment::whereIn(DB::raw("CONCAT_WS('-',`map_id`,`plp_order`,`form_id`,`form_order`,`assessor`)"),$code)->get();
 
         return view('cleaning.assessment',compact('assessments'));
     }
