@@ -1,6 +1,7 @@
 <?php
 
 use App\Exports\ExportMap;
+use App\Exports\ExportProfile;
 use App\Exports\ExportYudisium;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
@@ -120,5 +121,9 @@ Route::get('/export-maps',function(){
 Route::get('/export-yudisium/{plp_order}',function($plp_order){
     $file_name = 'yudisium-'.$plp_order.'-'.date('YmdHis').'.xlsx';
     return Excel::download(new ExportYudisium, $file_name);
+});
+Route::get('/export-profil-gp',function(){
+    $file_name = 'profile-gp-'.date('YmdHis').'.xlsx';
+    return Excel::download(new ExportProfile, $file_name);
 });
 
