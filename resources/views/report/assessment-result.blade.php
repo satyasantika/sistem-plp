@@ -12,7 +12,6 @@
         <div class="row">
             @includeWhen(auth()->user()->hasAnyRole('data'), 'report.assessment-result-departement', ['plp_order' => $plp_order ])
             @includeWhen(auth()->user()->hasAnyRole('kepsek','korguru','data'), 'report.assessment-result-school', ['plp_order' => $plp_order ])
-            {{-- @include('report.assessment-result-school', ['plp_order' => $plp_order ]) --}}
         </div>
     </div>
 </div>
