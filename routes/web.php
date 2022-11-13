@@ -97,6 +97,9 @@ Route::middleware('auth')->group(function () {
     Route::get('report/schooluserproposal',function(){
         return view('report.user-propose');
     })->middleware('permission:report/schooluserproposal-read');
+    Route::get('data/progress/profile',function(){
+        return view('report.profile');
+    })->middleware('permission:data/progress/profile-read');
     Route::get('yudisium/plp{plp_order}',function($plp_order){
         return view('report.yudisium',compact('plp_order'));
     })->middleware('permission:yudisium/plp1-read|yudisium/plp2-read');
