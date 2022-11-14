@@ -1,5 +1,9 @@
 @php
     $subjects = App\Models\Subject::whereNot('id','03')->get();
+    if (auth()->user()->hasAnyRole('kajur')) {
+        $subject_id = auth()->user()->subject_id;
+        $subjects = App\Models\Subject::where('id',$subject_id)->get();
+    }
     $forms = ($plp_order == 1) ? ['2022N2','2022N8'] : ['2022N2','2022N6','2022N7'];
 @endphp
 <div class="col-auto">
@@ -18,14 +22,21 @@
                                         ->get();
                 $assessed = 0;
                 foreach ($quota as $map) {
-                    if (App\Models\Assessment::where([
+                    foreach ($forms as $form){
+                        $form_times = App\Models\Form::find($form)->times;
+                        for ($i = 1; $i <= $form_times; $i++){
+                            $assessment = App\Models\Assessment::where([
                                                         'map_id'=>$map->id,
                                                         'plp_order'=>$plp_order,
-                                                        'assessor' => 'dosen'
-                                                    ])->exists()) {
-                        $assessed += 1;
-                    } else {
-                        continue;
+                                                        'assessor' => 'dosen',
+                                                        'form_id' => $form,
+                                                        'form_order' => $i
+                                                        ]);
+                            if ($assessment->doesntExist()) {
+                                continue;
+                            }
+                            $assessed += 1/($assessment->count());
+                        }
                     }
                 }
                 $percent = round($assessed/(3*$quota->count()) * 100,2)

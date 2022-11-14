@@ -45,17 +45,17 @@
                                             <span class="badge bg-primary">KepSek</span>
                                         </td>
                                         <td class="text-end">
-                                            <span class="badge bg-{{ isset($school->headmasters->golongan) ? 'success' : 'danger' }} rounded-pill">
-                                                golongan
+                                            <span class="badge bg-{{ isset($school->headmasters->golongan) ? 'light text-dark' : 'danger' }} rounded-pill">
+                                                {{ isset($school->headmasters->golongan) ? 'Gol: '.$school->headmasters->golongan : 'golongan?' }}
                                             </span>
-                                            <span class="badge bg-{{ isset($school->headmasters->npwp) ? 'success' : 'danger' }} rounded-pill">
-                                                npwp
+                                            <span class="badge bg-{{ isset($school->headmasters->npwp) ? 'light text-dark' : 'danger' }} rounded-pill">
+                                                {{ isset($school->headmasters->npwp) ? 'npwp: '.$school->headmasters->npwp : 'npwp?' }}
                                             </span>
-                                            <span class="badge bg-{{ isset($school->headmasters->nomor_rekening) ? 'success' : 'danger' }} rounded-pill">
-                                                nomor_rekening
+                                            <span class="badge bg-{{ isset($school->headmasters->nomor_rekening) ? 'light text-dark' : 'danger' }} rounded-pill">
+                                                {{ isset($school->headmasters->nomor_rekening) ? 'norek: '.$school->headmasters->nomor_rekening : 'nomor_rekening?' }}
                                             </span>
-                                            <span class="badge bg-{{ isset($school->headmasters->bank) ? 'success' : 'danger' }} rounded-pill">
-                                                bank
+                                            <span class="badge bg-{{ isset($school->headmasters->bank) ? 'light text-dark' : 'danger' }} rounded-pill">
+                                                {{ isset($school->headmasters->bank) ? $school->headmasters->bank : 'bank?' }}
                                             </span>
                                         </td>
                                     </tr>
@@ -70,17 +70,17 @@
                                             <span class="badge bg-primary">KGP</span>
                                         </td>
                                         <td class="text-end">
-                                            <span class="badge bg-{{ isset($school->coordinators->golongan) ? 'success' : 'danger' }} rounded-pill">
-                                                golongan
+                                            <span class="badge bg-{{ isset($school->coordinators->golongan) ? 'light text-dark' : 'danger' }} rounded-pill">
+                                                {{ isset($school->coordinators->golongan) ? 'Gol: '.$school->coordinators->golongan : 'golongan?' }}
                                             </span>
-                                            <span class="badge bg-{{ isset($school->coordinators->npwp) ? 'success' : 'danger' }} rounded-pill">
-                                                npwp
+                                            <span class="badge bg-{{ isset($school->coordinators->npwp) ? 'light text-dark' : 'danger' }} rounded-pill">
+                                                {{ isset($school->coordinators->npwp) ? 'npwp: '.$school->coordinators->npwp : 'npwp?' }}
                                             </span>
-                                            <span class="badge bg-{{ isset($school->coordinators->nomor_rekening) ? 'success' : 'danger' }} rounded-pill">
-                                                nomor_rekening
+                                            <span class="badge bg-{{ isset($school->coordinators->nomor_rekening) ? 'light text-dark' : 'danger' }} rounded-pill">
+                                                {{ isset($school->coordinators->nomor_rekening) ? 'norek: '.$school->coordinators->nomor_rekening : 'nomor_rekening?' }}
                                             </span>
-                                            <span class="badge bg-{{ isset($school->coordinators->bank) ? 'success' : 'danger' }} rounded-pill">
-                                                bank
+                                            <span class="badge bg-{{ isset($school->coordinators->bank) ? 'light text-dark' : 'danger' }} rounded-pill">
+                                                {{ isset($school->coordinators->bank) ? $school->coordinators->bank : 'bank?' }}
                                             </span>
                                         </td>
                                     </tr>
@@ -104,17 +104,17 @@
                                             <span class="badge bg-dark rounded-pill">GP</span>
                                         </td>
                                         <td class="text-end">
-                                            <span class="badge bg-{{ isset($user->teachers->golongan) ? 'success' : 'danger' }} rounded-pill">
-                                                golongan
+                                            <span class="badge bg-{{ isset($user->teachers->golongan) ? 'light text-dark' : 'danger' }} rounded-pill">
+                                                {{ isset($user->teachers->golongan) ? 'Gol: '.$user->teachers->golongan : 'golongan?' }}
                                             </span>
-                                            <span class="badge bg-{{ isset($user->teachers->npwp) ? 'success' : 'danger' }} rounded-pill">
-                                                npwp
+                                            <span class="badge bg-{{ isset($user->teachers->npwp) ? 'light text-dark' : 'danger' }} rounded-pill">
+                                                {{ isset($user->teachers->npwp) ? 'npwp: '.$user->teachers->npwp : 'npwp?' }}
                                             </span>
-                                            <span class="badge bg-{{ isset($user->teachers->nomor_rekening) ? 'success' : 'danger' }} rounded-pill">
-                                                nomor_rekening
+                                            <span class="badge bg-{{ isset($user->teachers->nomor_rekening) ? 'light text-dark' : 'danger' }} rounded-pill">
+                                                {{ isset($user->teachers->nomor_rekening) ? 'norek: '.$user->teachers->nomor_rekening : 'nomor_rekening?' }}
                                             </span>
-                                            <span class="badge bg-{{ isset($user->teachers->bank) ? 'success' : 'danger' }} rounded-pill">
-                                                bank
+                                            <span class="badge bg-{{ isset($user->teachers->bank) ? 'light text-dark' : 'danger' }} rounded-pill">
+                                                {{ isset($user->teachers->bank) ? $user->teachers->bank : 'bank?' }}
                                             </span>
                                         </td>
                                     </tr>

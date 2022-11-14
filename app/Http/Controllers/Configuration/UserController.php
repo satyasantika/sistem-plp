@@ -84,7 +84,7 @@ class UserController extends Controller
             'providers' => ['Telkomsel','Indosat Oreedoo'],
             'is_pns' => ['nonPNS','PNS'],
             'golongans' => ['I','II','III','IV'],
-            'banks' => ['Mandiri','BRI','BJB','BTN', 'BCA'],
+            'banks' => ['Mandiri','BRI','BJB','BTN','BCA','BNI'],
         ];
     }
 

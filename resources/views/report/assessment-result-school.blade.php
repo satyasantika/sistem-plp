@@ -23,14 +23,21 @@
                                         ->get();
                 $assessed = 0;
                 foreach ($quota as $map) {
-                    if (App\Models\Assessment::where([
+                    foreach ($forms as $form){
+                        $form_times = App\Models\Form::find($form)->times;
+                        for ($i = 1; $i <= $form_times; $i++){
+                            $assessment = App\Models\Assessment::where([
                                                         'map_id'=>$map->id,
                                                         'plp_order'=>$plp_order,
-                                                        'assessor' => 'guru'
-                                                    ])->exists()) {
-                        $assessed += 1;
-                    } else {
-                        continue;
+                                                        'assessor' => 'guru',
+                                                        'form_id' => $form,
+                                                        'form_order' => $i
+                                                        ]);
+                            if ($assessment->doesntExist()) {
+                                continue;
+                            }
+                            $assessed += 1/($assessment->count());
+                        }
                     }
                 }
                 $percent = round($assessed/(13*$quota->count()) * 100,2)
