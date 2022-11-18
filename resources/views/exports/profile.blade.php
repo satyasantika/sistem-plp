@@ -6,6 +6,7 @@
         <th>Peran</th>
         <th>Sekolah</th>
         <th>Mapel</th>
+        <th>NIP</th>
         <th>Status PNS</th>
         <th>Golongan</th>
         <th>NPWP</th>
@@ -23,6 +24,7 @@
             <td>Guru Pamong</td>
             <td>{{ $map->schools->name ?? '' }}</td>
             <td>{{ $map->teachers->subjects->name ?? '' }}</td>
+            <td>{{ $map->teachers->username ?? ''}}</td>
             <td>{{ $map->teachers->is_pns ?? ''}}</td>
             <td>{{ $map->teachers->golongan ?? ''}}</td>
             <td>{{ $map->teachers->npwp ?? '' }}</td>
@@ -39,6 +41,7 @@
             <td>Kepala</td>
             <td>{{ $map->schools->name ?? '' }}</td>
             <td>-</td>
+            <td>{{ $map->schools->headmasters->username ?? ''}}</td>
             <td>{{ $map->schools->headmasters->is_pns ?? ''}}</td>
             <td>{{ $map->schools->headmasters->golongan ?? ''}}</td>
             <td>{{ $map->schools->headmasters->npwp ?? '' }}</td>
@@ -55,6 +58,7 @@
             <td>Koordinator Guru Pamong</td>
             <td>{{ $map->schools->name ?? '' }}</td>
             <td>-</td>
+            <td>{{ $map->schools->coordinators->username ?? ''}}</td>
             <td>{{ $map->schools->coordinators->is_pns ?? ''}}</td>
             <td>{{ $map->schools->coordinators->golongan ?? ''}}</td>
             <td>{{ $map->schools->coordinators->npwp ?? '' }}</td>
