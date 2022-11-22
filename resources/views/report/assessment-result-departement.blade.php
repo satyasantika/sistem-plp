@@ -39,7 +39,8 @@
                         }
                     }
                 }
-                $percent = round($assessed/(3*$quota->count()) * 100,2)
+                $times = ($plp_order == 1) ? 2 : 3;
+                $percent = round($assessed/($times*$quota->count()) * 100,2)
             @endphp
             <div class="accordion mb-3" id="departement-accordion">
                 <div class="accordion-item">
@@ -107,14 +108,14 @@
                                                                 $assessment = App\Models\Assessment::where([
                                                                                             'map_id'=>$map->id,
                                                                                             'plp_order'=>$plp_order,
-                                                                                            'assessor' => 'guru',
+                                                                                            'assessor' => 'dosen',
                                                                                             'form_id' => $form,
                                                                                             'form_order' => $i
                                                                                             ]);
                                                                 if ($assessment->doesntExist()) {
                                                                     continue;
                                                                 }
-                                                                $assessed += 1/($form_times * $quota->count());
+                                                                $assessed += 1/($assessment->count() * $quota->count());
                                                             @endphp
                                                         @endforeach
                                                     @endfor
