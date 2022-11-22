@@ -12,6 +12,7 @@
         <th>NPWP</th>
         <th>No. Rekening</th>
         <th>Bank</th>
+        <th>Keterangan</th>
     </tr>
     </thead>
     <tbody>
@@ -30,6 +31,7 @@
             <td>{{ $map->teachers->npwp ?? '' }}</td>
             <td>{{ $map->teachers->nomor_rekening ?? '' }}</td>
             <td>{{ $map->teachers->bank ?? '' }}</td>
+            <td>{{ \App\Models\Map::where('teacher_id',$map->teacher_id)->where('plp2',1)->count() ?? '' }}</td>
         </tr>
     @endforeach
     {{-- LIST KEPALA SEKOLAH --}}
@@ -47,6 +49,7 @@
             <td>{{ $map->schools->headmasters->npwp ?? '' }}</td>
             <td>{{ $map->schools->headmasters->nomor_rekening ?? '' }}</td>
             <td>{{ $map->schools->headmasters->bank ?? '' }}</td>
+            <td></td>
         </tr>
     @endforeach
     {{-- LIST KOORDINATOR GURU PAMONG --}}
@@ -64,6 +67,7 @@
             <td>{{ $map->schools->coordinators->npwp ?? '' }}</td>
             <td>{{ $map->schools->coordinators->nomor_rekening ?? '' }}</td>
             <td>{{ $map->schools->coordinators->bank ?? '' }}</td>
+            <td></td>
         </tr>
     @endforeach
     </tbody>
