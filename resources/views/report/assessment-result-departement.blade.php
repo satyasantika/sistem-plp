@@ -72,29 +72,22 @@
                                     <tbody>
                                         @php
                                             // List dosen
-                                            $lectures = App\Models\User::role('dosen')
+                                            $lectures = App\Models\Map::distinct()
                                                                         ->where('subject_id',$subject->id)
-                                                                        ->orderBy('name')
-                                                                        ->get();
+                                                                        ->pluck('lecture_id');
                                             @endphp
+                                        {{-- masing-masing dosen --}}
                                         @foreach ($lectures as $lecture)
                                         <tr>
                                             @php
-                                                // dosen dalam mapping
-                                                $quota = App\Models\Map::where([
-                                                                            'lecture_id'=>$lecture->id,
-                                                                            'year'=>2022,
-                                                                            request()->segment(3)=>1,
-                                                                            'subject_id'=>$subject->id,
-                                                                        ])->whereNotNull('student_id')
-                                                                        ->get();
+                                                $user = App\Models\User::find($lecture);
                                             @endphp
                                             <td>
-                                                @if (isset($map->lectures->phone))
-                                                    <a href="{{ 'http://wa.me/62'.$map->lectures->phone }}" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-whatsapp"></i></a>
+                                                @if (isset($user->phone))
+                                                    <a href="{{ 'http://wa.me/62'.$user->phone }}" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-whatsapp"></i></a>
                                                 @endif
 
-                                                {{ $map->lectures->name ?? '' }}
+                                                {{ $user->name ?? '' }}
                                             </td>
                                             <td class="text-end">
                                                 @foreach ($forms as $form)
@@ -102,11 +95,21 @@
                                                         $form_times = App\Models\Form::find($form)->times;
                                                     @endphp
                                                     @for ($i = 1; $i <= $form_times; $i++)
+                                                        @php
+                                                            // dosen dalam mapping
+                                                            $quota = App\Models\Map::where([
+                                                                                        'lecture_id'=>$lecture,
+                                                                                        'year'=>2022,
+                                                                                        request()->segment(3)=>1,
+                                                                                        'subject_id'=>$subject->id,
+                                                                                    ])->whereNotNull('student_id')
+                                                                                    ->pluck('id');
+                                                        @endphp
                                                         @php $assessed = 0; @endphp
                                                         @foreach ($quota as $map)
                                                             @php
                                                                 $assessment = App\Models\Assessment::where([
-                                                                                            'map_id'=>$map->id,
+                                                                                            'map_id'=>$map,
                                                                                             'plp_order'=>$plp_order,
                                                                                             'assessor' => 'dosen',
                                                                                             'form_id' => $form,
