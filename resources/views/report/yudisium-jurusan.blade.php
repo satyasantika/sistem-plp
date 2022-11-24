@@ -4,7 +4,7 @@
     } else {
         $lecture_forms = ['2022N2','2022N6','2022N7'];
     }
-    $teacher_forms = ['2022N1','2022N3','2022N4','2002N5','2022N6','2022N7'];
+    $teacher_forms = ['2022N1','2022N3','2022N4','2022N5','2022N6','2022N7'];
 
 @endphp
 <div class="content-wrapper">
@@ -141,10 +141,7 @@
                                                     if ($teacher_assessment_by_form->exists()) {
                                                         $grade_sum = $teacher_assessment_by_form->sum('grade');
                                                         $form_times = App\Models\Form::find($form)->times;
-                                                        // $grade_sum = round($grade_sum/$form_times,0);
-                                                    }
-                                                    if ($form = '2022N4') {
-                                                        dd($grade_sum);
+                                                        $grade_sum = round($grade_sum/$form_times,0);
                                                     }
                                                 @endphp
                                                 <span class="badge bg-light text-success">
