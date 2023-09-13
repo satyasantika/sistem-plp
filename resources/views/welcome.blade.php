@@ -32,7 +32,7 @@
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <div class="table-responsive">
-                                        <h1>Mitra PLP 2022</h1>
+                                        <h1>Mitra PLP 2023</h1>
                                         <table class="table small-font table-striped table-hover table-sm">
                                             <thead>
                                                 <tr>
@@ -49,6 +49,7 @@
                                                             $subjects = App\Models\Map::select('subject_id', DB::raw('count(subject_id) as total'))
                                                                                         ->where('school_id',$school->id)
                                                                                         ->where('plp2',1)
+                                                                                        ->where('year',2023)
                                                                                         ->groupBy('subject_id')
                                                                                         ->get();
                                                         @endphp
@@ -75,7 +76,7 @@
                         </div>
                     </div>
                     <div class="text-center mt-5 text-muted">
-                        Copyright &copy; 2022 &mdash; FKIP Universitas Siliwangi
+                        Copyright &copy; 2023 &mdash; FKIP Universitas Siliwangi
                     </div>
                 </div>
             </div>

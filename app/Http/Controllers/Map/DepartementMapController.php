@@ -52,7 +52,10 @@ class DepartementMapController extends Controller
 
     private function _mySubjectMap()
     {
-        return Map::where('subject_id',$this->_mySubjectId())->orderBy('school_id')->get();
+        return Map::where([
+            'subject_id'=>$this->_mySubjectId(),
+            'year'=>2023
+            ])->orderBy('school_id')->get();
 
     }
     private function _dataSelection()
@@ -65,12 +68,18 @@ class DepartementMapController extends Controller
         return [
             'students' => User::role('mahasiswa')
                                 ->select('id','name')
-                                ->where('subject_id',$this->_mySubjectId())
+                                ->where([
+                                    'subject_id'=>$this->_mySubjectId(),
+                                    'is_active'=>1
+                                ])
                                 ->whereNotIn('id',$my_student_id_in_maps)
                                 ->orderBy('name')
                                 ->get(),
             'lectures' => User::role('dosen')
-                                ->where('subject_id',$this->_mySubjectId())
+                                ->where([
+                                    'subject_id'=>$this->_mySubjectId(),
+                                    'is_active'=>1
+                                ])
                                 ->orderBy('name')
                                 ->get(),
         ];

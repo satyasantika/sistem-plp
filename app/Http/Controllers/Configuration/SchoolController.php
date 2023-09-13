@@ -74,8 +74,12 @@ class SchoolController extends Controller
     private function _dataSelection()
     {
         return [
-            'kepsek' =>  User::role('kepsek')->select('id','name')->orderBy('name')->get(),
-            'korgur' =>  User::role('korguru')->select('id','name')->orderBy('name')->get(),
+            'kepsek' =>  User::role('kepsek')
+                        ->select('id','name')
+                        ->where('is_active',1)
+                        ->orderBy('name')
+                        ->get(),
+            'korgur' =>  User::role('korguru')->select('id','name')->where('is_active',1)->orderBy('name')->get(),
         ];
     }
 

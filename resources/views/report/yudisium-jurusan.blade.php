@@ -1,10 +1,10 @@
 @php
     if ($plp_order == 1) {
-        $lecture_forms = ['2022N2','2022N8'];
+        $lecture_forms = ['2023N2','2023N8'];
     } else {
-        $lecture_forms = ['2022N2','2022N6','2022N7'];
+        $lecture_forms = ['2023N2','2023N6','2023N7'];
     }
-    $teacher_forms = ['2022N1','2022N3','2022N4','2002N5','2022N6','2022N7'];
+    $teacher_forms = ['2023N1','2023N3','2023N4','2002N5','2023N6','2023N7'];
 
 @endphp
 <div class="content-wrapper">
@@ -29,7 +29,7 @@
                                     @php
                                         $maps = App\Models\Map::join('users','users.id','maps.student_id')
                                                         ->where([
-                                                            'year'=>2022,
+                                                            'year'=>2023,
                                                             request()->segment(2)=>1,
                                                             'maps.subject_id'=>auth()->user()->subject_id
                                                         ])->orderBy('users.name')
@@ -143,7 +143,7 @@
                                                         $form_times = App\Models\Form::find($form)->times;
                                                         // $grade_sum = round($grade_sum/$form_times,0);
                                                     }
-                                                    if ($form = '2022N4') {
+                                                    if ($form = '2023N4') {
                                                         dd($grade_sum);
                                                     }
                                                 @endphp

@@ -15,7 +15,7 @@
                         <table class="table small-font table-striped table-hover table-sm">
                             <tbody>
                                 @php
-                                    $maps = App\Models\Map::where('student_id',auth()->user()->id)->get();
+                                    $maps = App\Models\Map::where('student_id',auth()->user()->id)->where('year',2023)->get();
                                 @endphp
                                 @forelse ($maps as $map)
                                 <tr>

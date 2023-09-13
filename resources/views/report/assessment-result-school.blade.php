@@ -5,7 +5,7 @@
         $id = auth()->user()->id;
         $schools = App\Models\School::where('headmaster_id',$id)->orWhere('coordinator_id',$id)->get();
     }
-    $forms = ['2022N1','2022N3','2022N4','2022N5','2022N6','2022N7'];
+    $forms = ['2023N1','2023N3','2023N4','2023N5','2023N6','2023N7'];
 @endphp
 <div class="col-auto">
     <div class="card">
@@ -16,7 +16,7 @@
             @foreach ($schools as $school)
             @php
                 $quota = App\Models\Map::where([
-                                            'year'=>2022,
+                                            'year'=>2023,
                                             request()->segment(3)=>1,
                                             'school_id'=>$school->id,
                                         ])->whereNotNull('student_id')
@@ -82,7 +82,7 @@
                                                 // guru dalam mapping
                                                 $quota = App\Models\Map::where([
                                                                             'teacher_id'=>$teacher,
-                                                                            'year'=>2022,
+                                                                            'year'=>2023,
                                                                             request()->segment(3)=>1,
                                                                             'school_id'=>$school->id,
                                                                         ])->whereNotNull('student_id')

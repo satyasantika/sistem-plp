@@ -23,6 +23,7 @@
                                 @php
                                     $maps = App\Models\Map::where('subject_id',auth()->user()->subject_id)
                                                             ->where('teacher_id',auth()->user()->id)
+                                                            ->where('year',2023)
                                                             ->get()
                                 @endphp
                                 @forelse ($maps as $map)

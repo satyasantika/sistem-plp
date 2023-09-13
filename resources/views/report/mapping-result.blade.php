@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5>Kuota dan Hasil Pemetaan Mahasiswa pada PLP Tahun 2022</h5>
+                        <h5>Kuota dan Hasil Pemetaan Mahasiswa pada PLP Tahun 2023</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -37,9 +37,11 @@
                                             @php
                                                 $quota = App\Models\Map::where('subject_id',$subject->subjects->id)
                                                             ->where('school_id',$map->school_id)
+                                                            ->where('year',2023)
                                                             ->count();
                                                 $filled = App\Models\Map::where('subject_id',$subject->subjects->id)
                                                             ->where('school_id',$map->school_id)
+                                                            ->where('year',2023)
                                                             ->whereNotNull('student_id')
                                                             ->count();
                                             @endphp
@@ -64,8 +66,8 @@
                     <div class="card-body">
                         @foreach ($subjects as $subject)
                         @php
-                            $quota = App\Models\Map::where('subject_id',$subject->subjects->id)->count();
-                            $filled = App\Models\Map::where('subject_id',$subject->subjects->id)->whereNotNull('student_id')->count();
+                            $quota = App\Models\Map::where('subject_id',$subject->subjects->id)->where('year',2023)->count();
+                            $filled = App\Models\Map::where('subject_id',$subject->subjects->id)->where('year',2023)->whereNotNull('student_id')->count();
                             $percent = round($filled/$quota * 100,2)
                         @endphp
                         <div class="accordion mb-3" id="departement-accordion">
@@ -108,6 +110,7 @@
                                                         @php
                                                             $maps = App\Models\Map::select('school_id', DB::raw('count(student_id) as total'))
                                                                             ->where('lecture_id',$lecture->id)
+                                                                            ->where('year',2023)
                                                                             ->groupBy('school_id')->get();
                                                         @endphp
                                                         <td>

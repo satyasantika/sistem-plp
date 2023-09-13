@@ -20,7 +20,7 @@ class TeacherMapController extends Controller
     public function index()
     {
         $my_subject_maps = Map::where('school_id',$this->_mySchoolId())
-                                ->where('year',2022)
+                                ->where('year',2023)
                                 ->where('plp2',1)
                                 ->orderBy('subject_id')
                                 ->get();

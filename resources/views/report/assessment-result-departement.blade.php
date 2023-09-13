@@ -4,7 +4,7 @@
         $subject_id = auth()->user()->subject_id;
         $subjects = App\Models\Subject::where('id',$subject_id)->get();
     }
-    $forms = ($plp_order == 1) ? ['2022N2','2022N8'] : ['2022N2','2022N6','2022N7'];
+    $forms = ($plp_order == 1) ? ['2023N2','2023N8'] : ['2023N2','2023N6','2023N7'];
 @endphp
 <div class="col-auto">
     <div class="card">
@@ -15,7 +15,7 @@
             @foreach ($subjects as $subject)
             @php
                 $quota = App\Models\Map::where([
-                                            'year'=>2022,
+                                            'year'=>2023,
                                             request()->segment(3)=>1,
                                             'subject_id'=>$subject->id,
                                         ])->whereNotNull('student_id')
@@ -99,7 +99,7 @@
                                                             // dosen dalam mapping
                                                             $quota = App\Models\Map::where([
                                                                                         'lecture_id'=>$lecture,
-                                                                                        'year'=>2022,
+                                                                                        'year'=>2023,
                                                                                         request()->segment(3)=>1,
                                                                                         'subject_id'=>$subject->id,
                                                                                     ])->whereNotNull('student_id')

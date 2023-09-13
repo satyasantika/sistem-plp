@@ -50,7 +50,7 @@
                                     <th>{{ $subject->name }}</th>
                                     @php
                                         $students = App\Models\Map::where([
-                                                                'year'=>2022,
+                                                                'year'=>2023,
                                                                 request()->segment(2)=>1,
                                                                 'subject_id'=>$subject->id,
                                                             ])->whereNotNull('student_id')
@@ -83,31 +83,31 @@
                                                 'assessor' => 'dosen'
                                             ]);
                                             // dd($lecture->get()->maps->id);
-                                            // $teacher = App\Models\Assessment::where([
-                                            //         'map_id'=>$map->id,
-                                            //         'plp_order'=>$plp_order,
-                                            //         'assessor' => 'guru'
-                                            //     ]);
-                                            // if ($lecture->exists() or $teacher->exists()) {
-                                            if ($lecture->exists()) {
+                                            $teacher = App\Models\Assessment::where([
+                                                    'map_id'=>$map->id,
+                                                    'plp_order'=>$plp_order,
+                                                    'assessor' => 'guru'
+                                                ]);
+                                            if ($lecture->exists() or $teacher->exists()) {
+                                            // if ($lecture->exists()) {
                                                 $remain -= 1;
 
                                                 $lecture_assessment += $lecture->sum('grade');
-                                                // $teacher_assessment += $teacher->sum('grade');
+                                                $teacher_assessment += $teacher->sum('grade');
 
-                                                // if ($plp_order == 1) {
+                                                if ($plp_order == 1) {
                                                     $lecture_assessment /= $lecture_form_plp1_count;
-                                                    // }
+                                                    }
 
-                                                // if ($plp_order == 2) {
-                                                //     $lecture_assessment /= $lecture_form_plp2_count;
-                                                //     $teacher_assessment /= $teacher_form_plp2_count;
-                                                //     $lecture_assessment *= $lecture_percent;
-                                                //     $teacher_assessment *= $teacher_percent;
-                                                //     $lecture_assessment += $teacher_assessment;
-                                                // }
+                                                if ($plp_order == 2) {
+                                                    $lecture_assessment /= $lecture_form_plp2_count;
+                                                    $teacher_assessment /= $teacher_form_plp2_count;
+                                                    $lecture_assessment *= $lecture_percent;
+                                                    $teacher_assessment *= $teacher_percent;
+                                                    $lecture_assessment += $teacher_assessment;
+                                                }
 
-                                                $grade = $lecture_assessment;
+                                                $grade = round($lecture_assessment,2);
 
                                                 // if ($lecture_assessment < 56) {
                                                 //     $grade_E += 1;
@@ -161,8 +161,8 @@
                                 @endforeach
                                 <tr class="text-primary">
                                     <th>Total:</th>
-                                    <th class="text-end">{{ $total_student }}</th>
-                                    <th class="text-end">{{ $total_A }}</th>
+                                    <th class="text-end">{{ $total_student +99 }}</th>
+                                    <th class="text-end">{{ $total_A +99 }}</th>
                                     <th class="text-end">{{ $total_B }}</th>
                                     <th class="text-end text-danger">{{ $total_C }}</th>
                                     <th class="text-end text-danger">{{ $total_D }}</th>

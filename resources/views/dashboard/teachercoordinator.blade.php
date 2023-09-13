@@ -26,7 +26,7 @@
                             </thead>
                             <tbody>
                                 @php
-                                    $maps = App\Models\Map::where('school_id',$school->id)->get();
+                                    $maps = App\Models\Map::where('school_id',$school->id)->where('year',2023)->get();
                                 @endphp
                                 @forelse ($maps as $map)
                                 <tr>
