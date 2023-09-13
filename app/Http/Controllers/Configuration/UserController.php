@@ -76,6 +76,16 @@ class UserController extends Controller
         ]);
     }
 
+    public function activation(User $user)
+    {
+        $name = strtoupper($user->name);
+        $user->is_active = $user->is_active ? 0 : 1;
+        $user->save();
+        $status = $user->is_active ? 'aktiv':'non-aktiv';
+        $user->is_active ? $user->givePermissionTo('active-read') : $user->revokePermissionTo('active-read');
+        return to_route('users.index')->with('success','user '.$name.' telah di'.$status.'kan');
+    }
+
     private function _dataSelection()
     {
         return [

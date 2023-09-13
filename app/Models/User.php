@@ -41,6 +41,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'birth_date' => 'date',
         'is_pns' => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     public function subjects()

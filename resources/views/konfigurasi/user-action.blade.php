@@ -159,4 +159,15 @@
             <button type="submit" class="btn btn-primary btn-sm">Save</button>
         </div>
     </form>
+    <hr>
+        @if ($user->id)
+        <form id="activation-form" action="{{ route('users.activation',$user->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" class="btn btn-block btn-{{ $user->is_active ? 'primary' : 'outline-danger' }} btn-sm" form="activation-form">
+                        {{ $user->is_active ? 'aktif' : 'non aktif' }}
+                    </button>
+                </form>
+        @endif
+
 </div>
