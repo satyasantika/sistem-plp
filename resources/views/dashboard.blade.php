@@ -5,7 +5,7 @@
     <div class="title">
         Dashboard
     </div>
-    @if (auth()->user()->is_active)
+    @can('active-read')
         @includeWhen(auth()->user()->can('dashboard/ketua-read'),'dashboard.chairman')
         @includeWhen(auth()->user()->can('dashboard/kajur-read'),'dashboard.departement')
         @includeWhen(auth()->user()->can('dashboard/dosen-read'),'dashboard.lecture')
@@ -15,6 +15,6 @@
         @includeWhen(auth()->user()->can('dashboard/korguru-read'),'dashboard.teachercoordinator')
     @else
         <h1>Saat ini akun anda tidak aktif, silakan hubungi panitia PLP</h1>
-    @endif
+    @endcan
 </div>
 @endsection

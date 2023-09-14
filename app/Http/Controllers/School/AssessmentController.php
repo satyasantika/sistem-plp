@@ -24,15 +24,15 @@ class AssessmentController extends Controller
     // Rekap Penilaian
     public function index($plp_order)
     {
-        $maps = $this->_myMap(2022,$plp_order);
+        $maps = $this->_myMap(2023,$plp_order);
 
         if (auth()->user()->hasrole('dosen'))
         {
-            $plp1_dosen_menus = ['2022N2','2022N8'];
-            $plp2_dosen_menus = ['2022N2','2022N6','2022N7'];
+            $plp1_dosen_menus = ['2023N2','2023N8'];
+            $plp2_dosen_menus = ['2023N2','2023N6','2023N7'];
             $forms = ($plp_order == 1) ? $plp1_dosen_menus : $plp2_dosen_menus ;
         } else {
-            $forms = ['2022N1','2022N3','2022N4','2022N5','2022N6','2022N7'];
+            $forms = ['2023N1','2023N3','2023N4','2023N5','2023N6','2023N7'];
         }
 
         return view('aktivitas.assessment-resume',compact('maps','forms'));
@@ -70,7 +70,7 @@ class AssessmentController extends Controller
     // Menu Setiap Form
     public function show($plp_order, $form_id)
     {
-        $maps = $this->_myMap(2022,$plp_order);
+        $maps = $this->_myMap(2023,$plp_order);
 
         return view('aktivitas.assessment',compact('plp_order','maps','form_id'));
     }
