@@ -26,6 +26,9 @@ Route::get('/dashboard', function () {
 
 // require __DIR__.'/auth.php';
 Route::middleware('auth')->group(function () {
+    Route::get('/konfigurasi/users/import/create', [App\Http\Controllers\Configuration\UserController::class, 'importCreate'])->name('users.importcreate');
+    Route::post('/konfigurasi/users/import', [App\Http\Controllers\Configuration\UserController::class, 'importExcel'])->name('users.importexcel');
+    Route::post('/konfigurasi/users/{user}/activation', [App\Http\Controllers\Configuration\UserController::class, 'activation'])->name('users.activation');
     Route::get('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'showChangePasswordGet'])->name('change-password');
     Route::post('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'changePasswordPost'])->name('update-password');
     Route::post('/password/reset/{id}', [App\Http\Controllers\Auth\PasswordChangeController::class, 'resetPasswordPost'])->name('reset-password');
@@ -46,68 +49,72 @@ Route::middleware('auth')->group(function () {
     Route::resource('konfigurasi/assessments', App\Http\Controllers\Configuration\AssessmentController::class)->except('show');
     Route::resource('konfigurasi/observations', App\Http\Controllers\Configuration\ObservationController::class)->except('show');
     Route::resource('data/cleaningassessments', App\Http\Controllers\School\CleaningAssessmentController::class)->only(['index','destroy']);
-    Route::resource('usulan/schoolcoordinators', App\Http\Controllers\School\CoordinatorProposalController::class)->except('show');
-    Route::resource('usulan/schoolteachers', App\Http\Controllers\School\TeacherProposalController::class)->except('show');
-    Route::resource('mapping/mastermaps', App\Http\Controllers\Map\MasterMapController::class)->except('show');
-    Route::resource('mapping/departementmaps', App\Http\Controllers\Map\DepartementMapController::class)->only(['index','edit','update']);
-    Route::resource('mapping/teachermaps', App\Http\Controllers\Map\TeacherMapController::class)->only(['index','edit','update']);
 
-    Route::controller(App\Http\Controllers\School\StudentDiaryController::class)->group(function () {
-        Route::get('aktivitas/studentdiaries/plp{plp}','index')->name('studentdiaries.index');
-        Route::get('aktivitas/studentdiaries/plp{plp}/create','create')->name('studentdiaries.create');
-        Route::post('aktivitas/studentdiaries/plp{plp}','store')->name('studentdiaries.store');
-        Route::get('aktivitas/studentdiaries/plp{plp}/{studentdiary}/edit','edit')->name('studentdiaries.edit');
-        Route::put('aktivitas/studentdiaries/plp{plp}/{studentdiary}','update')->name('studentdiaries.update');
-        Route::delete('aktivitas/studentdiaries/plp{plp}/{studentdiary}','destroy')->name('studentdiaries.destroy');
-    });
+    Route::group(['middleware' => ['permission:active-read']], function () {
 
-    Route::controller(App\Http\Controllers\School\DiaryVerificationController::class)->group(function () {
-        Route::get('aktivitas/diaryverifications/plp{plp_order}','index')->name('diaryverifications.index');
-        Route::get('aktivitas/diaryverifications/plp{plp_order}/{map_id}','show')->name('diaryverifications.show');
-        Route::put('aktivitas/diaryverifications/plp{plp_order}/{map_id}/{diaryverification}','update')->name('diaryverifications.update');
+        Route::resource('usulan/schoolcoordinators', App\Http\Controllers\School\CoordinatorProposalController::class)->except('show');
+        Route::resource('usulan/schoolteachers', App\Http\Controllers\School\TeacherProposalController::class)->except('show');
+        Route::resource('mapping/mastermaps', App\Http\Controllers\Map\MasterMapController::class)->except('show');
+        Route::resource('mapping/departementmaps', App\Http\Controllers\Map\DepartementMapController::class)->only(['index','edit','update']);
+        Route::resource('mapping/teachermaps', App\Http\Controllers\Map\TeacherMapController::class)->only(['index','edit','update']);
+
+        Route::controller(App\Http\Controllers\School\StudentDiaryController::class)->group(function () {
+            Route::get('aktivitas/studentdiaries/plp{plp}','index')->name('studentdiaries.index');
+            Route::get('aktivitas/studentdiaries/plp{plp}/create','create')->name('studentdiaries.create');
+            Route::post('aktivitas/studentdiaries/plp{plp}','store')->name('studentdiaries.store');
+            Route::get('aktivitas/studentdiaries/plp{plp}/{studentdiary}/edit','edit')->name('studentdiaries.edit');
+            Route::put('aktivitas/studentdiaries/plp{plp}/{studentdiary}','update')->name('studentdiaries.update');
+            Route::delete('aktivitas/studentdiaries/plp{plp}/{studentdiary}','destroy')->name('studentdiaries.destroy');
+        });
+
+        Route::controller(App\Http\Controllers\School\DiaryVerificationController::class)->group(function () {
+            Route::get('aktivitas/diaryverifications/plp{plp_order}','index')->name('diaryverifications.index');
+            Route::get('aktivitas/diaryverifications/plp{plp_order}/{map_id}','show')->name('diaryverifications.show');
+            Route::put('aktivitas/diaryverifications/plp{plp_order}/{map_id}/{diaryverification}','update')->name('diaryverifications.update');
+        });
+        Route::controller(App\Http\Controllers\School\StudentObservationController::class)->group(function () {
+            Route::get('aktivitas/studentobservations','index')->name('studentobservations.index');
+            Route::get('aktivitas/studentobservations/{form_id}/create','create')->name('studentobservations.create');
+            Route::post('aktivitas/studentobservations/{form_id}','store')->name('studentobservations.store');
+            Route::get('aktivitas/studentobservations/{form_id}/{studentobservation}/edit','edit')->name('studentobservations.edit');
+            Route::put('aktivitas/studentobservations/{form_id}/{studentobservation}','update')->name('studentobservations.update');
+        });
+        Route::controller(App\Http\Controllers\School\AssessmentController::class)->group(function () {
+            Route::get('aktivitas/schoolassessments/plp{plp_order}','index')->name('schoolassessments.index');
+            Route::get('aktivitas/schoolassessments/plp{plp_order}/{form_id}/','show')->name('schoolassessments.show');
+            Route::get('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{form_order}/{map_id}/create','create')->name('schoolassessments.create');
+            Route::post('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{form_order}/{map_id}','store')->name('schoolassessments.store');
+            Route::get('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{form_order}/{map_id}/{schoolassessment}/edit','edit')->name('schoolassessments.edit');
+            Route::put('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{form_order}/{map_id}/{schoolassessment}','update')->name('schoolassessments.update');
+        });
+        Route::get('aktivitas/reportprint/plp{plp_order}', [App\Http\Controllers\School\ReportPrintController::class, 'generateCover'])->name('generateCover');
+        Route::get('aktivitas/teachingrespons',function(){
+            return view('aktivitas.teachingrespon-list');
+        })->middleware('permission:aktivitas/teachingrespons-read');
+        Route::get('report/mappingresult',function(){
+            return view('report.mapping-result');
+        })->middleware('permission:report/mappingresult-read');
+        Route::get('report/mappingquota',function(){
+            return view('report.mapping-quota');
+        })->middleware('permission:report/mappingquota-read');
+        Route::get('report/summary',function(){
+            return view('report.summary');
+        })->middleware('permission:report/summary-read');
+        Route::get('report/schooluserproposal',function(){
+            return view('report.user-propose');
+        })->middleware('permission:report/schooluserproposal-read');
+        Route::get('data/progress/profile',function(){
+            return view('report.profile');
+        })->middleware('permission:data/progress/profile-read');
+        Route::get('yudisium/plp{plp_order}',function($plp_order){
+            return view('report.yudisium',compact('plp_order'));
+        })->middleware('permission:yudisium/plp1-read|yudisium/plp2-read');
+        Route::get('data/progress/plp{plp_order}',function($plp_order){
+            return view('report.assessment-result',compact('plp_order'));
+        })->middleware('permission:data/progress/plp1-read|data/progress/plp2-read|'.request()->segment(3).'-read');
+        //TMP
+        Route::get('data/schooluserapprovals',[App\Http\Controllers\School\SchoolUserController::class, 'index']);
     });
-    Route::controller(App\Http\Controllers\School\StudentObservationController::class)->group(function () {
-        Route::get('aktivitas/studentobservations','index')->name('studentobservations.index');
-        Route::get('aktivitas/studentobservations/{form_id}/create','create')->name('studentobservations.create');
-        Route::post('aktivitas/studentobservations/{form_id}','store')->name('studentobservations.store');
-        Route::get('aktivitas/studentobservations/{form_id}/{studentobservation}/edit','edit')->name('studentobservations.edit');
-        Route::put('aktivitas/studentobservations/{form_id}/{studentobservation}','update')->name('studentobservations.update');
-    });
-    Route::controller(App\Http\Controllers\School\AssessmentController::class)->group(function () {
-        Route::get('aktivitas/schoolassessments/plp{plp_order}','index')->name('schoolassessments.index');
-        Route::get('aktivitas/schoolassessments/plp{plp_order}/{form_id}/','show')->name('schoolassessments.show');
-        Route::get('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{form_order}/{map_id}/create','create')->name('schoolassessments.create');
-        Route::post('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{form_order}/{map_id}','store')->name('schoolassessments.store');
-        Route::get('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{form_order}/{map_id}/{schoolassessment}/edit','edit')->name('schoolassessments.edit');
-        Route::put('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{form_order}/{map_id}/{schoolassessment}','update')->name('schoolassessments.update');
-    });
-    Route::get('aktivitas/reportprint/plp{plp_order}', [App\Http\Controllers\School\ReportPrintController::class, 'generateCover'])->name('generateCover');
-    Route::get('aktivitas/teachingrespons',function(){
-        return view('aktivitas.teachingrespon-list');
-    })->middleware('permission:aktivitas/teachingrespons-read');
-    Route::get('report/mappingresult',function(){
-        return view('report.mapping-result');
-    })->middleware('permission:report/mappingresult-read');
-    Route::get('report/mappingquota',function(){
-        return view('report.mapping-quota');
-    })->middleware('permission:report/mappingquota-read');
-    Route::get('report/summary',function(){
-        return view('report.summary');
-    })->middleware('permission:report/summary-read');
-    Route::get('report/schooluserproposal',function(){
-        return view('report.user-propose');
-    })->middleware('permission:report/schooluserproposal-read');
-    Route::get('data/progress/profile',function(){
-        return view('report.profile');
-    })->middleware('permission:data/progress/profile-read');
-    Route::get('yudisium/plp{plp_order}',function($plp_order){
-        return view('report.yudisium',compact('plp_order'));
-    })->middleware('permission:yudisium/plp1-read|yudisium/plp2-read');
-    Route::get('data/progress/plp{plp_order}',function($plp_order){
-        return view('report.assessment-result',compact('plp_order'));
-    })->middleware('permission:data/progress/plp1-read|data/progress/plp2-read|'.request()->segment(3).'-read');
-    //TMP
-    Route::get('data/schooluserapprovals',[App\Http\Controllers\School\SchoolUserController::class, 'index']);
 
 });
 

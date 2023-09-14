@@ -57,31 +57,36 @@
                             </thead>
                             <tbody>
                                 @php
-                                    $lectures = App\Models\User::role('dosen')->where('subject_id',auth()->user()->subject_id)->get()
+                                    $lectures = App\Models\Map::select('lecture_id')
+                                                        ->where('subject_id',auth()->user()->subject_id)
+                                                        ->where('year',2023)
+                                                        ->groupBy('lecture_id')->get();
                                 @endphp
-                                @foreach ($lectures as $lecture)
+                                @forelse ($lectures as $lecture)
                                 <tr>
-                                    <td>{{ $lecture->name ?? '' }}</td>
+                                    <td>{{ $lecture->lectures->name ?? '' }}</td>
                                     @php
                                         $maps = App\Models\Map::select('school_id', DB::raw('count(student_id) as total'))
-                                                        ->where('lecture_id',$lecture->id)
+                                                        ->where('lecture_id',$lecture->lecture_id)
                                                         ->where('year',2023)
                                                         ->groupBy('school_id')->get();
                                     @endphp
                                     <td>
-                                        @foreach ($maps as $map)
+                                        @forelse ($maps as $map)
                                             <span class="badge bg-light rounded-pill text-dark">
                                                 {{ $map->schools->name ?? '' }}
                                                 <span class="badge bg-primary rounded-pill">
                                                     {{ $map->total ?? '' }}
                                                 </span>
                                             </span>
-
-
-                                        @endforeach
+                                        @empty
+                                        <div class="alert alert-info">Belum diset</div>
+                                        @endforelse
                                     </td>
                                 </tr>
-                                @endforeach
+                                @empty
+                                <div class="alert alert-info">Belum ada data</div>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

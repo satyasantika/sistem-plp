@@ -29,7 +29,7 @@
                                 @forelse ($maps as $map)
                                 <tr>
                                     <td>
-                                        @if ($map->students->phone)
+                                        @if (isset($map->students->phone))
                                             <a href="{{ 'http://wa.me/62'.$map->students->phone }}" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-whatsapp"></i></a>
                                         @endif
                                         {{ $map->students->name ?? '' }}
