@@ -1,4 +1,4 @@
-var importData = (url,table) => {
+var importData = (table) => {
     const modal = new bootstrap.Modal($('#modalAction'))
     // let {url,table}
     $('.btn-import').on('click', function() {

@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Configuration;
 
 use App\Models\User;
 use App\Models\Subject;
+use App\Imports\UsersImport;
 use Illuminate\Http\Request;
 use App\DataTables\UserDataTable;
 use App\Http\Requests\UserRequest;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Storage;
 use Maatwebsite\Excel\Facades\Excel;
+
 
 class UserController extends Controller
 {
@@ -84,7 +87,6 @@ class UserController extends Controller
         $user->save();
         $status = $user->is_active ? 'aktiv':'non-aktiv';
         $user->is_active ? $user->givePermissionTo('active-read') : $user->revokePermissionTo('active-read');
-        // return to_route('users.index')->with('success','user '.$name.' telah di'.$status.'kan');
         return response()->json([
             'status' => 'success',
             'message' => 'User <strong>'.$name.'</strong> telah di'.$status.'kan'
@@ -103,7 +105,7 @@ class UserController extends Controller
         ];
     }
 
-    public function export()
+    public function exportExcel()
 	{
 		return Excel::download(new SiswaExport, 'siswa.xlsx');
 	}
@@ -113,7 +115,7 @@ class UserController extends Controller
         return view('konfigurasi.import-action');
     }
 
-    public function import(Request $request)
+    public function importExcel(Request $request)
 	{
 		// validasi
 		$this->validate($request, [
@@ -124,23 +126,26 @@ class UserController extends Controller
 		$file = $request->file('file');
 
         // membuat nama file unik
-		$nama_file = rand().$file->getClientOriginalName();
+		$file_name = rand().$file->getClientOriginalName();
 
         // upload ke folder file_siswa di dalam folder public
-		$file->move('file_siswa',$nama_file);
+		$file->move('import_file',$file_name);
 
         // import data
-		Excel::import(new SiswaImport, public_path('/file_siswa/'.$nama_file));
-
+		// Excel::import(new UsersImport, public_path('/import_file/'.$file_name));
+		Excel::import(new UsersImport, public_path('/import_file/'.$file_name));
+		// Excel::import(new UsersImport, $request->file('file')->store('temp'));
+        // Storage::delete('/import_file/'.$file_name);
         // notifikasi dengan session
 		// Session::flash('sukses','Data Siswa Berhasil Diimport!');
 
         // alihkan halaman kembali
-		return to_route('users.index');
-        // return response()->json([
-        //     'success' => true,
-        //     'message' => 'User <strong>'.$request->name.'</strong> telah ditambahkan'
-        // ]);
+		// return to_route('users.index');
+		// return back();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User Baru telah ditambahkan'
+        ]);
 	}
 
 }

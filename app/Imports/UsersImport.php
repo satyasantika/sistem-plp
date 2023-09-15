@@ -3,8 +3,8 @@
 namespace App\Imports;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithUpserts;
 
 class UsersImport implements ToModel, WithUpserts
 {
@@ -21,9 +21,9 @@ class UsersImport implements ToModel, WithUpserts
         return new User([
             'name'     => $row[0],
             'username'     => $row[1],
-            'email'    => $row[1],
-            'password' => Hash::make($row[3]),
-            'plp_mapel_id'    => $row[4],
+            'email'    => $row[2],
+            'password' => bcrypt($row[3]),
+            'subject_id'    => $row[4],
             'phone'    => $row[5],
             'address'    => $row[6],
         ]);
