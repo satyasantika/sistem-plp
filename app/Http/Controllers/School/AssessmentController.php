@@ -28,11 +28,11 @@ class AssessmentController extends Controller
 
         if (auth()->user()->hasrole('dosen'))
         {
-            $plp1_dosen_menus = ['2023N2','2023N8'];
-            $plp2_dosen_menus = ['2023N2','2023N6','2023N7'];
+            $plp1_dosen_menus = ['2022N2','2022N8'];
+            $plp2_dosen_menus = ['2022N2','2022N6','2022N7'];
             $forms = ($plp_order == 1) ? $plp1_dosen_menus : $plp2_dosen_menus ;
         } else {
-            $forms = ['2023N1','2023N3','2023N4','2023N5','2023N6','2023N7'];
+            $forms = ['2022N1','2022N3','2022N4','2022N5','2022N6','2022N7'];
         }
 
         return view('aktivitas.assessment-resume',compact('maps','forms'));
@@ -130,12 +130,13 @@ class AssessmentController extends Controller
 
     private function _myMap($year, $plp_order)
     {
-        $my_id = auth()->user()->id;
         $plp = 'plp'.$plp_order;
         return  Map::where('year',$year)
                 ->where($plp,1)
-                ->where('teacher_id',$my_id)
-                ->orWhere('lecture_id',$my_id)
+                ->where(function($query) {
+                $query->where('teacher_id',auth()->user()->id)
+                        ->orWhere('lecture_id',auth()->user()->id);
+                })
                 ->get();
     }
 

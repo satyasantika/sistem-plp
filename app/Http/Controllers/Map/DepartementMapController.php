@@ -61,6 +61,7 @@ class DepartementMapController extends Controller
     private function _dataSelection()
     {
         $my_student_id_in_maps = Map::where('subject_id',$this->_mySubjectId())
+                                    ->where('year',2023)
                                     ->whereNotNull('student_id')
                                     ->pluck('student_id');
         $my_lectures = User::role('dosen')->where('subject_id',$this->_mySubjectId())->get();

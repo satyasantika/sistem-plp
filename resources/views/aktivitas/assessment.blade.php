@@ -29,7 +29,7 @@
                                             <th>Mahasiswa</th>
                                             @for ($i = 0; $i < $form_times; $i++)
                                                 @if (substr($form_id,-2) == 'N3')
-                                                <th>RPP ke-{{ $i+1 }}</th>
+                                                <th>Perangkat ke-{{ $i+1 }}</th>
                                                 @elseif (substr($form_id,-2) == 'N5')
                                                 <th>Tampil ke-{{ $i+1 }}</th>
                                                 @else
