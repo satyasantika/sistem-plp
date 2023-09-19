@@ -24,6 +24,7 @@
                 <div class="card mt-4">
                     <div class="card-header">
                         <a href="{{ route('login') }}" class="btn btn-primary">Go to Login >></a>
+                        <a href="https://drive.google.com/file/d/1OLlhGUxBpUz2IOdKs-U3j2l07mhBjU8y/view?usp=sharing" class="btn btn-outline-primary float-end">Download Pedoman PLP 2023</a>
                     </div>
                 </div>
                 <div class="card">

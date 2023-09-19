@@ -5,10 +5,15 @@
 
 <div class="content-wrapper">
     <div class="row same-height">
-        <div class="col-md">
+        <div class="col">
             <div class="card">
                 <div class="card-header">
-                    <h5>Data Mahasiswa Peserta PLP</h5>
+                    <a href="https://docs.google.com/document/d/1bbfXIjsT6U2qUY_RU0K1BM9wdREGr6q2/edit" class="btn btn-outline-primary">Download Template Formulir Bimbingan PLP 1 2023</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h5>Informasi Kepesertaan PLP</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -88,18 +93,18 @@
         <div class="col-md">
             <div class="card">
                 <div class="card-header">
-                    <h5>Data Mahasiswa Peserta PLP</h5>
+                    <h5>Data Mahasiswa Peserta PLP satu Sekolah</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table small-font table-striped table-hover table-sm">
                             <tbody>
                                 @php
-                                $students = App\Models\Map::where('student_id',auth()->user()->id)->get();
+                                $students = App\Models\Map::where('student_id',auth()->user()->id)->where('year',2023)->get();
                                 @endphp
                                 @forelse ($students as $student)
                                     @php
-                                    $maps = App\Models\Map::where('school_id',$student->school_id)->get();
+                                    $maps = App\Models\Map::where('school_id',$student->school_id)->where('year',2023)->get();
                                     @endphp
                                     @forelse ($maps as $map)
                                     <tr>

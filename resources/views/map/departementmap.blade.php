@@ -37,7 +37,7 @@
                                                 <div class="row">
                                                     <div class="col-md-4">{{ $map->schools->name ?? '' }}</div>
                                                     <div class="col-md-4">DPL<span class="badge bg-light text-dark">{{ $map->lectures->name ?? '' }}</span></div>
-                                                    <div class="col-md-4">mahasiswa<span class="badge bg-light text-primary">{{ $map->students->name ?? '' }}</span></div>
+                                                    <div class="col-md-4">mhs<span class="badge bg-light text-primary">{{ $map->students->name ?? '' }}</span></div>
                                                 </div>
                                             </td>
                                         </tr>
