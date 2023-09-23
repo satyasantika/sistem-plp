@@ -73,7 +73,7 @@ class MapDataTable extends DataTable
      */
     public function query(Map $model): QueryBuilder
     {
-        return $model->newQuery();
+        return $model->where('year',2023)->newQuery();
     }
 
     /**

@@ -2,15 +2,16 @@
 
 namespace App\DataTables;
 
+use App\Models\Map;
 use App\Models\Assessment;
-use Illuminate\Database\Eloquent\Builder as QueryBuilder;
-use Yajra\DataTables\EloquentDataTable;
-use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
+use Yajra\DataTables\Html\Builder as HtmlBuilder;
+use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 
 class AssessmentDataTable extends DataTable
 {
@@ -53,7 +54,8 @@ class AssessmentDataTable extends DataTable
      */
     public function query(Assessment $model): QueryBuilder
     {
-        return $model->newQuery();
+        $maps = Map::where('year',2023)->pluck('id');
+        return $model->whereIn('map_id',$maps)->newQuery();
     }
 
     /**
