@@ -23,7 +23,7 @@ class StudentObservationController extends Controller
     public function index()
     {
         $forms = Form::where('type','yes_no')->get();
-        $map_id = Map::firstWhere('student_id',auth()->user()->id)->id;
+        $map_id = Map::where('year',2023)->firstWhere('student_id',auth()->user()->id)->id;
 
         return view('aktivitas.observation',compact('forms','map_id'));
     }
@@ -79,7 +79,7 @@ class StudentObservationController extends Controller
     private function _dataSelection($form_id)
     {
         return [
-            'map_id' => Map::firstWhere('student_id', auth()->user()->id)->id,
+            'map_id' => Map::where('year',2023)->firstWhere('student_id', auth()->user()->id)->id,
             'form' => Form::find($form_id),
             'form_guides' => $this->_formByComponent($form_id,'petunjuk'),
             'form_items' => $this->_formByComponent($form_id,'item'),

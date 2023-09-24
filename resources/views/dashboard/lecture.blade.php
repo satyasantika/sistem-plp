@@ -24,7 +24,7 @@
                                     $maps = App\Models\Map::where('subject_id',auth()->user()->subject_id)
                                                             ->where('lecture_id',auth()->user()->id)
                                                             ->where('year',2023)
-                                                            ->get()
+                                                            ->get();
                                 @endphp
                                 @forelse ($maps as $map)
                                 <tr>

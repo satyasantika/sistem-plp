@@ -21,7 +21,7 @@ class StudentDiaryController extends Controller
     public function index($plp)
     {
         $id = auth()->user()->id;
-        $myMapId = Map::firstWhere('student_id',$id)->id;
+        $myMapId = Map::where('year',2023)->firstWhere('student_id',$id)->id;
         $diaries = Diary::where('map_id',$myMapId)->where('plp_order',$plp)->orderBy('day_order')->get();
 
         return view('aktivitas.logbook',compact('diaries'));
@@ -90,7 +90,7 @@ class StudentDiaryController extends Controller
 
         return [
             'days' => $days,
-            'myMapId' => Map::firstWhere('student_id', auth()->user()->id)->id,
+            'myMapId' => Map::where('year',2023)->firstWhere('student_id', auth()->user()->id)->id,
         ];
     }
 

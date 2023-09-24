@@ -101,22 +101,13 @@
                                                                                     ;
                                             @endphp
                                                 @if ($assessments->exists())
-                                                @php
-                                                    $grade = $total_grade/count($forms);
-                                                    if ($grade < 56) {
-                                                        $letter = 'E';
-                                                    } elseif ($grade < 66) {
-                                                        $letter = 'D';
-                                                    } elseif ($grade < 76) {
-                                                        $letter = 'C';
-                                                    } elseif ($grade < 86) {
-                                                        $letter = 'B';
-                                                    } else {
-                                                        $letter = 'A';
-                                                    }
-                                                @endphp
-                                                <td class="text-center">{{ round($grade,1) }}</td>
-                                                @if ($plp_order == 1) <td class="text-center">{{ $letter }}</td> @endif
+                                                    @if ($plp_order == 1)
+                                                    <td class="text-center">{{ round($map->grade1,2) }}</td>
+                                                    <td class="text-center">{{ $map->letter1 }}</td>
+                                                    @else
+                                                    <td class="text-center">{{ round($map->grade2,2) }}</td>
+                                                    <td class="text-center">{{ $map->letter2 }}</td>
+                                                    @endif
                                                 @else
                                                 <td></td>
                                                 <td></td>

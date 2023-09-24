@@ -32,34 +32,44 @@ class MapDataTable extends DataTable
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm my-1 action"><i class="ti-trash"></i></button>';
                 return $action;
             })
-            ->addColumn('Mahasiswa', function($row){
+            ->addColumn('mahasiswa', function($row){
                 if (isset($row->student_id)) {
                     return $row->students->name;
                 }
             })
-            ->addColumn('DPL', function($row){
+            ->addColumn('dosen', function($row){
                 if (isset($row->lecture_id)) {
                     return $row->lectures->name;
                 }
             })
-            ->addColumn('GP', function($row){
+            ->addColumn('guru', function($row){
                 if (isset($row->teacher_id)) {
                     return $row->teachers->name;
                 }
             })
-            ->addColumn('Sekolah', function($row){
+            ->addColumn('tempat', function($row){
                 if (isset($row->school_id)) {
                     return $row->schools->name;
                 }
             })
-            ->addColumn('Mapel', function($row){
+            ->addColumn('mapel', function($row){
                 if (isset($row->subject_id)) {
                     return $row->subjects->name;
                 }
             })
-            ->addColumn('year', function($row){
+            ->addColumn('tahun', function($row){
                 if (isset($row->year)) {
                     return $row->year;
+                }
+            })
+            ->addColumn('plp1', function($row){
+                if (isset($row->grade1)) {
+                    return $row->grade1." (".$row->letter1.")";
+                }
+            })
+            ->addColumn('plp2', function($row){
+                if (isset($row->grade2)) {
+                    return $row->grade2." (".$row->letter2.")";
                 }
             })
             ->setRowId('id');
@@ -104,14 +114,16 @@ class MapDataTable extends DataTable
                     ->printable(false)
                     ->width(60)
                     ->addClass('text-center'),
-            Column::computed('Sekolah')->orderable(true)->searchable(true),
-            Column::computed('Mapel')->orderable(true)->searchable(true),
-            Column::computed('Mahasiswa')->orderable(true)->searchable(true),
-            Column::computed('DPL')->orderable(true)->searchable(true),
-            Column::computed('GP')->orderable(true)->searchable(true),
+            Column::computed('tempat')->orderable(true)->searchable(true),
+            Column::computed('mapel')->orderable(true)->searchable(true),
+            Column::computed('mahasiswa')->orderable(true)->searchable(true),
+            Column::computed('dosen')->orderable(true)->searchable(true),
+            Column::computed('guru')->orderable(true)->searchable(true),
             // Column::make('plp1'),
             // Column::make('plp2'),
             Column::make('year')->title('Tahun'),
+            Column::computed('plp1'),
+            Column::computed('plp2'),
         ];
     }
 

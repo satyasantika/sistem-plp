@@ -78,7 +78,7 @@ class DiaryController extends Controller
             array_push($day,$i);
         }
         return [
-            'maps' =>  Map::all(),
+            'maps' =>  Map::where('year',2023)->whereNotNull('student_id')->get(),
             'day' => $day,
         ];
     }
