@@ -9,62 +9,47 @@
                 aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <div class="accordion mb-3" id="permission-accordion">
-                @php
-                    $permission = [];
-                    foreach($permissions as $key => $value){
-                        $dash = strpos($value,'-');
-                        $url = substr($value,0,$dash);
-                        foreach (['create','read','update','delete'] as $action) {
-                            $permission_name = $url.'-'.$action;
-                            if (in_array($permission_name,$permissions->toArray())) {
-                                if (!in_array($url,$permission)) {
-                                    array_push($permission,$url);
-                                }
+            @php
+            // list permission
+                $permission = [];
+                foreach($permissions as $value){
+                    $url = explode('-',$value)[0];
+                    foreach (['-create','-read','-update','-delete'] as $action) {
+                        $permission_name = $url.$action;
+                        if (in_array($permission_name,$permissions->toArray())) {
+                            if (!in_array($url,$permission)) {
+                                array_push($permission,$url);
                             }
                         }
                     }
-                @endphp
-                @foreach($permission as $key => $url)
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading{{ $key }}">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse{{ $key }}" aria-expanded="false"
-                            aria-controls="collapse{{ $key }}">
-                            {{ $url }}
-                        </button>
-                    </h2>
-                    <div id="collapse{{ $key }}" class="accordion-collapse collapse"
-                    aria-labelledby="heading{{ $key }}" data-bs-parent="#permission-accordion">
-                        <div class="accordion-body row">
-                            @foreach (['create','read','update','delete'] as $action)
-                                @php
-                                    $permission_name = $url.'-'.$action;
-                                    $data = App\Models\Permission::where('name',$permission_name)->value('id');
-                                @endphp
-                                @if (in_array($permission_name,$permissions->toArray()))
-                                <div class="col-md-3">
-                                    <div class="input-group">
-                                        <div class="input-group-text light">
-                                            <input
-                                                type="checkbox"
-                                                name="permission[]"
-                                                value="{{ $data }}"
-                                                class="form-check-input mt-0"
-                                                @checked(in_array($data, $userPermissions))
-                                            >
-                                        </div>
-                                        <input type="text" class="form-control" value="{{ $action }}" aria-label="Text input with checkbox">
-                                    </div>
-                                </div>
-                                @endif
-                            @endforeach
-                        </div>
-                    </div>
-                    <br/>
+                }
+            @endphp
+            {{-- cek kecocokan setiap permission yang langsung dari Role --}}
+            @foreach($permission as $key => $url)
+            <div class="row">
+                <div class="col col-md-4">
+                    @foreach (['create','read','update','delete'] as $action)
+                        @php
+                            $permission_name = $url.'-'.$action;
+                            $data = App\Models\Permission::where('name',$permission_name)->value('id');
+                        @endphp
+                        @if (in_array($permission_name,$permissions->toArray()))
+                            <input
+                                type="checkbox"
+                                name="permission[]"
+                                value="{{ $data }}"
+                                id="{{ $data }}"
+                                @checked(in_array($data, $userPermissions))
+                            >
+                            <label for="{{ $data }}">{{ ucwords(substr($action,0,1)) }}</label>
+                        @endif
+                    @endforeach
                 </div>
-                @endforeach
+                <div class="col col-md-8" id="heading{{ $key }}">
+                    {{ $url }}
+                </div>
             </div>
+            @endforeach
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary btn-sm"
