@@ -27,7 +27,8 @@
                             @foreach ($maps as $map)
                             <option
                                 value="{{ $map->id }}"
-                                @selected($map->id == $observation->map_id)>
+                                @selected($map->id == $observation->map_id)
+                                >
                                 {{ $map->students->name }} dari {{ $map->schools->name }}
                             </option>
                             @endforeach
@@ -86,9 +87,7 @@
                             name="note"
                             id="note"
                             class="form-control"
-                            rows="5">
-                            {{ $observation->note }}
-                        </textarea>
+                            rows="5">{{ $observation->note }}</textarea>
                     </div>
                 </div>
             </div>

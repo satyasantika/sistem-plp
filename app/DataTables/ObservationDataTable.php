@@ -54,7 +54,7 @@ class ObservationDataTable extends DataTable
      */
     public function query(Observation $model): QueryBuilder
     {
-        $maps = Map::where('year',2023)->pluck('id');
+        $maps = Map::where('year',2023)->whereNotNull('student_id')->pluck('id');
         return $model->whereIn('map_id',$maps)->newQuery();
     }
 

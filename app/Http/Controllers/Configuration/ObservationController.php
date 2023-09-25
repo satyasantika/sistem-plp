@@ -73,7 +73,7 @@ class ObservationController extends Controller
     private function _dataSelection()
     {
         return [
-            'maps' =>  Map::where('year',2023)->whereNotNull('student_id')->get(),
+            'maps' =>  Map::join('users','users.id','maps.student_id')->select('maps.id','maps.student_id','maps.school_id')->where('maps.year',2023)->whereNotNull('maps.student_id')->orderBy('users.name')->get(),
             'forms' =>  Form::where('type','yes_no'),
             'options' => ['baik','kurang','tidak']
         ];
