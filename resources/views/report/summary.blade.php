@@ -73,9 +73,11 @@
                                     <tr class="text-primary">
                                         <th>Total:</th>
                                         <th class="text-end">{{ App\Models\Map::where('year',2023)
+                                                                                ->whereNotNull('student_id')
                                                                                 ->where('plp1',1)
                                                                                 ->count() }}</th>
                                         <th class="text-end">{{ App\Models\Map::where('year',2023)
+                                                                                ->whereNotNull('student_id')
                                                                                 ->where('plp2',1)
                                                                                 ->count() }}</th>
                                         <th class="text-end">{{ App\Models\Map::where('year',2023)

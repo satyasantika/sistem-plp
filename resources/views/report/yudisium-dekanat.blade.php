@@ -1,3 +1,7 @@
+@php
+    $grade = ($plp_order == 1) ? 'grade1' : 'grade2' ;
+    $letter_grade = ($plp_order == 1) ? 'letter1' : 'letter2' ;
+@endphp
 <div class="content-wrapper">
     <div class="row">
         <div class="col-auto">
@@ -45,16 +49,15 @@
 
                                 @foreach ($subjects as $subject)
                                 @continue($subject->id == '03')
+                                {{-- BAGIAN NILAI PER JURUSAN --}}
                                 <tr>
                                     <th>{{ $subject->name }}</th>
-                                    @php
-                                        $students = App\Models\Map::where([
+                                    <td class="text-end">{{ App\Models\Map::where([
                                                                 'year'=>2023,
                                                                 request()->segment(2)=>1,
                                                                 'subject_id'=>$subject->id,
-                                                            ])->whereNotNull('student_id');
-                                    @endphp
-                                    <td class="text-end">{{ $students->count() }}</td>
+                                                            ])->whereNotNull('student_id')->count() }}
+                                    </td>
                                     @foreach ($letters as $letter)
                                         @if (in_array($letter,['A','A-','B+','B']))
                                             <td class="text-end text-primary">
@@ -65,7 +68,7 @@
                                                                 'year'=>2023,
                                                                 request()->segment(2)=>1,
                                                                 'subject_id'=>$subject->id,
-                                                                'letter1'=>$letter,
+                                                                $letter_grade=>$letter,
                                                             ])->whereNotNull('student_id')->count() }}
                                         </td>
                                     @endforeach
@@ -74,23 +77,19 @@
                                                                 'year'=>2023,
                                                                 request()->segment(2)=>1,
                                                                 'subject_id'=>$subject->id,
-                                                                'grade1'=>0,
+                                                                $grade=>0,
                                                             ])->whereNotNull('student_id')->count() }}
                                     </td>
                                 </tr>
                                 @endforeach
 
+                                {{-- BAGIAN TOTAL --}}
                                 <tr class="text-primary bg-light">
-                                    @php
-                                        $total_student = App\Models\Map::where([
+                                    <th>Total:</th>
+                                    <th class="text-end">{{ App\Models\Map::where([
                                                                 'year'=>2023,
                                                                 request()->segment(2)=>1,
-                                                            ])->whereNotNull('student_id')
-                                                            ;
-                                    @endphp
-
-                                    <th>Total:</th>
-                                    <th class="text-end">{{ $total_student->count() + $penmas }}</th>
+                                                            ])->whereNotNull('student_id')->count() + $penmas }}</th>
                                     @foreach ($letters as $letter)
                                     @if (in_array($letter,['A','A-','B+','B']))
                                     <th class="text-end text-primary">
@@ -100,21 +99,15 @@
                                         {{ $total_student = App\Models\Map::where([
                                                                 'year'=>2023,
                                                                 request()->segment(2)=>1,
-                                                            ])->whereNotNull('student_id')->where('letter1',$letter)->count() }}
+                                                                $letter_grade=>$letter,
+                                                            ])->whereNotNull('student_id')->count() }}
                                     </th>
                                     @endforeach
                                     <th class="text-end">{{ $total_student = App\Models\Map::where([
                                                                 'year'=>2023,
                                                                 request()->segment(2)=>1,
-                                                                'grade1'=>0,
+                                                                $grade=>0,
                                                             ])->whereNotNull('student_id')->count() }}</th>
-{{--
-                                    <th class="text-end">{{ $total_A +99 }}</th>
-                                    <th class="text-end">{{ $total_B }}</th>
-                                    <th class="text-end text-danger">{{ $total_C }}</th>
-                                    <th class="text-end text-danger">{{ $total_D }}</th>
-                                    <th class="text-end text-danger">{{ $total_E }}</th>
-                                    <th class="text-end">{{ $total_remain }}</th> --}}
                                 </tr>
                             </tbody>
                         </table>
