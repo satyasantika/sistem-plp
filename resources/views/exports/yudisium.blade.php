@@ -19,51 +19,6 @@
     </thead>
     <tbody>
     @foreach($maps as $index => $map)
-        @php
-            $teacher_grade = App\Models\Assessment::where([
-                    'assessor' => 'guru',
-                    'plp_order' => 2,
-                    'map_id' => $map->id,
-                ])->sum('grade')/13;
-
-            $lecture_grade = App\Models\Assessment::where([
-                    'assessor' => 'dosen',
-                    'plp_order' => 2,
-                    'map_id' => $map->id,
-                ])->sum('grade')/3;
-
-            $grade = App\Models\Assessment::where([
-                    'plp_order' => 2,
-                    'map_id' => $map->id,
-                ])->sum('grade')/16;
-
-                if (request()->segment(2) == 'plp1') {
-                    $grade = App\Models\Assessment::where([
-                        'plp_order' => 1,
-                        'map_id' => $map->id,
-                    ])->sum('grade')/2;
-                }
-
-            if ($grade >= 86) {
-                $letter = 'A';
-            } else if ($grade >= 76) {
-                $letter = 'B';
-            } else if ($grade >= 66) {
-                $letter = 'C';
-            } else if ($grade >= 56) {
-                $letter = 'D';
-            } else {
-                $letter = 'E';
-            }
-
-            if ($grade < 76) {
-                $description = 'TIDAK LULUS';
-            } else {
-                $description = 'LULUS';
-            }
-
-
-        @endphp
         <tr>
             <td>{{ $index + 1 }}</td>
             <td>{{ $map->students->username ?? '' }}</td>
@@ -76,9 +31,9 @@
                 <td>{{ $lecture_grade ?? '' }}</td>
                 <td>{{ $teacher_grade ?? '' }}</td>
             @endif
-            <td>{{ $grade }}</td>
-            <td>{{ $letter }}</td>
-            <td>{{ $description }}</td>
+            <td>{{ $map->grade1 }}</td>
+            <td>{{ $map->letter1 }}</td>
+            <td>{{ $map->grade1< 61 ? 'TIDAK LULUS' : 'LULUS' }}</td>
         </tr>
     @endforeach
     </tbody>
