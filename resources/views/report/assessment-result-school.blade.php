@@ -5,7 +5,7 @@
         $id = auth()->user()->id;
         $schools = App\Models\School::where('headmaster_id',$id)->orWhere('coordinator_id',$id)->get();
     }
-    $forms = ['2023N1','2023N3','2023N4','2023N5','2023N6','2023N7'];
+    $forms = ['2022N1','2022N3','2022N4','2022N5','2022N6','2022N7'];
 @endphp
 <div class="col-auto">
     <div class="card">
@@ -40,7 +40,7 @@
                         }
                     }
                 }
-                $percent = round($assessed/(13*$quota->count()) * 100,2)
+                $percent = $quota->count()==0 ? 0 :  round($assessed/(13*$quota->count()) * 100,2);
             @endphp
             <div class="accordion mb-3" id="school-accordion">
                 <div class="accordion-item">

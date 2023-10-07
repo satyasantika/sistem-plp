@@ -11,7 +11,9 @@
     <div class="content-wrapper">
         <div class="row">
             @includeWhen(auth()->user()->hasAnyRole('data','kajur'), 'report.assessment-result-departement', ['plp_order' => $plp_order ])
-            @includeWhen(auth()->user()->hasAnyRole('kepsek','korguru','data'), 'report.assessment-result-school', ['plp_order' => $plp_order ])
+            @can('plp2-read')
+                @includeWhen(auth()->user()->hasAnyRole('kepsek','korguru','data'), 'report.assessment-result-school', ['plp_order' => 2 ])
+            @endcan
         </div>
     </div>
 </div>

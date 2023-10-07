@@ -1,10 +1,9 @@
 @php
     $subjects = App\Models\Subject::whereNot('id','03')->get();
     if (auth()->user()->hasAnyRole('kajur')) {
-        $subject_id = auth()->user()->subject_id;
-        $subjects = App\Models\Subject::where('id',$subject_id)->get();
+        $subjects = App\Models\Subject::find(auth()->user()->subject_id);
     }
-    $forms = ($plp_order == 1) ? ['2023N2','2023N8'] : ['2023N2','2023N6','2023N7'];
+    $forms = ($plp_order == 1) ? ['2022N2','2022N8'] : ['2022N2','2022N6','2022N7'];
 @endphp
 <div class="col-auto">
     <div class="card">
@@ -40,7 +39,7 @@
                     }
                 }
                 $times = ($plp_order == 1) ? 2 : 3;
-                $percent = round($assessed/($times*$quota->count()) * 100,2)
+                $percent = $quota->count()==0 ? 0 : round($assessed/($times*$quota->count()) * 100,2);
             @endphp
             <div class="accordion mb-3" id="departement-accordion">
                 <div class="accordion-item">
@@ -74,6 +73,7 @@
                                             // List dosen
                                             $lectures = App\Models\Map::distinct()
                                                                         ->where('subject_id',$subject->id)
+                                                                        ->where('year',2023)
                                                                         ->pluck('lecture_id');
                                             @endphp
                                         {{-- masing-masing dosen --}}
