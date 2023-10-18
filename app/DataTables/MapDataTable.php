@@ -57,11 +57,11 @@ class MapDataTable extends DataTable
                     return $row->subjects->name;
                 }
             })
-            ->addColumn('tahun', function($row){
-                if (isset($row->year)) {
-                    return $row->year;
-                }
-            })
+            // ->addColumn('tahun', function($row){
+            //     if (isset($row->year)) {
+            //         return $row->year;
+            //     }
+            // })
             ->addColumn('plp1', function($row){
                 if (isset($row->grade1)) {
                     return $row->grade1." (".$row->letter1.")";
@@ -114,11 +114,11 @@ class MapDataTable extends DataTable
                     ->printable(false)
                     ->width(60)
                     ->addClass('text-center'),
-            Column::computed('tempat')->orderable(true)->searchable(true),
-            Column::computed('mapel')->orderable(true)->searchable(true),
-            Column::computed('mahasiswa')->orderable(true)->searchable(true),
-            Column::computed('dosen')->orderable(true)->searchable(true),
-            Column::computed('guru')->orderable(true)->searchable(true),
+            Column::computed('tempat')->searchable(true),
+            Column::computed('mapel')->searchable(true),
+            Column::computed('mahasiswa')->searchable(true),
+            Column::computed('dosen')->searchable(true),
+            Column::computed('guru')->searchable(true),
             // Column::make('plp1'),
             // Column::make('plp2'),
             Column::make('year')->title('Tahun'),
