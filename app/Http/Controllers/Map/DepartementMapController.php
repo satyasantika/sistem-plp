@@ -67,19 +67,19 @@ class DepartementMapController extends Controller
         $my_lectures = User::role('dosen')->where('subject_id',$this->_mySubjectId())->get();
 
         return [
-            'students' => User::role('mahasiswa')
+            'students' => User::role('mahasiswa')->can('active-read')
                                 ->select('id','name')
                                 ->where([
                                     'subject_id'=>$this->_mySubjectId(),
-                                    'is_active'=>1
+                                    // 'is_active'=>1
                                 ])
                                 ->whereNotIn('id',$my_student_id_in_maps)
                                 ->orderBy('name')
                                 ->get(),
-            'lectures' => User::role('dosen')
+            'lectures' => User::role('dosen')->can('active-read')
                                 ->where([
                                     'subject_id'=>$this->_mySubjectId(),
-                                    'is_active'=>1
+                                    // 'is_active'=>1
                                 ])
                                 ->orderBy('name')
                                 ->get(),

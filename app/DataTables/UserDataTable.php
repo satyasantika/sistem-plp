@@ -36,6 +36,11 @@ class UserDataTable extends DataTable
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
                 return $action;
             })
+            ->addColumn('active', function($row){
+                $active =  $row->can('active-read') ? 'yes' : 'no';
+
+                return $active;
+            })
             ->addColumn('role', function($row){
                 return $row->getRoleNames()->implode(', ');
             })
@@ -86,7 +91,7 @@ class UserDataTable extends DataTable
                     ->printable(false)
                     ->width(120)
                     ->addClass('text-center'),
-            Column::make('is_active')->title('Ac?'),
+            Column::computed('active')->title('Aktif'),
             Column::make('name'),
             Column::make('username'),
             Column::make('email'),

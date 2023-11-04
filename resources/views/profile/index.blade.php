@@ -76,7 +76,10 @@
                                     </tr>
                                     <tr>
                                         <td>Status PNS</td>
-                                        <td>{{ ($user->is_pns == 1 ? 'PNS' : 'nonPNS' ) ?? '-' }}</td>
+                                        <td>
+                                            @if ($user->is_pns == 0) nonPNS @endif
+                                            @if ($user->is_pns == 1) PNS @endif
+                                            @if ($user->is_pns == 2) PPPK @endif
                                     </tr>
                                     <tr>
                                         <td>Golongan</td>

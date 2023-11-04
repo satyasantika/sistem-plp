@@ -83,10 +83,10 @@ class UserController extends Controller
     public function activation(User $user)
     {
         $name = strtoupper($user->name);
-        $user->is_active = $user->is_active ? 0 : 1;
-        $user->save();
-        $status = $user->is_active ? 'aktiv':'non-aktiv';
-        $user->is_active ? $user->givePermissionTo('active-read') : $user->revokePermissionTo('active-read');
+        // $user->is_active = $user->is_active ? 0 : 1;
+        // $user->save();
+        $user->can('active-read') ? $user->revokePermissionTo('active-read') : $user->givePermissionTo('active-read');
+        $status = $user->can('active-read') ? 'aktiv':'non-aktiv';
         return response()->json([
             'status' => 'success',
             'message' => 'User <strong>'.$name.'</strong> telah di'.$status.'kan'
@@ -99,8 +99,8 @@ class UserController extends Controller
             'roles' =>  Role::all()->pluck('name')->sort(),
             'subjects' =>  Subject::select('id', 'name')->orderBy('name')->get(),
             'providers' => ['Telkomsel','Indosat Oreedoo'],
-            'is_pns' => ['nonPNS','PNS'],
-            'golongans' => ['I','II','III','IV'],
+            'is_pns' => ['nonPNS','PNS','PPPK'],
+            'golongans' => ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII'],
             'banks' => ['Mandiri','BRI','BJB','BTN','BCA','BNI'],
         ];
     }

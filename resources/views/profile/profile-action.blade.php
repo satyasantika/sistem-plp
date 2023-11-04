@@ -78,7 +78,7 @@
                         <select id="provider" class="form-control @error('provider') is-invalid @enderror" name="provider">
                             <option value="">-- Pilih Provider --</option>
                             @foreach ($providers as $provider)
-                                <option value="{{ $provider }}" {{ $user->provider == $provider ? 'selected' : '' }}>{{ $provider }}</option>
+                                <option value="{{ $provider }}" @selected($user->provider == $provider)>{{ $provider }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -88,7 +88,7 @@
                         <label for="is_pns" class="form-label">Status PNS</label>
                         <select id="is_pns" class="form-control @error('is_pns') is-invalid @enderror" name="is_pns">
                             @foreach ($is_pns as $key => $value)
-                                <option value="{{ $key }}" {{ $user->is_pns == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                <option value="{{ $key }}" @selected($user->is_pns == $key)>{{ $value }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -99,7 +99,7 @@
                         <select id="golongan" class="form-control @error('golongan') is-invalid @enderror" name="golongan">
                             <option value="">-- Pilih Golongan --</option>
                             @foreach ($golongans as $golongan)
-                                <option value="{{ $golongan }}" {{ $user->golongan == $golongan ? 'selected' : '' }}>Golongan {{ $golongan }}</option>
+                                <option value="{{ $golongan }}" @selected($user->golongan == $golongan)>Golongan {{ $golongan }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -122,7 +122,7 @@
                         <select id="bank" class="form-control @error('bank') is-invalid @enderror" name="bank">
                             <option value="">-- Pilih Bank untuk pencairan honor --</option>
                             @foreach ($banks as $bank)
-                                <option value="{{ $bank }}" {{ $user->bank == $bank ? 'selected' : '' }}>bank {{ $bank }}</option>
+                                <option value="{{ $bank }}" @selected($user->bank == $bank)>bank {{ $bank }}</option>
                             @endforeach
                         </select>
                     </div>
