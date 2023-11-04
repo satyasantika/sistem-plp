@@ -40,8 +40,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'birth_date' => 'date',
-        'is_pns' => 'boolean',
-        'is_active' => 'boolean',
+        // 'is_pns' => 'boolean',
+        // 'is_active' => 'boolean',
     ];
 
     public function subjects()

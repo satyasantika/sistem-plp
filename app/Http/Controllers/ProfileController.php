@@ -26,8 +26,8 @@ class ProfileController extends Controller
         return view('profile.profile-action', [
             'user' => $profile,
             'providers' => ['Telkomsel','Indosat Oreedoo'],
-            'is_pns' => ['nonPNS','PNS'],
-            'golongans' => ['I','II','III','IV'],
+            'is_pns' => ['nonPNS','PNS','PPPK'],
+            'golongans' => ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII'],
             'banks' => ['Mandiri','BRI','BJB','BTN','BCA','BNI'],
         ]);
     }
