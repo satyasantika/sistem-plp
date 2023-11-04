@@ -40,10 +40,13 @@
                                     @endphp
                                     @foreach($maps as $map)
                                     <tr>
+                                        {{-- Mahasiswa --}}
                                         <td>
                                             {{ $map->students->name ?? '' }}
                                         </td>
+                                        {{-- Nilai --}}
                                         @if (App\Models\Assessment::where('assessor','dosen')
+                                                                                    ->orWhere('assessor','guru')
                                                                                     ->where('plp_order',$plp_order)
                                                                                     ->where('map_id',$map->id)
                                                                                     ->exists())
