@@ -2,8 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Map;
-use App\Models\Assessment;
+use App\Models\ViewAssessment;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\EloquentDataTable;
@@ -30,16 +29,6 @@ class AssessmentDataTable extends DataTable
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm my-1 action"><i class="ti-trash"></i></button>';
                 return $action;
             })
-            ->addColumn('mahasiswa', function($row){
-                if (isset($row->map_id)) {
-                    return $row->maps->students->name;
-                }
-            })
-            ->addColumn('sekolah', function($row){
-                if (isset($row->map_id)) {
-                    return $row->maps->schools->name;
-                }
-            })
             ->editColumn('updated_at', function($row) {
                 return $row->updated_at->format('d/m/Y H:i:s');
             })
@@ -52,10 +41,9 @@ class AssessmentDataTable extends DataTable
      * @param \App\Models\Assessment $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Assessment $model): QueryBuilder
+    public function query(ViewAssessment $model): QueryBuilder
     {
-        $maps = Map::where('year',2023)->pluck('id');
-        return $model->whereIn('map_id',$maps)->newQuery();
+        return $model->newQuery();
     }
 
     /**
@@ -87,11 +75,11 @@ class AssessmentDataTable extends DataTable
                     ->width(60)
                     ->addClass('text-center'),
             Column::make('mahasiswa'),
-            Column::make('assessor'),
-            Column::make('plp_order'),
-            Column::make('form_id'),
-            Column::make('form_order')->title('ke-'),
-            Column::make('grade'),
+            Column::make('penilai'),
+            Column::make('plp'),
+            Column::make('form'),
+            Column::make('ke'),
+            Column::make('nilai'),
             Column::make('updated_at'),
         ];
     }

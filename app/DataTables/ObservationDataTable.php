@@ -2,8 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Map;
-use App\Models\Observation;
+use App\Models\ViewObservation;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\EloquentDataTable;
@@ -30,16 +29,6 @@ class ObservationDataTable extends DataTable
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm my-1 action"><i class="ti-trash"></i></button>';
                 return $action;
             })
-            ->addColumn('mahasiswa', function($row){
-                if (isset($row->map_id)) {
-                    return $row->maps->students->name;
-                }
-            })
-            ->addColumn('sekolah', function($row){
-                if (isset($row->map_id)) {
-                    return $row->maps->schools->name;
-                }
-            })
             ->editColumn('updated_at', function($row) {
                 return $row->updated_at->format('d/m/Y H:i:s');
             })
@@ -52,10 +41,10 @@ class ObservationDataTable extends DataTable
      * @param \App\Models\Observation $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Observation $model): QueryBuilder
+    public function query(ViewObservation $model): QueryBuilder
     {
-        $maps = Map::where('year',2023)->whereNotNull('student_id')->pluck('id');
-        return $model->whereIn('map_id',$maps)->newQuery();
+        // $maps = Map::where('year',2023)->whereNotNull('student_id')->pluck('id');
+        return $model->newQuery();
     }
 
     /**
@@ -86,9 +75,9 @@ class ObservationDataTable extends DataTable
                     ->printable(false)
                     ->width(60)
                     ->addClass('text-center'),
+            Column::make('form'),
             Column::make('mahasiswa'),
-            Column::make('sekolah'),
-            Column::make('form_id'),
+            Column::make('tempat'),
             Column::make('updated_at'),
         ];
     }

@@ -2,8 +2,8 @@
 
 namespace App\DataTables;
 
-use App\Models\Map;
-use App\Models\Diary;
+// use App\Models\Map;
+use App\Models\ViewDiary;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\EloquentDataTable;
@@ -30,19 +30,6 @@ class DiaryDataTable extends DataTable
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm my-1 action"><i class="ti-trash"></i></button>';
                 return $action;
             })
-            ->addColumn('mahasiswa', function($row){
-                if (isset($row->map_id)) {
-                    return $row->maps->students->name;
-                }
-            })
-            ->addColumn('sekolah', function($row){
-                if (isset($row->map_id)) {
-                    return $row->maps->schools->name;
-                }
-            })
-            ->editColumn('log_date', function($row) {
-                return $row->log_date->format('d/m/Y');
-            })
             ->editColumn('updated_at', function($row) {
                 return $row->updated_at->format('d/m/Y H:i:s');
             })
@@ -55,10 +42,9 @@ class DiaryDataTable extends DataTable
      * @param \App\Models\Diary $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Diary $model): QueryBuilder
+    public function query(ViewDiary $model): QueryBuilder
     {
-        $maps = Map::where('year',2023)->pluck('id');
-        return $model->whereIn('map_id',$maps)->newQuery();
+        return $model->newQuery();
     }
 
     /**
@@ -90,9 +76,10 @@ class DiaryDataTable extends DataTable
                     ->width(60)
                     ->addClass('text-center'),
             Column::make('mahasiswa'),
-            Column::make('plp_order')->title('plp'),
-            Column::make('day_order')->title('hari ke-'),
-            Column::make('log_date')->title('tanggal'),
+            Column::make('tempat'),
+            Column::make('plp_order'),
+            Column::make('day_order'),
+            Column::make('log_date'),
             Column::make('note'),
             Column::make('verified'),
             Column::make('updated_at'),

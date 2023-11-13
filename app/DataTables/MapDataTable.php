@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Map;
+use App\Models\ViewMap;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -23,54 +23,11 @@ class MapDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            // ->editColumn('updated_at', function($row) {
-            //     return $row->updated_at->format('d/m/Y H:i:s');
-            // })
             ->addColumn('action', function($row){
                 $action = '';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="edit" class="btn btn-primary btn-sm my-1 action"><i class="ti-pencil"></i></button>';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm my-1 action"><i class="ti-trash"></i></button>';
                 return $action;
-            })
-            ->addColumn('mahasiswa', function($row){
-                if (isset($row->student_id)) {
-                    return $row->students->name;
-                }
-            })
-            ->addColumn('dosen', function($row){
-                if (isset($row->lecture_id)) {
-                    return $row->lectures->name;
-                }
-            })
-            ->addColumn('guru', function($row){
-                if (isset($row->teacher_id)) {
-                    return $row->teachers->name;
-                }
-            })
-            ->addColumn('tempat', function($row){
-                if (isset($row->school_id)) {
-                    return $row->schools->name;
-                }
-            })
-            ->addColumn('mapel', function($row){
-                if (isset($row->subject_id)) {
-                    return $row->subjects->name;
-                }
-            })
-            // ->addColumn('tahun', function($row){
-            //     if (isset($row->year)) {
-            //         return $row->year;
-            //     }
-            // })
-            ->addColumn('plp1', function($row){
-                if (isset($row->grade1)) {
-                    return $row->grade1." (".$row->letter1.")";
-                }
-            })
-            ->addColumn('plp2', function($row){
-                if (isset($row->grade2)) {
-                    return $row->grade2." (".$row->letter2.")";
-                }
             })
             ->setRowId('id');
     }
@@ -81,9 +38,9 @@ class MapDataTable extends DataTable
      * @param \App\Models\Map $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Map $model): QueryBuilder
+    public function query(ViewMap $model): QueryBuilder
     {
-        return $model->where('year',2023)->newQuery();
+        return $model->newQuery();
     }
 
     /**
@@ -114,16 +71,16 @@ class MapDataTable extends DataTable
                     ->printable(false)
                     ->width(60)
                     ->addClass('text-center'),
-            Column::computed('tempat')->searchable(true),
-            Column::computed('mapel')->searchable(true),
-            Column::computed('mahasiswa')->searchable(true),
-            Column::computed('dosen')->searchable(true),
-            Column::computed('guru')->searchable(true),
-            // Column::make('plp1'),
-            // Column::make('plp2'),
-            Column::make('year')->title('Tahun'),
-            Column::computed('plp1'),
-            Column::computed('plp2'),
+            Column::make('tempat'),
+            Column::make('mapel'),
+            Column::make('mahasiswa'),
+            Column::make('dosen'),
+            Column::make('guru'),
+            Column::make('plp1'),
+            Column::make('plp2'),
+            Column::make('tahun'),
+            Column::make('nilai_plp1'),
+            Column::make('nilai_plp2'),
         ];
     }
 
