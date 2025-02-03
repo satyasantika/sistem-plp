@@ -21,6 +21,6 @@ class WelcomeController extends Controller
                             ->groupBy('school_id')
                             ->get();
         $schools = School::whereIn('id',$school_id)->get();
-        return view('welcome', compact('schools'));
+        return view('auth.login', compact('schools'));
     }
 }

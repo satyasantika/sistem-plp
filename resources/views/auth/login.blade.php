@@ -1,9 +1,12 @@
 @extends('layouts.auth')
 
 @section('content')
+    <h1 class="fs-1 text-center fw-bold mb-4">
+        Selamat datang di Sistem PLP <br>FKIP-EDU 2025
+    </h1>
     <div class="card shadow-lg">
         <div class="card-body p-4">
-            <h1 class="fs-4 text-center fw-bold mb-4">Login PLP</h1>
+            <h1 class="fs-4 text-center fw-bold mb-4">Silakan login</h1>
             <form method="POST" action="{{ route('login') }}">
                 @csrf
 
@@ -65,4 +68,8 @@
             </form>
         </div>
     </div>
+    <div class="card">
+        <a href="https://drive.google.com/file/d/1QGM0yNbERPGAw6Oz-O0l0smwSDcYv-B4/view?usp=drive_link" class="btn btn-outline-primary float-end">Download Pedoman FKIP EDU 2025</a>
+    </div>
+
 @endsection

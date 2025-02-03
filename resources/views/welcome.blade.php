@@ -24,16 +24,17 @@
                 <div class="card mt-4">
                     <div class="card-header">
                         <a href="{{ route('login') }}" class="btn btn-primary">Go to Login >></a>
-                        <a href="https://drive.google.com/file/d/1OLlhGUxBpUz2IOdKs-U3j2l07mhBjU8y/view?usp=sharing" class="btn btn-outline-primary float-end">Download Pedoman PLP 2023</a>
+                        {{-- <a href="https://drive.google.com/file/d/1OLlhGUxBpUz2IOdKs-U3j2l07mhBjU8y/view?usp=sharing" class="btn btn-outline-primary float-end">Download Pedoman PLP 2023</a> --}}
+                        <a href="https://drive.google.com/file/d/1QGM0yNbERPGAw6Oz-O0l0smwSDcYv-B4/view?usp=drive_link" class="btn btn-outline-primary float-end">Download Pedoman FKIP EDU 2025</a>
                     </div>
                 </div>
-                <div class="card">
+                {{-- <div class="card">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <div class="table-responsive">
-                                        <h1>Mitra PLP 2023</h1>
+                                        <h1>Mitra PLP 2025</h1>
                                         <table class="table small-font table-striped table-hover table-sm">
                                             <thead>
                                                 <tr>
@@ -79,7 +80,7 @@
                     <div class="text-center mt-5 text-muted">
                         Copyright &copy; 2023 &mdash; FKIP Universitas Siliwangi
                     </div>
-                </div>
+                </div> --}}
             </div>
         </section>
     </body>
