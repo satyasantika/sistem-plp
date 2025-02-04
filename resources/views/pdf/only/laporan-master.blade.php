@@ -48,14 +48,13 @@
 </head>
 <body>
     @php
-AQ2        $data = [
+        $data = [
             'my_map' => $my_map,
             'maps' => $maps,
-            'plp_order' => $plp_order,
         ]
     @endphp
-    @include('pdf.cover',$data)
-    @include('pdf.cover-back',$data)
-    @include('pdf.pengesahan',$data)
+    @include('pdf.ONLY.cover',$data)
+    @include('pdf.ONLY.cover-back',$data)
+    @include('pdf.ONLY.pengesahan',$data)
 </body>
 </html>

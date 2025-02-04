@@ -87,6 +87,35 @@ Route::middleware('auth')->group(function () {
             Route::get('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{form_order}/{map_id}/{schoolassessment}/edit','edit')->name('schoolassessments.edit');
             Route::put('aktivitas/schoolassessments/plp{plp_order}/{form_id}/{form_order}/{map_id}/{schoolassessment}','update')->name('schoolassessments.update');
         });
+        //NEW
+        Route::controller(App\Http\Controllers\School\Only\StudentDiaryController::class)->group(function () {
+            Route::get('aktivitas/studentdiaries/plp','index')->name('studentdiaries.only.index');
+            Route::get('aktivitas/studentdiaries/plp/create','create')->name('studentdiaries.only.create');
+            Route::post('aktivitas/studentdiaries/plp','store')->name('studentdiaries.only.store');
+            Route::get('aktivitas/studentdiaries/plp/{studentdiary}/edit','edit')->name('studentdiaries.only.edit');
+            Route::put('aktivitas/studentdiaries/plp/{studentdiary}','update')->name('studentdiaries.only.update');
+            Route::delete('aktivitas/studentdiaries/plp/{studentdiary}','destroy')->name('studentdiaries.only.destroy');
+        });
+        Route::controller(App\Http\Controllers\School\Only\DiaryVerificationController::class)->group(function () {
+            Route::get('aktivitas/diaryverifications/plp','index')->name('diaryverifications.only.index');
+            Route::get('aktivitas/diaryverifications/plp/{map_id}','show')->name('diaryverifications.only.show');
+            Route::put('aktivitas/diaryverifications/plp/{map_id}/{diaryverification}','update')->name('diaryverifications.only.update');
+        });
+        Route::controller(App\Http\Controllers\School\Only\StudentObservationController::class)->group(function () {
+            Route::get('aktivitas/studentobservations/plp','index')->name('studentobservations.only.index');
+            Route::get('aktivitas/studentobservations/plp/{form_id}/create','create')->name('studentobservations.only.create');
+            Route::post('aktivitas/studentobservations/plp/{form_id}','store')->name('studentobservations.only.store');
+            Route::get('aktivitas/studentobservations/plp/{form_id}/{studentobservation}/edit','edit')->name('studentobservations.only.edit');
+            Route::put('aktivitas/studentobservations/plp/{form_id}/{studentobservation}','update')->name('studentobservations.only.update');
+        });
+        Route::controller(App\Http\Controllers\School\Only\AssessmentController::class)->group(function () {
+            Route::get('aktivitas/schoolassessments/plp','index')->name('schoolassessments.only.index');
+            Route::get('aktivitas/schoolassessments/plp/{form_id}/','show')->name('schoolassessments.only.show');
+            Route::get('aktivitas/schoolassessments/plp/{form_id}/{form_order}/{map_id}/create','create')->name('schoolassessments.only.create');
+            Route::post('aktivitas/schoolassessments/plp/{form_id}/{form_order}/{map_id}','store')->name('schoolassessments.only.store');
+            Route::get('aktivitas/schoolassessments/plp/{form_id}/{form_order}/{map_id}/{schoolassessment}/edit','edit')->name('schoolassessments.only.edit');
+            Route::put('aktivitas/schoolassessments/plp/{form_id}/{form_order}/{map_id}/{schoolassessment}','update')->name('schoolassessments.only.update');
+        });
         Route::get('aktivitas/reportprint/plp{plp_order}', [App\Http\Controllers\School\ReportPrintController::class, 'generateCover'])->name('generateCover');
         Route::get('aktivitas/teachingrespons',function(){
             return view('aktivitas.teachingrespon-list');
@@ -112,6 +141,14 @@ Route::middleware('auth')->group(function () {
         Route::get('data/progress/plp{plp_order}',function($plp_order){
             return view('report.assessment-result',compact('plp_order'));
         })->middleware('permission:data/progress/plp1-read|data/progress/plp2-read|'.request()->segment(3).'-read');
+        //NEW
+        Route::get('aktivitas/reportprint/plp', [App\Http\Controllers\School\Only\ReportPrintController::class, 'generateCover'])->name('only.generateCover');
+        Route::get('yudisium/plp',function(){
+            return view('report.only.yudisium');
+        })->middleware('permission:yudisium/plp-read');
+        Route::get('data/progress/plp',function(){
+            return view('report.only.assessment-result');
+        })->middleware('permission:data/progress/plp-read');
         //TMP
         Route::get('data/schooluserapprovals',[App\Http\Controllers\School\SchoolUserController::class, 'index']);
     });

@@ -57,7 +57,7 @@ class AssessmentDataTable extends DataTable
                     ->setTableId('assessment-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1, 'asc');
+                    ->orderBy(7, 'desc');
     }
 
     /**

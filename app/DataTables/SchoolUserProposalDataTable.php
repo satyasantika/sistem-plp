@@ -67,7 +67,7 @@ class SchoolUserProposalDataTable extends DataTable
                     ->setTableId('schooluserproposal-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1, 'asc');
+                    ->orderBy(9, 'desc');
     }
 
     /**

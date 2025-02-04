@@ -58,7 +58,7 @@ class ObservationDataTable extends DataTable
                     ->setTableId('observation-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1, 'asc');
+                    ->orderBy(4, 'asc');
     }
 
     /**

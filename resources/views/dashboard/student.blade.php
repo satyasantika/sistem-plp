@@ -8,7 +8,7 @@
         <div class="col">
             <div class="card">
                 <div class="card-header">
-                    <a href="https://docs.google.com/document/d/1bbfXIjsT6U2qUY_RU0K1BM9wdREGr6q2/edit" class="btn btn-outline-primary">Download Template Formulir Bimbingan PLP 1 2023</a>
+                    <a href="https://docs.google.com/document/d/1bbfXIjsT6U2qUY_RU0K1BM9wdREGr6q2/edit" class="btn btn-outline-primary">Download Template Formulir Bimbingan PLP 1 2025</a>
                 </div>
             </div>
             <div class="card">
@@ -20,7 +20,7 @@
                         <table class="table small-font table-striped table-hover table-sm">
                             <tbody>
                                 @php
-                                    $maps = App\Models\Map::where('student_id',auth()->user()->id)->where('year',2023)->get();
+                                    $maps = App\Models\Map::where('student_id',auth()->user()->id)->where('year',2025)->get();
                                 @endphp
                                 @forelse ($maps as $map)
                                 <tr>
@@ -100,11 +100,11 @@
                         <table class="table small-font table-striped table-hover table-sm">
                             <tbody>
                                 @php
-                                $students = App\Models\Map::where('student_id',auth()->user()->id)->where('year',2023)->get();
+                                $students = App\Models\Map::where('student_id',auth()->user()->id)->where('year',2025)->get();
                                 @endphp
                                 @forelse ($students as $student)
                                     @php
-                                    $maps = App\Models\Map::where('school_id',$student->school_id)->where('year',2023)->get();
+                                    $maps = App\Models\Map::where('school_id',$student->school_id)->where('year',2025)->get();
                                     @endphp
                                     @forelse ($maps as $map)
                                     <tr>

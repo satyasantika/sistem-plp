@@ -3,7 +3,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h5>Kuota dan Hasil Pemetaan Mahasiswa {{ auth()->user()->subjects->departement }} pada PLP Tahun 2023</h5>
+                    <h5>Kuota dan Hasil Pemetaan Mahasiswa {{ auth()->user()->subjects->departement }} pada PLP Tahun 2025</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -17,18 +17,18 @@
                             </thead>
                             <tbody>
                                 @php
-                                    $maps = App\Models\Map::select('school_id')->where('year',2023)->where('subject_id',auth()->user()->subject_id)->groupBy('school_id')->get();
+                                    $maps = App\Models\Map::select('school_id')->where('year',2025)->where('subject_id',auth()->user()->subject_id)->groupBy('school_id')->get();
                                 @endphp
                                 @forelse ($maps as $map)
                                 <tr>
                                     <td>{{ $map->schools->name ?? '' }}</td>
                                     <td>{{ App\Models\Map::where('subject_id',auth()->user()->subject_id)
                                                         ->where('school_id',$map->school_id)
-                                                        ->where('year',2023)
+                                                        ->where('year',2025)
                                                         ->count() ?? '' }}</td>
                                     <td>{{ App\Models\Map::where('subject_id',auth()->user()->subject_id)
                                                         ->where('school_id',$map->school_id)
-                                                        ->where('year',2023)
+                                                        ->where('year',2025)
                                                         ->whereNotNull('student_id')
                                                         ->count() ?? '' }}</td>
                                 </tr>
@@ -44,7 +44,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h5>Pemetaan DPL {{ auth()->user()->subjects->departement }} pada PLP Tahun 2023</h5>
+                    <h5>Pemetaan DPL {{ auth()->user()->subjects->departement }} pada PLP Tahun 2025</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -59,7 +59,7 @@
                                 @php
                                     $lectures = App\Models\Map::select('lecture_id')
                                                         ->where('subject_id',auth()->user()->subject_id)
-                                                        ->where('year',2023)
+                                                        ->where('year',2025)
                                                         ->groupBy('lecture_id')->get();
                                 @endphp
                                 @forelse ($lectures as $lecture)
@@ -68,7 +68,7 @@
                                     @php
                                         $maps = App\Models\Map::select('school_id', DB::raw('count(student_id) as total'))
                                                         ->where('lecture_id',$lecture->lecture_id)
-                                                        ->where('year',2023)
+                                                        ->where('year',2025)
                                                         ->groupBy('school_id')->get();
                                     @endphp
                                     <td>

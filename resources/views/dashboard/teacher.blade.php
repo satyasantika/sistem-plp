@@ -11,6 +11,7 @@
                     <h5>Data Mahasiswa Pamongan</h5>
                 </div>
                 <div class="card-body">
+                    <div class="mb-2"><a href="{{ route('schoolassessments.only.index') }}" class="btn btn-primary">Mulai Menilai</a></div>
                     <div class="table-responsive">
                         <table class="table small-font table-striped table-hover table-sm">
                             <thead>
@@ -23,7 +24,7 @@
                                 @php
                                     $maps = App\Models\Map::where('subject_id',auth()->user()->subject_id)
                                                             ->where('teacher_id',auth()->user()->id)
-                                                            ->where('year',2023)
+                                                            ->where('year',2025)
                                                             ->get()
                                 @endphp
                                 @forelse ($maps as $map)

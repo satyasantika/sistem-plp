@@ -13,6 +13,7 @@ class Map extends Model
     protected $casts = [
         'plp1' => 'boolean',
         'plp2' => 'boolean',
+        'plp' => 'boolean',
     ];
 
     public function students()

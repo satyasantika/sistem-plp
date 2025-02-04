@@ -99,21 +99,30 @@
                             value="{{ $map->year }}" name="year" class="form-control" id="year">
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="mb-3">
-                        <label for="plp1" class="form-label">Ikut PLP 1</label>
-                        <select id="plp1" class="form-control @error('plp1') is-invalid @enderror" name="plp1">
-                            <option value="1" {{ $map->plp1 === true ? 'selected' : '' }}>YA</option>
-                            <option value="0" {{ $map->plp1 === false ? 'selected' : '' }}>TIDAK</option>
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label for="plp1" class="form-label">Ikut PLP</label>
+                        <select id="plp1" class="form-control @error('plp1') is-invalid @enderror" name="plp">
+                            <option value="1" @selected($map->plp)>YA</option>
+                            <option value="0" @selected($map->plp!=1)>TIDAK</option>
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="mb-3">
+                <div class="col-md-2">
+                    <div class="mb-2">
+                        <label for="plp1" class="form-label">Ikut PLP 1</label>
+                        <select id="plp1" class="form-control @error('plp1') is-invalid @enderror" name="plp1">
+                            <option value="1" @selected($map->plp1)>YA</option>
+                            <option value="0" @selected($map->plp1!=1)>TIDAK</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-2">
                         <label for="plp2" class="form-label">Ikut PLP 2</label>
                         <select id="plp2" class="form-control @error('plp2') is-invalid @enderror" name="plp2">
-                            <option value="1" {{ $map->plp2 === true ? 'selected' : '' }}>YA</option>
-                            <option value="0" {{ $map->plp2 === false ? 'selected' : '' }}>TIDAK</option>
+                            <option value="1" @selected($map->plp2)>YA</option>
+                            <option value="0" @selected($map->plp2!=1)>TIDAK</option>
                         </select>
                     </div>
                 </div>

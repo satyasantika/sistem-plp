@@ -54,7 +54,8 @@ class MapDataTable extends DataTable
                     ->setTableId('map-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1, 'asc');
+                    ->orderBy(1, 'desc');
+
     }
 
     /**
@@ -71,16 +72,13 @@ class MapDataTable extends DataTable
                     ->printable(false)
                     ->width(60)
                     ->addClass('text-center'),
+            Column::make('tahun'),
             Column::make('tempat'),
             Column::make('mapel'),
             Column::make('mahasiswa'),
             Column::make('dosen'),
             Column::make('guru'),
-            Column::make('plp1'),
-            Column::make('plp2'),
-            Column::make('tahun'),
-            Column::make('nilai_plp1'),
-            Column::make('nilai_plp2'),
+            Column::make('nilai_plp'),
         ];
     }
 

@@ -58,7 +58,7 @@ class DiaryDataTable extends DataTable
                     ->setTableId('diary-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1, 'asc');
+                    ->orderBy(5, 'desc');
     }
 
     /**
