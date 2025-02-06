@@ -11,7 +11,10 @@
                     <h5>Sebaran Mahasiswa Bimbingan</h5>
                 </div>
                 <div class="card-body">
-                    <div class="mb-2"><a href="{{ route('schoolassessments.only.index') }}" class="btn btn-primary">Mulai Menilai</a></div>
+                    <div class="mb-2">
+                        <a href="{{ route('schoolassessments.only.index') }}" class="btn btn-primary">Mulai Menilai</a>
+                        <a href="{{ route('diaryverifications.only.index') }}" class="btn btn-primary">Verifikasi Logbook</a>
+                    </div>
                     <div class="table-responsive">
                         <table class="table small-font table-striped table-hover table-sm">
                             <thead>
