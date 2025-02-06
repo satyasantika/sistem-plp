@@ -11,9 +11,16 @@
         Observasi Kegiatan PLP
     </div>
     <div class="content-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+            </div>
+        </div>
         <div class="row same-height">
             <div class="col-md-12">
                 <div class="card">
+                    <div class="card-header">
+                        <a href="{{ route('dashboard') }}" class="btn btn-primary float-end">Kembali ke dashboard</a>
+                    </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <div id="role-table_wrapper" class="dataTables_wrapper no-footer">

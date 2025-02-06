@@ -8,7 +8,13 @@
         <div class="col">
             <div class="card">
                 <div class="card-header">
-                    <a href="https://docs.google.com/document/d/1bbfXIjsT6U2qUY_RU0K1BM9wdREGr6q2/edit" class="btn btn-outline-primary">Download Template Formulir Bimbingan PLP 1 2025</a>
+                    <a href="{{ route('studentobservations.only.index') }}" class="btn btn-primary">Observasi</a>
+                    <a href="{{ route('studentdiaries.only.index') }}" class="btn btn-primary">Logbook</a>
+                    <hr>
+                    <a href="{{ route('only.generateCover') }}" class="btn btn-outline-primary mb-2">Download</a>
+                    Cover Laporan PLP <br>
+                    <a href="https://docs.google.com/document/d/1bbfXIjsT6U2qUY_RU0K1BM9wdREGr6q2/edit" class="btn btn-outline-primary">Download</a>
+                    Template Formulir Bimbingan PLP 2025
                 </div>
             </div>
             <div class="card">

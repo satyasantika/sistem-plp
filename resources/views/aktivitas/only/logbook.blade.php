@@ -14,6 +14,9 @@
         <div class="row same-height">
             <div class="col-md-12">
                 <div class="card">
+                    <div class="card-header">
+                        <a href="{{ route('dashboard') }}" class="btn btn-primary float-end">Kembali ke dashboard</a>
+                    </div>
                     <div class="card-body">
                         <button type="button" class="btn btn-primary btn-sm mb-3 btn-add">+ Logbook</button>
                         <div class="table-responsive">
