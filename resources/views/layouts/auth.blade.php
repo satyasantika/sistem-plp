@@ -26,7 +26,7 @@
                 <div class="col-xxl-4 col-xl-5 col-lg-6 col-md-7 col-sm-8">
                 @yield('content')
                     <div class="text-center mt-5 text-muted">
-                        Copyright &copy; 2023 &mdash; FKIP Universitas Siliwangi
+                        Sistem PLP &copy; 2022 SaReDep (Satya-Redi-DepiArdian) &mdash; FKIP Universitas Siliwangi
                     </div>
                 </div>
             </div>

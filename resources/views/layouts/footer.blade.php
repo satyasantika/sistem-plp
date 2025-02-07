@@ -1,3 +1,3 @@
 <footer>
-    Sistem PLP © 2022. All rights Reserved</span>
+    Sistem PLP &copy; 2022 SaReDep (Satya-Redi-DepiArdian) &mdash; FKIP Universitas Siliwangi
 </footer>
