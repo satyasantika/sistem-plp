@@ -54,14 +54,14 @@ class DepartementMapController extends Controller
     {
         return Map::where([
             'subject_id'=>$this->_mySubjectId(),
-            'year'=>2023
+            'year'=>2025
             ])->orderBy('school_id')->get();
 
     }
     private function _dataSelection()
     {
         $my_student_id_in_maps = Map::where('subject_id',$this->_mySubjectId())
-                                    ->where('year',2023)
+                                    ->where('year',2025)
                                     ->whereNotNull('student_id')
                                     ->pluck('student_id');
         $my_lectures = User::role('dosen')->where('subject_id',$this->_mySubjectId())->get();
