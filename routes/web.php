@@ -142,6 +142,9 @@ Route::middleware('auth')->group(function () {
             return view('report.assessment-result',compact('plp_order'));
         })->middleware('permission:data/progress/plp1-read|data/progress/plp2-read|'.request()->segment(3).'-read');
         //NEW
+        Route::get('report/summary/plp',function(){
+            return view('report.only.summary');
+        })->middleware('permission:report/summary/plp-read');
         Route::get('aktivitas/reportprint/plp', [App\Http\Controllers\School\Only\ReportPrintController::class, 'generateCover'])->name('only.generateCover');
         Route::get('yudisium/plp',function(){
             return view('report.only.yudisium');
