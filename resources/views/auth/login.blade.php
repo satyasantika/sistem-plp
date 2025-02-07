@@ -69,7 +69,13 @@
         </div>
     </div>
     <div class="card">
-        <a href="https://drive.google.com/file/d/1QGM0yNbERPGAw6Oz-O0l0smwSDcYv-B4/view?usp=drive_link" class="btn btn-outline-primary float-end">Download Pedoman FKIP EDU 2025</a>
+        <div class="card-body p-4">
+
+            <a href="https://drive.google.com/file/d/1QGM0yNbERPGAw6Oz-O0l0smwSDcYv-B4/view?usp=drive_link" target="_blank" class="btn btn-outline-primary mb-2">Download Pedoman FKIP EDU 2025</a>
+            <a href="https://scribehow.com/shared/Panduan_Sistem-PLP_bagi_Mahasiswa__yo6klHZkRWWDfqsRGCqfvg" target="_blank" class="btn btn-outline-primary mb-2">Panduan Sistem-PLP bagi Mahasiswa</a>
+            <a href="https://scribehow.com/shared/Panduan_Menilai_dalam_Sistem_PLP_untuk_Guru_Pamong__pN3dVQosSq-KiRnz7E_z9A" target="_blank" class="btn btn-outline-primary mb-2">Panduan Sistem-PLP bagi Guru Pamong</a>
+            <a href="https://scribehow.com/shared/Panduan_Penggunaan_Sistem-PLP_bagi_Dosen__T8RGNhsQTp6xf1yMJhX6rg" target="_blank" class="btn btn-outline-primary mb-2">Panduan Sistem-PLP bagi Dosen Pembimbing</a>
+        </div>
     </div>
 
 @endsection
