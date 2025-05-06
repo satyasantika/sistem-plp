@@ -87,8 +87,8 @@
                                     @php
                                         // List guru
                                         $school_maps = App\Models\Map::select('teacher_id','school_id')
-                                                                        ->where('year',2023)
-                                                                        ->where('plp2',1)
+                                                                        ->where('year',date("Y"))
+                                                                        ->where('plp',1)
                                                                         ->where('school_id',$school->id)
                                                                         ->groupBy('teacher_id','school_id')
                                                                         ->get();
