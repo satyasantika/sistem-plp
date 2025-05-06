@@ -16,7 +16,7 @@
             @foreach ($schools as $school)
             @php
                 $quota = App\Models\Map::where([
-                                            'year'=>2025,
+                                            'year'=>date("Y"),
                                             request()->segment(3)=>1,
                                             'school_id'=>$school->id,
                                         ])->whereNotNull('student_id')
@@ -72,6 +72,7 @@
                                         @php
                                             // List guru
                                             $school_maps = App\Models\Map::distinct()
+                                                                        ->where('year',date("Y"))
                                                                         ->where('school_id',$school->id)
                                                                         ->pluck('teacher_id');
                                         @endphp
@@ -81,7 +82,7 @@
                                                 // guru dalam mapping
                                                 $quota = App\Models\Map::where([
                                                                             'teacher_id'=>$teacher,
-                                                                            'year'=>2025,
+                                                                            'year'=>date("Y"),
                                                                             'school_id'=>$school->id,
                                                                         ])->whereNotNull('student_id')
                                                                         ->get();
