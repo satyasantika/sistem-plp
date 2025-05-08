@@ -16,6 +16,7 @@ var updateOnly = (table) => {
                 $.ajax({
                     method: 'POST',
                     url: URL+`/password/reset/${id}`,
+                    // url: `/plp/password/reset/${id}`,  // untuk hosting di supportfkip.unsil.ac.id/plp
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },

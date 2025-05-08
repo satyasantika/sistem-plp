@@ -5,7 +5,8 @@ var updateActivation = (table) => {
 
         $.ajax({
             method: 'POST',
-            url: URL+`/konfigurasi/users/${id}/activation`,
+            url: `/konfigurasi/users/${id}/activation`,
+            // url: `/plp/konfigurasi/users/${id}/activation`, // untuk hosting di supportfkip.unsil.ac.id/plp
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
