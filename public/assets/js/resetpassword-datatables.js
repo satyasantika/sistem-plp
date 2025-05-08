@@ -15,7 +15,7 @@ var updateOnly = (table) => {
             if (result.isConfirmed) {
                 $.ajax({
                     method: 'POST',
-                    url: document.URL+`/password/reset/${id}`,
+                    url: URL+`/password/reset/${id}`,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },

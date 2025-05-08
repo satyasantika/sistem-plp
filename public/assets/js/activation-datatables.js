@@ -5,11 +5,12 @@ var updateActivation = (table) => {
 
         $.ajax({
             method: 'POST',
-            url: document.URL+`/konfigurasi/users/${id}/activation`,
+            url: URL+`/konfigurasi/users/${id}/activation`,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success : function(response) {
+                window.LaravelDataTables[`${table}`].ajax.reload()
                 iziToast.success({
                     title: 'OK!',
                     message: response.message,
