@@ -15,12 +15,11 @@ var updateOnly = (table) => {
             if (result.isConfirmed) {
                 $.ajax({
                     method: 'POST',
-                    url: `/password/reset/${id}`,
+                    url: document.URL+`/password/reset/${id}`,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success : function(response) {
-                        // $(`#${table}`).load(document.URL +  ` #${table}`)
                         iziToast.success({
                             title: 'OK!',
                             message: response.message,
