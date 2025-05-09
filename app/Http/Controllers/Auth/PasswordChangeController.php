@@ -42,18 +42,16 @@ class PasswordChangeController extends Controller
     {
         //Change Password
         $user = User::find($id);
-        $user->password = bcrypt($user->username);
-        if ($user->role('kepsek')) {
+        if ($user->hasRole('kepsek')) {
             $user->password = bcrypt('kepala');
-        }
-        if ($user->role('korguru')) {
+        }elseif ($user->hasRole('korguru')) {
             $user->password = bcrypt('koordinator');
-        }
-        if ($user->role('guru')) {
+        }elseif ($user->hasRole('guru')) {
             $user->password = bcrypt('guru');
-        }
-        if ($user->role('dosen')) {
+        }elseif ($user->hasRole('dosen')) {
             $user->password = bcrypt('dosen');
+        }else {
+            $user->password = bcrypt($user->username);
         }
         $user->save();
 
