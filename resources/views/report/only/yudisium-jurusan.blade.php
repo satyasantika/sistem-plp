@@ -1,6 +1,6 @@
 @php
-    $lecture_forms = ['2022N2','2022N6','2022N7'];
-    $teacher_forms = ['2022N1','2022N3','2022N4','2022N5','2022N6','2022N7'];
+    $lecture_forms = ['2024N2','2024N6','2024N7'];
+    $teacher_forms = ['2024N1','2024N3','2024N4','2024N5','2024N6','2024N7'];
 
 @endphp
 <div class="content-wrapper">
