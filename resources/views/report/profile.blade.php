@@ -4,7 +4,8 @@
 @endpush
 
 @php
-    $schools = App\Models\School::all();
+    $school_on_current_maps = App\Models\Map::select('school_id')->where('year',date('Y'))->groupBy('school_id')->get();
+    $schools = App\Models\School::whereIn('id',$school_on_current_maps)->orderBy('id')->get();
     if (auth()->user()->hasAnyRole('kepsek','korguru')) {
         $id = auth()->user()->id;
         $schools = App\Models\School::where('headmaster_id',$id)->orWhere('coordinator_id',$id)->get();
