@@ -12,9 +12,9 @@ class ExportProfile implements FromView
     public function view(): View
     {
         return view('exports.profile', [
-            'teacher_maps' => Map::select('teacher_id','school_id')->where('year',2023)->where('plp2',1)->groupBy('teacher_id','school_id')->get(),
-            'headmaster_maps' => Map::select('school_id')->where('year',2023)->where('plp2',1)->groupBy('school_id')->get(),
-            'coordinator_maps' => Map::select('school_id')->where('year',2023)->where('plp2',1)->groupBy('school_id')->get(),
+            'teacher_maps' => Map::select('teacher_id','school_id')->where('year',date('Y'))->where('plp',1)->groupBy('teacher_id','school_id')->get(),
+            'headmaster_maps' => Map::select('school_id')->where('year',date('Y'))->where('plp',1)->groupBy('school_id')->get(),
+            'coordinator_maps' => Map::select('school_id')->where('year',date('Y'))->where('plp',1)->groupBy('school_id')->get(),
         ]);
     }
 }
