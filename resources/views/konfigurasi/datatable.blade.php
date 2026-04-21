@@ -16,7 +16,12 @@
                 <div class="card">
                     <div class="card-body">
                         @stack('import')
-                        <button type="button" class="btn btn-primary btn-sm mb-3 btn-add">+ {{ request()->segment(2) }}</button>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <button type="button" class="btn btn-primary btn-sm btn-add">+ {{ request()->segment(2) }}</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-reload-table" data-table-id="{{ $dataTable->getTableAttribute('id') }}">
+                                Reload Table
+                            </button>
+                        </div>
                         <div class="table-responsive">
                         {{ $dataTable->table(['class' => 'display nowrap']) }}
                         </div>
@@ -42,6 +47,22 @@
     <script src="{{ asset('') }}vendor/izitoast/dist/js/iziToast.min.js"></script>
     {{ $dataTable->scripts() }}
     <script src="{{ asset('') }}assets/js/crud-datatables.js"></script>
+    <script>
+        $(function() {
+            $('.btn-reload-table').on('click', function() {
+                const tableId = $(this).data('table-id')
+
+                if (window.LaravelDataTables?.[tableId]) {
+                    window.LaravelDataTables[tableId].ajax.reload(null, false)
+                    return
+                }
+
+                if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
+                    $(`#${tableId}`).DataTable().ajax.reload(null, false)
+                }
+            })
+        })
+    </script>
     @stack('jscode')
 
 @endpush

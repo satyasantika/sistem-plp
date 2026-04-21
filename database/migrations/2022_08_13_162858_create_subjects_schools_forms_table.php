@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->string('name');
-            $table->string('departement');
-            $table->string('abbreviation');
+            $table->string('name')->nullable();
+            $table->string('departement')->nullable();
+            $table->string('abbreviation')->nullable();
         });
         Schema::create('schools', function (Blueprint $table) {
             $table->id();
@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('type')->nullable(); //tipe form (max/skor_4/skro_40/yes_no)
             $table->integer('count')->default(0);
+            $table->integer('max_score')->default(0);
             $table->integer('times')->default(1);
         });
         Schema::create('form_items', function (Blueprint $table) {

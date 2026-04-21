@@ -22,8 +22,15 @@ return new class extends Migration
             $table->string('subject_id')->nullable();
             $table->foreign('subject_id')->references('id')->on('subjects')->constrained()->nullable();
             $table->integer('year')->nullable();
-            $table->boolean('plp1')->default(1);
-            $table->boolean('plp2')->default(1);
+            $table->boolean('plp1')->default(0);
+            $table->boolean('plp2')->default(0);
+            $table->boolean('plp')->default(0);
+            $table->double('grade1')->nullable();
+            $table->string('letter1')->nullable();
+            $table->double('grade2')->nullable();
+            $table->string('letter2')->nullable();
+            $table->double('grade')->nullable();
+            $table->string('letter')->nullable();
             $table->timestamps();
         });
     }

@@ -1,10 +1,17 @@
 @extends('konfigurasi.datatable')
 
 @push('import')
-    {{-- <button type="button" class="btn btn-primary btn-sm mb-3 btn-import float-end" data-toggle="modal" data-target="#importExcel"> --}}
-    <button type="button" class="btn btn-primary btn-sm mb-3 btn-import float-end">
-        IMPORT User
-    </button>
+	<div class="d-flex flex-wrap justify-content-end gap-2 mb-3">
+		<button type="button" class="btn btn-primary btn-sm btn-import" data-role="dosen" data-title="Import Dosen">
+			Import Dosen
+		</button>
+		<button type="button" class="btn btn-primary btn-sm btn-import" data-role="guru" data-title="Import Guru">
+			Import Guru
+		</button>
+		<button type="button" class="btn btn-primary btn-sm btn-import" data-role="mahasiswa" data-title="Import Mahasiswa">
+			Import Mahasiswa
+		</button>
+	</div>
 
 		<!-- Import Excel -->
 		{{-- <div class="modal fade" id="importExcel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

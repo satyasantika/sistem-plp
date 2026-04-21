@@ -3,34 +3,61 @@
 namespace App\Imports;
 
 use App\Models\User;
-use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithUpserts;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class UsersImport implements ToModel, WithUpserts
+class UsersImport implements ToCollection, WithHeadingRow, WithValidation
 {
-    /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
-    public function model(array $row)
+    public function __construct(private string $role)
     {
-        if (!isset($row[1])) {
-            return null;
-        }
-        return new User([
-            'name'     => $row[0],
-            'username'     => $row[1],
-            'email'    => $row[2],
-            'password' => bcrypt($row[3]),
-            'subject_id'    => $row[4],
-            'phone'    => $row[5],
-            'address'    => $row[6],
-        ]);
     }
 
-    public function uniqueBy()
+    public function collection(Collection $rows)
     {
-        return 'username';
+        foreach ($rows as $row) {
+            if (blank($row['username'] ?? null)) {
+                continue;
+            }
+
+            $user = User::updateOrCreate(
+                ['username' => $row['username']],
+                [
+                    'name' => $row['name'] ?? null,
+                    'email' => $row['email'] ?? null,
+                    'password' => bcrypt($row['password'] ?? 'password'),
+                    'subject_id' => $row['subject_id'] ?? null,
+                ]
+            );
+
+            $user->syncRoles([$this->role]);
+        }
+    }
+
+    public function rules(): array
+    {
+        return [
+            '*.username' => ['required', 'string'],
+            '*.name' => ['required', 'string'],
+            '*.email' => ['required', 'email'],
+            '*.password' => ['required', 'string', 'min:6'],
+            '*.subject_id' => ['required', 'integer', 'exists:subjects,id'],
+        ];
+    }
+
+    public function customValidationMessages(): array
+    {
+        return [
+            '*.username.required' => 'Kolom username wajib diisi.',
+            '*.name.required' => 'Kolom name wajib diisi.',
+            '*.email.required' => 'Kolom email wajib diisi.',
+            '*.email.email' => 'Format email tidak valid.',
+            '*.password.required' => 'Kolom password wajib diisi.',
+            '*.password.min' => 'Password minimal 6 karakter.',
+            '*.subject_id.required' => 'Kolom subject_id wajib diisi.',
+            '*.subject_id.integer' => 'subject_id harus berupa angka.',
+            '*.subject_id.exists' => 'subject_id tidak ditemukan pada data subject.',
+        ];
     }
 }

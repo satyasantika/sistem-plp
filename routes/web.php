@@ -27,6 +27,7 @@ Route::get('/dashboard', function () {
 // require __DIR__.'/auth.php';
 Route::middleware('auth')->group(function () {
     Route::get('/konfigurasi/users/import/create', [App\Http\Controllers\Configuration\UserController::class, 'importCreate'])->name('users.importcreate');
+    Route::get('/konfigurasi/users/import/template', [App\Http\Controllers\Configuration\UserController::class, 'importTemplate'])->name('users.importtemplate');
     Route::post('/konfigurasi/users/import', [App\Http\Controllers\Configuration\UserController::class, 'importExcel'])->name('users.importexcel');
     Route::post('/konfigurasi/users/{user}/activation', [App\Http\Controllers\Configuration\UserController::class, 'activation'])->name('users.activation');
     Route::get('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'showChangePasswordGet'])->name('change-password');
