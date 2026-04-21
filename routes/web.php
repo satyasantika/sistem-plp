@@ -3,6 +3,7 @@
 use App\Exports\ExportMap;
 use App\Exports\ExportProfile;
 use App\Exports\ExportYudisium;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\RoleController;
@@ -29,6 +30,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/konfigurasi/users/import/create', [App\Http\Controllers\Configuration\UserController::class, 'importCreate'])->name('users.importcreate');
     Route::get('/konfigurasi/users/import/template', [App\Http\Controllers\Configuration\UserController::class, 'importTemplate'])->name('users.importtemplate');
     Route::post('/konfigurasi/users/import', [App\Http\Controllers\Configuration\UserController::class, 'importExcel'])->name('users.importexcel');
+    Route::get('/konfigurasi/maps/import/create', [App\Http\Controllers\Configuration\MapController::class, 'importCreate'])->name('maps.importcreate');
+    Route::get('/konfigurasi/maps/import/template', [App\Http\Controllers\Configuration\MapController::class, 'importTemplate'])->name('maps.importtemplate');
+    Route::post('/konfigurasi/maps/import', [App\Http\Controllers\Configuration\MapController::class, 'importExcel'])->name('maps.importexcel');
     Route::post('/konfigurasi/users/{user}/activation', [App\Http\Controllers\Configuration\UserController::class, 'activation'])->name('users.activation');
     Route::get('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'showChangePasswordGet'])->name('change-password');
     Route::post('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'changePasswordPost'])->name('update-password');

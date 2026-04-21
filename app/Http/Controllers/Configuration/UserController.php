@@ -14,7 +14,6 @@ use App\Http\Requests\UserRequest;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
-use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
 use PhpOffice\PhpSpreadsheet\NamedRange;
@@ -112,11 +111,6 @@ class UserController extends Controller
             'banks' => ['Mandiri','BRI','BJB','BTN','BCA','BNI'],
         ];
     }
-
-    public function exportExcel()
-	{
-		return Excel::download(new SiswaExport, 'siswa.xlsx');
-	}
 
     public function importCreate()
     {

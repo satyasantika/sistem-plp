@@ -1,23 +1,45 @@
-var importData = (table) => {
-    const modal = new bootstrap.Modal($('#modalAction'))
+var importData = (table, options = {}) => {
+    const modalElement = document.getElementById('modalAction')
+    const modalDialog = $('#modalAction').find('.modal-dialog')
+    const modal = bootstrap.Modal.getOrCreateInstance(modalElement)
+    const settings = {
+        createUrl: '/konfigurasi/users/import/create',
+        ...options,
+    }
 
-    $('.btn-import').on('click', function() {
+    $(document)
+    .off('click.importData', '.btn-import')
+    .on('click.importData', '.btn-import', function() {
         const role = this.dataset.role
         const title = this.dataset.title
 
         $.ajax({
             method: 'GET',
-            url: `/konfigurasi/users/import/create`,
+            url: settings.createUrl,
             data: {
                 role,
                 title,
             },
             success : function(response) {
-                $('#modalAction').find('.modal-dialog').removeClass('modal-lg').addClass('modal-xl').html(response)
+                modalDialog.removeClass('modal-lg').addClass('modal-xl').html(response)
                 modal.show()
                 bindImportFlow()
+            },
+            error: function(response) {
+                const message = response.responseJSON?.message || 'Modal import gagal dimuat.'
+
+                iziToast.error({
+                    title: 'Import gagal',
+                    message,
+                    position: 'topRight',
+                    timeout: 10000,
+                })
             }
         })
+    })
+
+    modalElement.addEventListener('hidden.bs.modal', function () {
+        modalDialog.html('')
     })
 
     function bindImportFlow() {
@@ -27,7 +49,7 @@ var importData = (table) => {
             clearFeedback(form)
         })
 
-        form.on('submit', function(e) {
+        form.off('submit.importData').on('submit.importData', function(e) {
             e.preventDefault()
             clearFeedback(form)
 
