@@ -3,13 +3,12 @@
 namespace App\DataTables;
 
 use App\Models\ViewMap;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
-use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
-use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
 class MapDataTable extends DataTable
@@ -26,7 +25,15 @@ class MapDataTable extends DataTable
             ->addColumn('action', function($row){
                 $action = '';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="edit" class="btn btn-primary btn-sm my-1 action"><i class="ti-pencil"></i></button>';
-                $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm my-1 action"><i class="ti-trash"></i></button>';
+
+                $isUsedInOtherTables =
+                    DB::table('diaries')->where('map_id', $row->id)->exists() ||
+                    DB::table('assessments')->where('map_id', $row->id)->exists() ||
+                    DB::table('observations')->where('map_id', $row->id)->exists();
+
+                if (!$isUsedInOtherTables) {
+                    $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm my-1 action"><i class="ti-trash"></i></button>';
+                }
                 return $action;
             })
             ->setRowId('id');

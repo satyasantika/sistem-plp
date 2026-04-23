@@ -6,10 +6,8 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
-use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
-use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
 class UserDataTable extends DataTable
@@ -33,7 +31,17 @@ class UserDataTable extends DataTable
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="reset" class="btn btn-danger btn-sm reset">R-</button>';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="edit" class="btn btn-primary btn-sm action"><i class="ti-pencil"></i></button>';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="activation" class="btn btn-outline-primary btn-sm activation">A</button>';
-                $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
+                $isUsedInOtherTables =
+                    (int) ($row->headmasters_count ?? 0) > 0 ||
+                    (int) ($row->coordinators_count ?? 0) > 0 ||
+                    (int) ($row->students_count ?? 0) > 0 ||
+                    (int) ($row->lectures_count ?? 0) > 0 ||
+                    (int) ($row->teachers_count ?? 0) > 0;
+
+                if (!$isUsedInOtherTables) {
+                    $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
+                }
+
                 return $action;
             })
             ->addColumn('active', function($row){
@@ -60,7 +68,13 @@ class UserDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
-        return $model->newQuery();
+        return $model->newQuery()->withCount([
+            'headmasters',
+            'coordinators',
+            'students',
+            'lectures',
+            'teachers',
+        ]);
     }
 
     /**
@@ -89,8 +103,8 @@ class UserDataTable extends DataTable
                     ->title('')
                     ->exportable(false)
                     ->printable(false)
-                    ->width(120)
-                    ->addClass('text-center'),
+                    ->width(120),
+                    // ->addClass('text-center'),
             Column::computed('active')->title('Aktif'),
             Column::make('name'),
             Column::make('username'),

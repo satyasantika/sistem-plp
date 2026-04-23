@@ -28,14 +28,14 @@ class School extends Model
         return $this->hasMany(Map::class);
     }
 
-    public function teacher_proposals()
-    {
-        return $this->hasMany(TeacherProposal::class);
-    }
+    // public function teacher_proposals()
+    // {
+    //     return $this->hasMany(TeacherProposal::class);
+    // }
 
-    public function coordinator_proposals()
-    {
-        return $this->hasMany(CoordinatorProposal::class);
-    }
+    // public function coordinator_proposals()
+    // {
+    //     return $this->hasMany(CoordinatorProposal::class);
+    // }
 
 }

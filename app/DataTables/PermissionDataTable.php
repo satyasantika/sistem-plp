@@ -6,10 +6,8 @@ use App\Models\Permission;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
-use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
-use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
 class PermissionDataTable extends DataTable
@@ -29,7 +27,14 @@ class PermissionDataTable extends DataTable
             ->addColumn('action', function($row){
                 $action = '';
                 $action .= '<button type="button" data-id='.$row->id.' data-jenis="edit" class="btn btn-primary btn-sm action"><i class="ti-pencil"></i></button>';
-                $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
+
+                $isUsedInOtherTables =
+                    (int) ($row->roles_count ?? 0) > 0 ||
+                    (int) ($row->users_count ?? 0) > 0;
+
+                if (!$isUsedInOtherTables) {
+                    $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
+                }
                 return $action;
             })
             ->setRowId('id')
@@ -44,7 +49,10 @@ class PermissionDataTable extends DataTable
      */
     public function query(Permission $model): QueryBuilder
     {
-        return $model->newQuery();
+        return $model->newQuery()->withCount([
+            'roles',
+            'users',
+        ]);
     }
 
     /**
