@@ -157,6 +157,13 @@
                                 <i class="ti-key"></i> Password
                             </div>
                         </a>
+                        @if (app('impersonate')->isImpersonating())
+                        <a href="{{ route('impersonate.leave') }}">
+                            <div class="description">
+                                <i class="ti-back-left"></i> Back to Admin
+                            </div>
+                        </a>
+                        @endif
                         <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                             <div class="description">
                                 <i class="ti-power-off"></i> Logout

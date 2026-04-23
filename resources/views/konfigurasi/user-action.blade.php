@@ -171,6 +171,9 @@
             </div>
         </div>
         <div class="modal-footer">
+            @if ($user->id && auth()->check() && auth()->user()->hasRole('admin') && auth()->id() !== $user->id)
+                <a href="{{ route('impersonate', $user->id) }}" class="btn btn-warning btn-sm">Impersonate</a>
+            @endif
             <button type="button" class="btn btn-secondary btn-sm"
                 data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary btn-sm">Save</button>

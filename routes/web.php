@@ -40,6 +40,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/konfigurasi/maps/import/preview', [App\Http\Controllers\Configuration\MapController::class, 'importPreview'])->name('maps.importpreview');
     Route::post('/konfigurasi/maps/import/commit', [App\Http\Controllers\Configuration\MapController::class, 'importCommit'])->name('maps.importcommit');
     Route::post('/konfigurasi/users/{user}/activation', [App\Http\Controllers\Configuration\UserController::class, 'activation'])->name('users.activation');
+    Route::impersonate();
+    Route::get('/impersonate/leave', function () {
+        app('impersonate')->leave();
+        return redirect()->route('users.index');
+    })->name('impersonate.leave');
     Route::get('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'showChangePasswordGet'])->name('change-password');
     Route::post('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'changePasswordPost'])->name('update-password');
     Route::post('/password/reset/{id}', [App\Http\Controllers\Auth\PasswordChangeController::class, 'resetPasswordPost'])->name('reset-password');

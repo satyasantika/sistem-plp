@@ -6,12 +6,13 @@ namespace App\Models;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
+use Lab404\Impersonate\Models\Impersonate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, Impersonate;
 
     protected $fillable = [
         'name',
@@ -72,5 +73,15 @@ class User extends Authenticatable
     public function teachers()
     {
         return $this->hasMany(Map::class, 'teacher_id');
+    }
+
+    public function canImpersonate()
+    {
+        return $this->hasRole('admin');
+    }
+
+    public function canBeImpersonated()
+    {
+        return !$this->hasRole('admin');
     }
 }
