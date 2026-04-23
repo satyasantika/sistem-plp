@@ -1,5 +1,8 @@
 var crudDataTables = (url,table) => {
-    const modal = new bootstrap.Modal($('#modalAction'))
+    const modalElement = document.getElementById('modalAction')
+    const modal = bootstrap?.Modal?.getOrCreateInstance
+        ? bootstrap.Modal.getOrCreateInstance(modalElement)
+        : new bootstrap.Modal(modalElement)
     // let {url,table}
     $('.btn-add').on('click', function() {
         $.ajax({

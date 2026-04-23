@@ -25,7 +25,7 @@ class MapController extends Controller
     function __construct()
     {
         $this->middleware('permission:konfigurasi/maps-read', ['only' => ['index','show']]);
-        $this->middleware('permission:konfigurasi/maps-create', ['only' => ['create','store','importCreate','importTemplate','importExcel']]);
+        $this->middleware('permission:konfigurasi/maps-create', ['only' => ['create','store','importPage','importPreview','importCommit','importCreate','importTemplate','importExcel']]);
         $this->middleware('permission:konfigurasi/maps-update', ['only' => ['edit','update']]);
         $this->middleware('permission:konfigurasi/maps-delete', ['only' => ['destroy']]);
     }
@@ -87,6 +87,125 @@ class MapController extends Controller
         return view('konfigurasi.import-map-action', [
             'title' => request('title', 'Import Maps'),
         ]);
+    }
+
+    public function importPage(Request $request)
+    {
+        $draft = $this->getImportDraft($request);
+        $previewRows = [];
+
+        if ($draft !== null) {
+            if (!Storage::exists($draft['temp_path'])) {
+                $this->forgetImportDraft($request);
+                $draft = null;
+            } else {
+                $previewRows = $this->buildImportPreviewRows(
+                    $this->extractImportRows(storage_path('app/'.$draft['temp_path']))
+                );
+            }
+        }
+
+        return view('konfigurasi.map-import', [
+            'title' => 'Import Maps',
+            'draft' => $draft,
+            'previewRows' => $previewRows,
+            'previewSummary' => $this->summarizeImportPreviewRows($previewRows),
+        ]);
+    }
+
+    public function importPreview(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:csv,xls,xlsx',
+        ]);
+
+        $previousDraft = $this->getImportDraft($request);
+        if ($previousDraft !== null) {
+            $this->forgetImportDraft($request, $previousDraft['temp_path']);
+        }
+
+        $file = $request->file('file');
+        $tempPath = $file->storeAs('temp-imports', Str::uuid().'.'.$file->getClientOriginalExtension());
+
+        try {
+            $this->buildImportPreviewRows(
+                $this->extractImportRows(storage_path('app/'.$tempPath))
+            );
+        } catch (\Throwable $exception) {
+            Storage::delete($tempPath);
+            throw $exception;
+        }
+
+        $request->session()->put($this->getImportDraftSessionKey(), [
+            'temp_path' => $tempPath,
+            'original_name' => $file->getClientOriginalName(),
+            'uploaded_at' => now()->format('d/m/Y H:i:s'),
+        ]);
+
+        return redirect()
+            ->route('maps.importpage')
+            ->with('success', 'File berhasil diupload. Preview data maps siap ditinjau sebelum commit.');
+    }
+
+    public function importCommit(Request $request)
+    {
+        $draft = $this->getImportDraft($request);
+
+        if ($draft === null || !Storage::exists($draft['temp_path'])) {
+            throw LaravelValidationException::withMessages([
+                'file' => ['Preview import maps tidak ditemukan. Upload file terlebih dahulu.'],
+            ]);
+        }
+
+        $validated = $request->validate([
+            'selected_rows' => ['required', 'array', 'min:1'],
+            'selected_rows.*' => ['integer'],
+        ], [
+            'selected_rows.required' => 'Pilih minimal satu data map baru untuk dicommit.',
+            'selected_rows.min' => 'Pilih minimal satu data map baru untuk dicommit.',
+        ]);
+
+        $previewRows = $this->buildImportPreviewRows(
+            $this->extractImportRows(storage_path('app/'.$draft['temp_path']))
+        );
+
+        $selectedRows = collect($validated['selected_rows'])
+            ->map(fn ($rowNumber) => (int) $rowNumber)
+            ->unique()
+            ->values();
+
+        $previewRowsByNumber = collect($previewRows)->keyBy('row_number');
+        $rowsToCommit = $selectedRows->map(function ($rowNumber) use ($previewRowsByNumber) {
+            return $previewRowsByNumber->get($rowNumber);
+        });
+
+        if ($rowsToCommit->contains(fn ($row) => $row === null || !$row['is_selectable'])) {
+            throw LaravelValidationException::withMessages([
+                'selected_rows' => ['Sebagian data map yang dipilih sudah tidak valid untuk dicommit. Muat ulang preview lalu pilih ulang data baru.'],
+            ]);
+        }
+
+        $insertedCount = 0;
+
+        DB::transaction(function () use ($rowsToCommit, &$insertedCount) {
+            foreach ($rowsToCommit as $row) {
+                Map::create([
+                    'student_id' => $row['student_id'],
+                    'lecture_id' => $row['lecture_id'],
+                    'teacher_id' => $row['teacher_id'],
+                    'school_id' => $row['school_id'],
+                    'subject_id' => $row['subject_id'],
+                    'year' => $row['year'],
+                ]);
+                $insertedCount++;
+            }
+        });
+
+        $this->forgetImportDraft($request, $draft['temp_path']);
+
+        return redirect()
+            ->route('maps.importpage')
+            ->with('success', 'Commit import maps berhasil. Total data tersimpan: '.$insertedCount.'.');
     }
 
     public function importTemplate()
@@ -395,6 +514,157 @@ class MapController extends Controller
         }
 
         return $importRows;
+    }
+
+    private function buildImportPreviewRows(array $rows): array
+    {
+        $studentUsernames = collect($rows)->pluck('nim_mahasiswa')->filter()->unique()->values();
+        $lectureUsernames = collect($rows)->pluck('nidn_dosen')->filter()->unique()->values();
+        $teacherUsernames = collect($rows)->pluck('nip_guru')->filter()->unique()->values();
+        $schoolNames = collect($rows)->pluck('nama_sekolah')->filter()->unique()->values();
+        $subjectNames = collect($rows)->pluck('mapel')->filter()->unique()->values();
+
+        $students = User::role('mahasiswa')->whereIn('username', $studentUsernames)->get()->keyBy('username');
+        $lectures = User::role('dosen')->whereIn('username', $lectureUsernames)->get()->keyBy('username');
+        $teachers = User::role('guru')->whereIn('username', $teacherUsernames)->get()->keyBy('username');
+        $schools = School::whereIn('name', $schoolNames)->get()->keyBy('name');
+        $subjects = Subject::whereIn('name', $subjectNames)->get()->keyBy('name');
+        $compositeKeys = [];
+
+        return array_map(function ($row) use ($students, $lectures, $teachers, $schools, $subjects, &$compositeKeys) {
+            $validator = Validator::make(
+                $row,
+                [
+                    'nim_mahasiswa' => ['required', 'string'],
+                    'nidn_dosen' => ['required', 'string'],
+                    'nip_guru' => ['required', 'string'],
+                    'nama_sekolah' => ['required', 'string'],
+                    'mapel' => ['required', 'string'],
+                    'year' => ['required', 'integer', 'digits:4'],
+                ],
+                [
+                    'nim_mahasiswa.required' => 'nim_mahasiswa wajib diisi.',
+                    'nidn_dosen.required' => 'nidn_dosen wajib diisi.',
+                    'nip_guru.required' => 'nip_guru wajib diisi.',
+                    'nama_sekolah.required' => 'nama_sekolah wajib diisi.',
+                    'mapel.required' => 'mapel wajib diisi.',
+                    'year.required' => 'year wajib diisi.',
+                    'year.integer' => 'year harus berupa angka.',
+                    'year.digits' => 'year harus 4 digit.',
+                ]
+            );
+
+            $notes = $validator->errors()->all();
+            $student = $students->get($row['nim_mahasiswa']);
+            $lecture = $lectures->get($row['nidn_dosen']);
+            $teacher = $teachers->get($row['nip_guru']);
+            $school = $schools->get($row['nama_sekolah']);
+            $subject = $subjects->get($row['mapel']);
+
+            if (!$student) {
+                $notes[] = 'nim_mahasiswa '.$row['nim_mahasiswa'].' tidak ditemukan pada user role mahasiswa.';
+            }
+
+            if (!$lecture) {
+                $notes[] = 'nidn_dosen '.$row['nidn_dosen'].' tidak ditemukan pada user role dosen.';
+            }
+
+            if (!$teacher) {
+                $notes[] = 'nip_guru '.$row['nip_guru'].' tidak ditemukan pada user role guru.';
+            }
+
+            if (!$school) {
+                $notes[] = 'nama_sekolah '.$row['nama_sekolah'].' tidak ditemukan.';
+            }
+
+            if (!$subject) {
+                $notes[] = 'mapel '.$row['mapel'].' tidak ditemukan pada tabel subject.';
+            }
+
+            $studentId = $student?->id;
+            $lectureId = $lecture?->id;
+            $teacherId = $teacher?->id;
+            $schoolId = $school?->id;
+            $subjectId = $subject?->id;
+            $year = ctype_digit((string) $row['year']) ? (int) $row['year'] : null;
+
+            if ($studentId && $lectureId && $teacherId && $schoolId && $subjectId && $year !== null) {
+                $compositeKey = implode('|', [$studentId, $lectureId, $teacherId, $subjectId, $schoolId, $year]);
+
+                if (isset($compositeKeys[$compositeKey])) {
+                    $notes[] = 'Kombinasi student, lecture, teacher, school, subject, dan year duplikat di file import.';
+                } else {
+                    $compositeKeys[$compositeKey] = true;
+
+                    $exists = Map::where('student_id', $studentId)
+                        ->where('lecture_id', $lectureId)
+                        ->where('teacher_id', $teacherId)
+                        ->where('school_id', $schoolId)
+                        ->where('subject_id', $subjectId)
+                        ->where('year', $year)
+                        ->exists();
+
+                    if ($exists) {
+                        $notes[] = 'Data map dengan kombinasi tersebut sudah ada.';
+                    }
+                }
+            }
+
+            $notes = array_values(array_unique($notes));
+            $isSelectable = $notes === [];
+
+            return [
+                'row_number' => $row['row_number'],
+                'nim_mahasiswa' => $row['nim_mahasiswa'],
+                'nidn_dosen' => $row['nidn_dosen'],
+                'nip_guru' => $row['nip_guru'],
+                'nama_sekolah' => $row['nama_sekolah'],
+                'mapel' => $row['mapel'],
+                'year' => $year ?? $row['year'],
+                'student_id' => $studentId,
+                'lecture_id' => $lectureId,
+                'teacher_id' => $teacherId,
+                'school_id' => $schoolId,
+                'subject_id' => $subjectId,
+                'student_name' => $student?->name ?? '-',
+                'lecture_name' => $lecture?->name ?? '-',
+                'teacher_name' => $teacher?->name ?? '-',
+                'school_name' => $school?->name ?? $row['nama_sekolah'],
+                'subject_name' => $subject?->name ?? $row['mapel'],
+                'notes' => $notes,
+                'is_selectable' => $isSelectable,
+                'status_label' => $isSelectable ? 'Baru' : 'Tidak bisa diimport',
+                'status_class' => $isSelectable ? 'success' : 'secondary',
+            ];
+        }, $rows);
+    }
+
+    private function summarizeImportPreviewRows(array $rows): array
+    {
+        return [
+            'total' => count($rows),
+            'selectable' => count(array_filter($rows, fn ($row) => $row['is_selectable'])),
+            'blocked' => count(array_filter($rows, fn ($row) => !$row['is_selectable'])),
+        ];
+    }
+
+    private function getImportDraft(Request $request): ?array
+    {
+        return $request->session()->get($this->getImportDraftSessionKey());
+    }
+
+    private function forgetImportDraft(Request $request, ?string $tempPath = null): void
+    {
+        if ($tempPath) {
+            Storage::delete($tempPath);
+        }
+
+        $request->session()->forget($this->getImportDraftSessionKey());
+    }
+
+    private function getImportDraftSessionKey(): string
+    {
+        return 'maps.import.preview';
     }
 
 }

@@ -26,7 +26,7 @@ class UserController extends Controller
     function __construct()
     {
         $this->middleware('permission:users-read', ['only' => ['index','show']]);
-        $this->middleware('permission:users-create', ['only' => ['create','store','importCreate','importTemplate','importExcel']]);
+        $this->middleware('permission:users-create', ['only' => ['create','store','importPage','importPreview','importCommit','importCreate','importTemplate','importExcel']]);
         $this->middleware('permission:users-update', ['only' => ['edit','update']]);
         $this->middleware('permission:users-delete', ['only' => ['destroy']]);
     }
@@ -120,6 +120,130 @@ class UserController extends Controller
             'role' => $role,
             'title' => request('title', 'Import '.ucfirst($role)),
         ]);
+    }
+
+    public function importPage(Request $request, string $role)
+    {
+        $role = $this->validateImportRole($role);
+        $draft = $this->getImportDraft($request, $role);
+        $previewRows = [];
+
+        if ($draft !== null) {
+            if (!Storage::exists($draft['temp_path'])) {
+                $this->forgetImportDraft($request, $role);
+                $draft = null;
+            } else {
+                $previewRows = $this->buildImportPreviewRows(
+                    $this->extractImportRows(storage_path('app/'.$draft['temp_path']))
+                );
+            }
+        }
+
+        return view('konfigurasi.user-import', [
+            'role' => $role,
+            'title' => 'Import '.ucfirst($role),
+            'draft' => $draft,
+            'previewRows' => $previewRows,
+            'previewSummary' => $this->summarizeImportPreviewRows($previewRows),
+        ]);
+    }
+
+    public function importPreview(Request $request, string $role)
+    {
+        $role = $this->validateImportRole($role);
+        $request->validate([
+            'file' => 'required|mimes:csv,xls,xlsx',
+        ]);
+
+        $previousDraft = $this->getImportDraft($request, $role);
+        if ($previousDraft !== null) {
+            $this->forgetImportDraft($request, $role, $previousDraft['temp_path']);
+        }
+
+        $file = $request->file('file');
+        $tempPath = $file->storeAs('temp-imports', Str::uuid().'.'.$file->getClientOriginalExtension());
+
+        try {
+            $this->buildImportPreviewRows(
+                $this->extractImportRows(storage_path('app/'.$tempPath))
+            );
+        } catch (\Throwable $exception) {
+            Storage::delete($tempPath);
+            throw $exception;
+        }
+
+        $request->session()->put($this->getImportDraftSessionKey($role), [
+            'temp_path' => $tempPath,
+            'original_name' => $file->getClientOriginalName(),
+            'uploaded_at' => now()->format('d/m/Y H:i:s'),
+        ]);
+
+        return redirect()
+            ->route('users.importpage', ['role' => $role])
+            ->with('success', 'File berhasil diupload. Preview data siap ditinjau sebelum commit.');
+    }
+
+    public function importCommit(Request $request, string $role)
+    {
+        $role = $this->validateImportRole($role);
+        $draft = $this->getImportDraft($request, $role);
+
+        if ($draft === null || !Storage::exists($draft['temp_path'])) {
+            throw LaravelValidationException::withMessages([
+                'file' => ['Preview import tidak ditemukan. Upload file terlebih dahulu.'],
+            ]);
+        }
+
+        $validated = $request->validate([
+            'selected_rows' => ['required', 'array', 'min:1'],
+            'selected_rows.*' => ['integer'],
+        ], [
+            'selected_rows.required' => 'Pilih minimal satu data baru untuk dicommit.',
+            'selected_rows.min' => 'Pilih minimal satu data baru untuk dicommit.',
+        ]);
+
+        $previewRows = $this->buildImportPreviewRows(
+            $this->extractImportRows(storage_path('app/'.$draft['temp_path']))
+        );
+
+        $selectedRows = collect($validated['selected_rows'])
+            ->map(fn ($rowNumber) => (int) $rowNumber)
+            ->unique()
+            ->values();
+
+        $previewRowsByNumber = collect($previewRows)->keyBy('row_number');
+        $rowsToCommit = $selectedRows->map(function ($rowNumber) use ($previewRowsByNumber) {
+            return $previewRowsByNumber->get($rowNumber);
+        });
+
+        if ($rowsToCommit->contains(fn ($row) => $row === null || !$row['is_selectable'])) {
+            throw LaravelValidationException::withMessages([
+                'selected_rows' => ['Sebagian data yang dipilih sudah tidak valid untuk dicommit. Muat ulang preview lalu pilih ulang data baru.'],
+            ]);
+        }
+
+        $insertedCount = 0;
+
+        DB::transaction(function () use ($rowsToCommit, $role, &$insertedCount) {
+            foreach ($rowsToCommit as $row) {
+                $user = User::create([
+                    'username' => $row['username'],
+                    'name' => $row['name'],
+                    'email' => $row['email'],
+                    'password' => $row['password_hash'],
+                    'subject_id' => $row['subject_id'],
+                ]);
+
+                $user->syncRoles([$role]);
+                $insertedCount++;
+            }
+        });
+
+        $this->forgetImportDraft($request, $role, $draft['temp_path']);
+
+        return redirect()
+            ->route('users.importpage', ['role' => $role])
+            ->with('success', 'Commit import '.strtoupper($role).' berhasil. Total data tersimpan: '.$insertedCount.'.');
     }
 
     public function importTemplate(Request $request)
@@ -363,6 +487,105 @@ class UserController extends Controller
         }
 
         return $importRows;
+    }
+
+    private function buildImportPreviewRows(array $rows): array
+    {
+        $usernames = collect($rows)->pluck('username');
+        $emails = collect($rows)->pluck('email');
+        $subjectIds = collect($rows)->pluck('subject_id')->filter()->unique()->values();
+        $duplicateUsernames = $usernames->filter()->countBy()->filter(fn ($count) => $count > 1)->keys()->all();
+        $duplicateEmails = $emails->filter()->countBy()->filter(fn ($count) => $count > 1)->keys()->all();
+        $existingUsernames = User::whereIn('username', $usernames)->pluck('username')->all();
+        $existingEmails = User::whereIn('email', $emails)->pluck('email')->all();
+        $subjects = Subject::whereIn('id', $subjectIds)->pluck('name', 'id');
+
+        return array_map(function ($row) use ($duplicateUsernames, $duplicateEmails, $existingUsernames, $existingEmails, $subjects) {
+            $validator = Validator::make(
+                $row,
+                [
+                    'username' => ['required', 'string'],
+                    'name' => ['required', 'string'],
+                    'email' => ['required', 'email'],
+                    'password' => ['required', 'string', 'min:6'],
+                    'subject_id' => ['required', 'exists:subjects,id'],
+                ],
+                [
+                    'username.required' => 'username wajib diisi.',
+                    'name.required' => 'name wajib diisi.',
+                    'email.required' => 'email wajib diisi.',
+                    'email.email' => 'format email tidak valid.',
+                    'password.required' => 'password wajib diisi.',
+                    'password.min' => 'password minimal 6 karakter.',
+                    'subject_id.required' => 'subject_id wajib diisi.',
+                    'subject_id.exists' => 'subject_id tidak ditemukan pada tabel subject.',
+                ]
+            );
+
+            $notes = $validator->errors()->all();
+
+            if (in_array($row['username'], $duplicateUsernames, true)) {
+                $notes[] = 'Username duplikat di file import.';
+            }
+
+            if (in_array($row['email'], $duplicateEmails, true)) {
+                $notes[] = 'Email duplikat di file import.';
+            }
+
+            if (in_array($row['username'], $existingUsernames, true)) {
+                $notes[] = 'Username sudah terdaftar.';
+            }
+
+            if (in_array($row['email'], $existingEmails, true)) {
+                $notes[] = 'Email sudah terdaftar.';
+            }
+
+            $notes = array_values(array_unique($notes));
+            $isSelectable = $notes === [];
+
+            return [
+                'row_number' => $row['row_number'],
+                'username' => $row['username'],
+                'name' => $row['name'],
+                'email' => $row['email'],
+                'subject_id' => $row['subject_id'],
+                'subject_name' => $subjects[$row['subject_id']] ?? '-',
+                'password_preview' => str_repeat('*', max(strlen($row['password']), 6)),
+                'password_hash' => bcrypt($row['password']),
+                'notes' => $notes,
+                'is_selectable' => $isSelectable,
+                'status_label' => $isSelectable ? 'Baru' : 'Tidak bisa diimport',
+                'status_class' => $isSelectable ? 'success' : 'secondary',
+            ];
+        }, $rows);
+    }
+
+    private function summarizeImportPreviewRows(array $rows): array
+    {
+        return [
+            'total' => count($rows),
+            'selectable' => count(array_filter($rows, fn ($row) => $row['is_selectable'])),
+            'blocked' => count(array_filter($rows, fn ($row) => !$row['is_selectable'])),
+        ];
+    }
+
+    private function getImportDraft(Request $request, string $role): ?array
+    {
+        return $request->session()->get($this->getImportDraftSessionKey($role));
+    }
+
+    private function forgetImportDraft(Request $request, string $role, ?string $tempPath = null): void
+    {
+        if ($tempPath) {
+            Storage::delete($tempPath);
+        }
+
+        $request->session()->forget($this->getImportDraftSessionKey($role));
+    }
+
+    private function getImportDraftSessionKey(string $role): string
+    {
+        return 'users.import.preview.'.$role;
     }
 
 }

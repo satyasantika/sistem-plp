@@ -1,5 +1,8 @@
 var userRolePermission = (table) => {
-    const modal = new bootstrap.Modal($('#modalAction'))
+    const modalElement = document.getElementById('modalAction')
+    const modal = bootstrap?.Modal?.getOrCreateInstance
+        ? bootstrap.Modal.getOrCreateInstance(modalElement)
+        : new bootstrap.Modal(modalElement)
 
     function store() {
         $('#formAction').on('submit',function(e) {

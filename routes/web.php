@@ -30,9 +30,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/konfigurasi/users/import/create', [App\Http\Controllers\Configuration\UserController::class, 'importCreate'])->name('users.importcreate');
     Route::get('/konfigurasi/users/import/template', [App\Http\Controllers\Configuration\UserController::class, 'importTemplate'])->name('users.importtemplate');
     Route::post('/konfigurasi/users/import', [App\Http\Controllers\Configuration\UserController::class, 'importExcel'])->name('users.importexcel');
+    Route::get('/konfigurasi/users/import/{role}', [App\Http\Controllers\Configuration\UserController::class, 'importPage'])->name('users.importpage');
+    Route::post('/konfigurasi/users/import/{role}/preview', [App\Http\Controllers\Configuration\UserController::class, 'importPreview'])->name('users.importpreview');
+    Route::post('/konfigurasi/users/import/{role}/commit', [App\Http\Controllers\Configuration\UserController::class, 'importCommit'])->name('users.importcommit');
     Route::get('/konfigurasi/maps/import/create', [App\Http\Controllers\Configuration\MapController::class, 'importCreate'])->name('maps.importcreate');
     Route::get('/konfigurasi/maps/import/template', [App\Http\Controllers\Configuration\MapController::class, 'importTemplate'])->name('maps.importtemplate');
     Route::post('/konfigurasi/maps/import', [App\Http\Controllers\Configuration\MapController::class, 'importExcel'])->name('maps.importexcel');
+    Route::get('/konfigurasi/maps/import-page', [App\Http\Controllers\Configuration\MapController::class, 'importPage'])->name('maps.importpage');
+    Route::post('/konfigurasi/maps/import/preview', [App\Http\Controllers\Configuration\MapController::class, 'importPreview'])->name('maps.importpreview');
+    Route::post('/konfigurasi/maps/import/commit', [App\Http\Controllers\Configuration\MapController::class, 'importCommit'])->name('maps.importcommit');
     Route::post('/konfigurasi/users/{user}/activation', [App\Http\Controllers\Configuration\UserController::class, 'activation'])->name('users.activation');
     Route::get('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'showChangePasswordGet'])->name('change-password');
     Route::post('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'changePasswordPost'])->name('update-password');

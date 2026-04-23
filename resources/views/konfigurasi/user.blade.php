@@ -2,15 +2,15 @@
 
 @push('import')
 	<div class="d-flex flex-wrap justify-content-end gap-2 mb-3">
-		<button type="button" class="btn btn-primary btn-sm btn-import" data-role="dosen" data-title="Import Dosen">
+		<a href="{{ route('users.importpage', ['role' => 'dosen']) }}" class="btn btn-primary btn-sm">
 			Import Dosen
-		</button>
-		<button type="button" class="btn btn-primary btn-sm btn-import" data-role="guru" data-title="Import Guru">
+		</a>
+		<a href="{{ route('users.importpage', ['role' => 'guru']) }}" class="btn btn-primary btn-sm">
 			Import Guru
-		</button>
-		<button type="button" class="btn btn-primary btn-sm btn-import" data-role="mahasiswa" data-title="Import Mahasiswa">
+		</a>
+		<a href="{{ route('users.importpage', ['role' => 'mahasiswa']) }}" class="btn btn-primary btn-sm">
 			Import Mahasiswa
-		</button>
+		</a>
 	</div>
 
 		<!-- Import Excel -->
@@ -46,6 +46,4 @@
     <script> updateOnly('user-table') </script>
     <script src="{{ asset('') }}assets/js/activation-datatables.js"></script>
     <script> updateActivation('user-table') </script>
-    <script src="{{ asset('') }}assets/js/import-data.js"></script>
-    <script> importData('user-table') </script>
 @endpush
