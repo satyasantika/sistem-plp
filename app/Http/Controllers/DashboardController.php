@@ -26,6 +26,9 @@ class DashboardController extends Controller
         $teacherCoordinatorSchools = collect();
         $departementSchoolSummaries = collect();
         $departementLectureSummaries = collect();
+        $adminOverview = [];
+        $adminSubjectSummaries = collect();
+        $adminSchoolSummaries = collect();
 
         if ($user->can('dashboard/mahasiswa-read')) {
             $studentMaps = Map::forYear($activeYear)
@@ -68,19 +71,23 @@ class DashboardController extends Controller
 
         if ($user->can('dashboard/kepsek-read')) {
             $headmasterSchools = School::where('headmaster_id', $user->id)
-                ->with(['maps' => function ($query) use ($activeYear) {
-                    $query->forYear($activeYear)
-                        ->with(['subjects', 'students', 'teachers', 'lectures']);
-                }])
+                ->with([
+                    'maps' => function ($query) use ($activeYear) {
+                        $query->forYear($activeYear)
+                            ->with(['subjects', 'students', 'teachers', 'lectures']);
+                    }
+                ])
                 ->get();
         }
 
         if ($user->can('dashboard/korguru-read')) {
             $teacherCoordinatorSchools = School::where('coordinator_id', $user->id)
-                ->with(['maps' => function ($query) use ($activeYear) {
-                    $query->forYear($activeYear)
-                        ->with(['subjects', 'students', 'teachers', 'lectures']);
-                }])
+                ->with([
+                    'maps' => function ($query) use ($activeYear) {
+                        $query->forYear($activeYear)
+                            ->with(['subjects', 'students', 'teachers', 'lectures']);
+                    }
+                ])
                 ->get();
         }
 
@@ -109,6 +116,54 @@ class DashboardController extends Controller
             })->values();
         }
 
+        if ($user->can('dashboard/ketua-read') || $user->hasRole('admin')) {
+            $adminYearMaps = Map::forYear($activeYear);
+
+            $totalMaps = (int) (clone $adminYearMaps)->count();
+            $filledStudents = (int) (clone $adminYearMaps)->whereNotNull('student_id')->distinct('student_id')->count('student_id');
+            $mappedLectures = (int) (clone $adminYearMaps)->whereNotNull('lecture_id')->distinct('lecture_id')->count('lecture_id');
+            $mappedTeachers = (int) (clone $adminYearMaps)->whereNotNull('teacher_id')->distinct('teacher_id')->count('teacher_id');
+            $activeSchools = (int) (clone $adminYearMaps)->whereNotNull('school_id')->distinct('school_id')->count('school_id');
+            $activeSubjects = (int) (clone $adminYearMaps)->whereNotNull('subject_id')->distinct('subject_id')->count('subject_id');
+
+            $adminOverview = [
+                'total_maps' => $totalMaps,
+                'filled_students' => $filledStudents,
+                'mapped_lectures' => $mappedLectures,
+                'mapped_teachers' => $mappedTeachers,
+                'active_schools' => $activeSchools,
+                'active_subjects' => $activeSubjects,
+                'student_fill_rate' => $totalMaps > 0 ? round(($filledStudents / $totalMaps) * 100, 1) : 0,
+            ];
+
+            $adminSubjectSummaries = Map::forYear($activeYear)
+                ->select(
+                    'subject_id',
+                    DB::raw('COUNT(*) as quota_count'),
+                    DB::raw('COUNT(student_id) as filled_count'),
+                    DB::raw('COUNT(DISTINCT school_id) as school_count'),
+                    DB::raw('COUNT(DISTINCT lecture_id) as lecture_count'),
+                    DB::raw('COUNT(DISTINCT teacher_id) as teacher_count')
+                )
+                ->groupBy('subject_id')
+                ->with('subjects')
+                ->orderByDesc('filled_count')
+                ->get();
+
+            $adminSchoolSummaries = Map::forYear($activeYear)
+                ->select(
+                    'school_id',
+                    DB::raw('COUNT(*) as quota_count'),
+                    DB::raw('COUNT(student_id) as filled_count'),
+                    DB::raw('COUNT(DISTINCT subject_id) as subject_count')
+                )
+                ->groupBy('school_id')
+                ->with('schools')
+                ->orderByDesc('filled_count')
+                ->limit(15)
+                ->get();
+        }
+
         return view('dashboard', compact(
             'studentMaps',
             'studentSchoolmates',
@@ -117,7 +172,10 @@ class DashboardController extends Controller
             'headmasterSchools',
             'teacherCoordinatorSchools',
             'departementSchoolSummaries',
-            'departementLectureSummaries'
+            'departementLectureSummaries',
+            'adminOverview',
+            'adminSubjectSummaries',
+            'adminSchoolSummaries'
         ));
     }
 }
