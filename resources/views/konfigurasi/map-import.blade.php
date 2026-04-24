@@ -54,7 +54,8 @@
 
                         <div class="alert alert-light border small mb-0">
                             Format kolom Excel: <strong>nim_mahasiswa, nidn_dosen, nip_guru, nama_sekolah, mapel, year</strong>.
-                            Data baru akan ditandai badge <strong>Baru</strong> dan dapat dipilih untuk commit.
+                            Status preview terdiri dari <strong>Baru</strong>, <strong>Sudah Ada</strong>, dan <strong>Konflik</strong>.
+                            Data dengan status <strong>Baru</strong> saja yang dapat dipilih untuk commit.
                         </div>
                     </div>
                 </div>
@@ -74,7 +75,8 @@
                                 <div class="d-flex flex-wrap gap-2 small">
                                     <span class="badge bg-dark">Total {{ $previewSummary['total'] }}</span>
                                     <span class="badge bg-success">Baru {{ $previewSummary['selectable'] }}</span>
-                                    <span class="badge bg-secondary">Tertahan {{ $previewSummary['blocked'] }}</span>
+                                    <span class="badge bg-secondary">Sudah Ada {{ $previewSummary['existing'] }}</span>
+                                    <span class="badge bg-danger">Konflik {{ $previewSummary['conflict'] }}</span>
                                     <span class="badge bg-primary" id="selectedCountBadge">Dipilih 0</span>
                                 </div>
                             </div>
@@ -105,7 +107,7 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($previewRows as $row)
-                                                <tr class="{{ $row['is_selectable'] ? 'table-success' : '' }}">
+                                                <tr class="{{ $row['status_key'] === 'baru' ? 'table-success' : ($row['status_key'] === 'conflict' ? 'table-danger' : '') }}">
                                                     <td class="text-center">
                                                         @if ($row['is_selectable'])
                                                             <input type="checkbox" name="selected_rows[]" value="{{ $row['row_number'] }}" class="preview-row-checkbox">
@@ -124,6 +126,8 @@
                                                     <td>
                                                         @if ($row['notes'] === [])
                                                             <span class="text-success small">Data map baru siap dicommit.</span>
+                                                        @elseif ($row['status_key'] === 'existing')
+                                                            <span class="text-muted small">Data map dengan kombinasi ini sudah tersedia di sistem.</span>
                                                         @else
                                                             <ul class="mb-0 ps-3 small">
                                                                 @foreach ($row['notes'] as $note)

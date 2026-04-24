@@ -613,6 +613,26 @@ class MapController extends Controller
             $notes = array_values(array_unique($notes));
             $isSelectable = $notes === [];
 
+            $hasExistingNote = collect($notes)->contains(function ($note) {
+                return str_contains(Str::lower($note), 'sudah ada');
+            });
+
+            $statusKey = 'baru';
+            $statusLabel = 'Baru';
+            $statusClass = 'success';
+
+            if (!$isSelectable) {
+                if ($hasExistingNote && count($notes) === 1) {
+                    $statusKey = 'existing';
+                    $statusLabel = 'Sudah Ada';
+                    $statusClass = 'secondary';
+                } else {
+                    $statusKey = 'conflict';
+                    $statusLabel = 'Konflik';
+                    $statusClass = 'danger';
+                }
+            }
+
             return [
                 'row_number' => $row['row_number'],
                 'nim_mahasiswa' => $row['nim_mahasiswa'],
@@ -633,8 +653,9 @@ class MapController extends Controller
                 'subject_name' => $subject?->name ?? $row['mapel'],
                 'notes' => $notes,
                 'is_selectable' => $isSelectable,
-                'status_label' => $isSelectable ? 'Baru' : 'Tidak bisa diimport',
-                'status_class' => $isSelectable ? 'success' : 'secondary',
+                'status_key' => $statusKey,
+                'status_label' => $statusLabel,
+                'status_class' => $statusClass,
             ];
         }, $rows);
     }
@@ -643,8 +664,9 @@ class MapController extends Controller
     {
         return [
             'total' => count($rows),
-            'selectable' => count(array_filter($rows, fn($row) => $row['is_selectable'])),
-            'blocked' => count(array_filter($rows, fn($row) => !$row['is_selectable'])),
+            'selectable' => count(array_filter($rows, fn($row) => $row['status_key'] === 'baru')),
+            'existing' => count(array_filter($rows, fn($row) => $row['status_key'] === 'existing')),
+            'conflict' => count(array_filter($rows, fn($row) => $row['status_key'] === 'conflict')),
         ];
     }
 
