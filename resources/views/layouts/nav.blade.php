@@ -28,9 +28,10 @@
                         {{-- static MENU from config/menu.php --}}
                         @foreach (config('menu.items', []) as $menu)
                         @can($menu['permission'])
+                        @php($menuIcon = $menu['icon'] ?? 'ti-angle-right')
                         <li class="{{ request()->is($menu['url']) || request()->is($menu['url'].'/*') ? 'active' : '' }}">
                             <a href="{{ url($menu['url']) }}" class="link">
-                                {{-- <i class="ti-home"></i> --}}
+                                <i class="{{ $menuIcon }}"></i>
                                 <span>{{ $menu['name'] }}</span>
                             </a>
                         </li>
