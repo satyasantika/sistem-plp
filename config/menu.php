@@ -254,18 +254,6 @@ return [
 
         // KAJUR: yudisium/progress PLP per periode
         [
-            'name' => 'Yudisium PLP 1',
-            'url' => 'yudisium/plp1',
-            'permission' => 'yudisium/plp1-read',
-            'icon' => 'ti-medall'
-        ],
-        [
-            'name' => 'Yudisium PLP 2',
-            'url' => 'yudisium/plp2',
-            'permission' => 'yudisium/plp2-read',
-            'icon' => 'ti-medall'
-        ],
-        [
             'name' => 'Progress PLP 1',
             'url' => 'data/progress/plp1',
             'permission' => 'data/progress/plp1-read',
@@ -280,7 +268,7 @@ return [
         [
             'name' => 'Yudisium PLP',
             'url' => 'yudisium/plp',
-            'permission' => 'yudisium/plp-read',
+            'permissions_any' => ['yudisium/plp-read', 'yudisium/plp1-read', 'yudisium/plp2-read'],
             'icon' => 'ti-medall'
         ],
         [

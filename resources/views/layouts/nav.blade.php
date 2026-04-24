@@ -27,7 +27,15 @@
                     @can('active-read')
                         {{-- static MENU from config/menu.php --}}
                         @foreach (config('menu.items', []) as $menu)
-                        @can($menu['permission'])
+                        @php
+                            $menuAllowed = false;
+                            if (isset($menu['permissions_any']) && is_array($menu['permissions_any'])) {
+                                $menuAllowed = auth()->user()->canAny($menu['permissions_any']);
+                            } elseif (isset($menu['permission'])) {
+                                $menuAllowed = auth()->user()->can($menu['permission']);
+                            }
+                        @endphp
+                        @if($menuAllowed)
                         @php($menuIcon = $menu['icon'] ?? 'ti-angle-right')
                         <li class="{{ request()->is($menu['url']) || request()->is($menu['url'].'/*') ? 'active' : '' }}">
                             <a href="{{ url($menu['url']) }}" class="link">
@@ -35,7 +43,7 @@
                                 <span>{{ $menu['name'] }}</span>
                             </a>
                         </li>
-                        @endcan
+                        @endif
                         @endforeach
                     @endcan
                 </ul>

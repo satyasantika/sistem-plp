@@ -3,11 +3,11 @@
         <div class="col-auto">
             <div class="card">
                 <div class="card-header">
-                    <h5>Rekap Hasil Penilaian PLP {{ $plp_order }}</h5>
+                    <h5>Rekap Hasil Penilaian PLP</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive yudisium-table-wrap">
-                        <table id="{{ $tableId ?? 'yudisium-dekanat-table' }}" class="table small-font table-striped table-hover table-sm yudisium-table js-yudisium-table">
+                        <table id="{{ $tableId ?? 'yudisium-only-dekanat-table' }}" class="table small-font table-striped table-hover table-sm yudisium-table js-yudisium-table">
                             @php
                                 $letters = $dekanatSummary['letters'];
                             @endphp
@@ -25,8 +25,7 @@
                                 @foreach ($dekanatSummary['rows'] as $summaryRow)
                                 <tr>
                                     <th>{{ $summaryRow['subject'] }}</th>
-                                    <td class="text-end">{{ $summaryRow['participants'] }}
-                                    </td>
+                                    <td class="text-end">{{ $summaryRow['participants'] }}</td>
                                     @foreach ($letters as $letter)
                                         @if (in_array($letter,['A','A-','B+','B']))
                                             <td class="text-end text-primary">
@@ -36,13 +35,10 @@
                                             {{ $summaryRow['letters'][$letter] }}
                                         </td>
                                     @endforeach
-                                    <td class="text-end">
-                                        {{ $summaryRow['ungraded'] }}
-                                    </td>
+                                    <td class="text-end">{{ $summaryRow['ungraded'] }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
-
                             <tfoot>
                                 <tr class="text-primary bg-light">
                                     <th>Total:</th>
@@ -66,4 +62,3 @@
         </div>
     </div>
 </div>
-
