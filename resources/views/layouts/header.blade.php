@@ -184,7 +184,7 @@
                         @if (app('impersonate')->isImpersonating())
                         <a href="{{ route('impersonate.leave') }}">
                             <div class="description">
-                                <i class="ti-back-left"></i> Back to Admin
+                                <i class="ti-back-left"></i> to Admin
                             </div>
                         </a>
                         @endif

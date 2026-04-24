@@ -13,7 +13,7 @@ class MyHelperServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        require_once app_path('Helpers/myNavigation.php');
+        // Helper lama telah dihapus; tidak ada file yang perlu dimuat di sini.
     }
 
     /**

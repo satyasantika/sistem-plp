@@ -25,43 +25,18 @@
                         </a>
                     </li>
                     @can('active-read')
-                        {{-- add MENU from database --}}
-                        @foreach (myNav() as $menu)
-                        @can($menu->url.'-read')
-                        <li class="{{ request()->url() == url($menu->url) ? 'active' : '' }}">
-                            <a href="{{ url($menu->url) }}" class="link">
+                        {{-- static MENU from config/menu.php --}}
+                        @foreach (config('menu.items', []) as $menu)
+                        @can($menu['permission'])
+                        <li class="{{ request()->is($menu['url']) || request()->is($menu['url'].'/*') ? 'active' : '' }}">
+                            <a href="{{ url($menu['url']) }}" class="link">
                                 {{-- <i class="ti-home"></i> --}}
-                                <span>{{ $menu->name }}</span>
+                                <span>{{ $menu['name'] }}</span>
                             </a>
                         </li>
                         @endcan
                         @endforeach
                     @endcan
-
-
-
-
-                    {{-- add MENU from database --}}
-                    {{-- @foreach (myNavigation() as $menu)
-                    @can($menu->url.'-read')
-                    <li class="{{ request()->segment(1) == $menu->url ? 'active open' : '' }}">
-                        <a href="#" class="main-menu has-dropdown">
-                            <i class="{{ $menu->icon }}"></i>
-                            <span>{{ $menu->name }}</span>
-                        </a>
-                        <ul class="sub-menu {{ request()->segment(1) == $menu->url ? 'expand' : '' }}">
-                            @foreach ($menu->children as $submenu)
-                            @can($submenu->url.'-read')
-                            <li class="{{ request()->segment(1) == explode('/',$submenu->url)[0] && request()->segment(2) == explode('/',$submenu->url)[1] ? 'active' : '' }}">
-                                <a href="{{ url($submenu->url) }}" class="link"><span>{{ $submenu->name }}</span></a>
-                            </li>
-                            @endcan
-                            @endforeach
-                        </ul>
-                    </li>
-                    @endcan
-                    @endforeach --}}
-
                 </ul>
             </div>
         </nav>
