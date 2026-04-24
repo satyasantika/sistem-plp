@@ -1,9 +1,12 @@
 <div class="content-wrapper">
+    @php
+        $departementName = auth()->user()->subjects->departement ?? '-';
+    @endphp
     <div class="row same-height">
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h5>Kuota dan Hasil Pemetaan Mahasiswa {{ auth()->user()->subjects->departement }} pada PLP Tahun {{ $activeYear }}</h5>
+                    <h5>Kuota dan Hasil Pemetaan Mahasiswa {{ $departementName }} pada PLP Tahun {{ $activeYear }}</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -34,7 +37,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h5>Pemetaan DPL {{ auth()->user()->subjects->departement }} pada PLP Tahun {{ $activeYear }}</h5>
+                    <h5>Pemetaan DPL {{ $departementName }} pada PLP Tahun {{ $activeYear }}</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
