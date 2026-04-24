@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -19,7 +18,7 @@ return new class extends Migration
             $table->string('assessor'); // enum(dosen,guru)
             $table->integer('plp_order');
             $table->string('form_id')->nullable();
-            $table->foreign('form_id')->references('id')->on('forms')->constrained();
+            $table->foreign('form_id')->references('id')->on('forms');
             $table->integer('form_order');
             $table->integer('score1')->nullable();
             $table->integer('score2')->nullable();
@@ -42,7 +41,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('map_id')->constrained();
             $table->string('form_id')->nullable();
-            $table->foreign('form_id')->references('id')->on('forms')->constrained();
+            $table->foreign('form_id')->references('id')->on('forms');
             $table->string('item1')->nullable();
             $table->string('item2')->nullable();
             $table->string('item3')->nullable();

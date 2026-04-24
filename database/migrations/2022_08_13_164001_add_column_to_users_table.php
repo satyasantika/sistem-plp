@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -16,7 +15,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('username')->unique()->after('name');
             $table->string('subject_id')->nullable();
-            $table->foreign('subject_id')->references('id')->on('subjects')->constrained()->nullable();
+            $table->foreign('subject_id')->references('id')->on('subjects');
             $table->string('gender')->nullable(); //L,P
             $table->string('birth_place')->nullable();
             $table->date('birth_date')->nullable();
@@ -28,6 +27,7 @@ return new class extends Migration
             $table->string('npwp')->nullable();
             $table->string('nomor_rekening')->nullable();
             $table->string('bank')->nullable();
+            $table->boolean('is_active')->default(1);
         });
     }
 
@@ -40,7 +40,22 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropForeign(['subject_id']);
-            $table->dropColumn(['phone', 'provider', 'address', 'provider', 'is_pns', 'golongan', 'npwp', 'nomor_rekening', 'bank']);
+            $table->dropColumn([
+                'username',
+                'subject_id',
+                'gender',
+                'birth_place',
+                'birth_date',
+                'address',
+                'phone',
+                'provider',
+                'is_pns',
+                'golongan',
+                'npwp',
+                'nomor_rekening',
+                'bank',
+                'is_active',
+            ]);
         });
     }
 };
