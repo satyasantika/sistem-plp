@@ -12,10 +12,10 @@ class FormItemController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:konfigurasi/formitems-read', ['only' => ['index','show']]);
-        $this->middleware('permission:konfigurasi/formitems-create', ['only' => ['create','store']]);
-        $this->middleware('permission:konfigurasi/formitems-update', ['only' => ['edit','update']]);
-        $this->middleware('permission:konfigurasi/formitems-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:formitems-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:formitems-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:formitems-update', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:formitems-delete', ['only' => ['destroy']]);
     }
 
     public function index(FormItemDataTable $dataTable)
@@ -27,9 +27,9 @@ class FormItemController extends Controller
     {
         $formitem = new FormItem();
         return view('konfigurasi.formitem-action', array_merge(
-            ['formitem'=> $formitem],
+            ['formitem' => $formitem],
             $this->_dataSelection()
-            ));
+        ));
     }
 
     public function store(Request $request)
@@ -37,16 +37,16 @@ class FormItemController extends Controller
         FormItem::create($request->all());
         return response()->json([
             'success' => true,
-            'message' => 'FormItem <strong>'.$request->name.'</strong> telah ditambahkan'
+            'message' => 'FormItem <strong>' . $request->name . '</strong> telah ditambahkan'
         ]);
     }
 
     public function edit(FormItem $formitem)
     {
         return view('konfigurasi.formitem-action', array_merge(
-            ['formitem'=>$formitem],
+            ['formitem' => $formitem],
             $this->_dataSelection()
-            ));
+        ));
     }
 
     public function update(Request $request, FormItem $formitem)
@@ -56,7 +56,7 @@ class FormItemController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'FormItem <strong>'.$request->name.'</strong> telah diperbarui'
+            'message' => 'FormItem <strong>' . $request->name . '</strong> telah diperbarui'
         ]);
     }
 
@@ -67,15 +67,15 @@ class FormItemController extends Controller
         $formitem->delete();
         return response()->json([
             'status' => 'success',
-            'message' => 'FormItem <strong>'.$name.'</strong> telah dihapus'
+            'message' => 'FormItem <strong>' . $name . '</strong> telah dihapus'
         ]);
     }
 
     private function _dataSelection()
     {
         return [
-            'components' =>  ['petunjuk','item','tambahan'],
-            'forms' =>  Form::pluck('id')->sort(),
+            'components' => ['petunjuk', 'item', 'tambahan'],
+            'forms' => Form::pluck('id')->sort(),
         ];
     }
 

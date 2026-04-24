@@ -12,10 +12,10 @@ class DiaryController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:konfigurasi/diaries-read', ['only' => ['index','show']]);
-        $this->middleware('permission:konfigurasi/diaries-create', ['only' => ['create','store']]);
-        $this->middleware('permission:konfigurasi/diaries-update', ['only' => ['edit','update']]);
-        $this->middleware('permission:konfigurasi/diaries-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:diaries-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:diaries-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:diaries-update', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:diaries-delete', ['only' => ['destroy']]);
     }
 
     public function index(DiaryDataTable $dataTable)
@@ -27,9 +27,9 @@ class DiaryController extends Controller
     {
         $diary = new Diary();
         return view('konfigurasi.diary-action', array_merge(
-            ['diary'=> $diary],
+            ['diary' => $diary],
             $this->_dataSelection()
-            ));
+        ));
     }
 
     public function store(Request $request)
@@ -37,16 +37,16 @@ class DiaryController extends Controller
         Diary::create($request->all());
         return response()->json([
             'success' => true,
-            'message' => 'Diary <strong>'.$request->id.'</strong> telah ditambahkan'
+            'message' => 'Diary <strong>' . $request->id . '</strong> telah ditambahkan'
         ]);
     }
 
     public function edit(Diary $diary)
     {
         return view('konfigurasi.diary-action', array_merge(
-            ['diary'=>$diary],
+            ['diary' => $diary],
             $this->_dataSelection()
-            ));
+        ));
     }
 
     public function update(Request $request, Diary $diary)
@@ -56,7 +56,7 @@ class DiaryController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Diary <strong>'.$request->id.'</strong> telah diperbarui'
+            'message' => 'Diary <strong>' . $request->id . '</strong> telah diperbarui'
         ]);
     }
 
@@ -67,18 +67,18 @@ class DiaryController extends Controller
         $diary->delete();
         return response()->json([
             'status' => 'success',
-            'message' => 'Diary <strong>'.$name.'</strong> telah dihapus'
+            'message' => 'Diary <strong>' . $name . '</strong> telah dihapus'
         ]);
     }
 
     private function _dataSelection()
     {
         $day = [];
-        for ($i=1; $i <=30; $i++) {
-            array_push($day,$i);
+        for ($i = 1; $i <= 30; $i++) {
+            array_push($day, $i);
         }
         return [
-            'maps' =>  Map::where('year',2023)->whereNotNull('student_id')->get(),
+            'maps' => Map::where('year', 2023)->whereNotNull('student_id')->get(),
             'day' => $day,
         ];
     }

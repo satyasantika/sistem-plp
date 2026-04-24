@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class CreateAdminUserSeeder extends Seeder
 {
@@ -17,19 +16,39 @@ class CreateAdminUserSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::create([
+        $user = User::firstOrCreate(
+            ['username' => 'admin'],
+            [
                 'name' => 'Admin PLP',
-                'username' => 'admin',
                 'email' => 'admin@gmail.com',
-                'password' => bcrypt('asdfasdf')
-            ]);
+                'password' => bcrypt('asdfasdf'),
+            ]
+        );
 
-        $role = Role::create(['name' => 'admin']);
-        $permissions = Permission::create(['name' => 'active-read']);
+        $role = Role::firstOrCreate(['name' => 'admin']);
 
-        // $permissions = Permission::pluck('id','id')->all();
+        // Required to unlock sidebar rendering block in nav view.
+        $activePermission = Permission::firstOrCreate(['name' => 'active-read']);
+        if (!$role->hasPermissionTo($activePermission)) {
+            $role->givePermissionTo($activePermission);
+        }
 
-        $role->syncPermissions($permissions);
+        // Ensure admin can see every configured static menu item.
+        $menuPermissions = collect(config('menu.items', []))
+            ->pluck('permission')
+            ->filter()
+            ->unique()
+            ->values();
 
-        $user->assignRole([$role->id]);    }
+        foreach ($menuPermissions as $permissionName) {
+            $permission = Permission::firstOrCreate(['name' => $permissionName]);
+            if (!$role->hasPermissionTo($permission)) {
+                $role->givePermissionTo($permission);
+            }
+        }
+
+        if (!$user->hasRole($role->name)) {
+            $user->assignRole($role);
+        }
+    }
 }

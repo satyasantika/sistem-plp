@@ -14,6 +14,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, Impersonate;
 
+    protected $guard_name = 'web';
+
     protected $fillable = [
         'name',
         'username',
@@ -30,7 +32,8 @@ class User extends Authenticatable
         'golongan',
         'npwp',
         'nomor_rekening',
-        'bank'
+        'bank',
+        'is_active',
     ];
 
     protected $hidden = [
@@ -41,8 +44,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'birth_date' => 'date',
-        // 'is_pns' => 'boolean',
-        // 'is_active' => 'boolean',
+        'is_pns' => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     public function subjects()
@@ -83,5 +86,10 @@ class User extends Authenticatable
     public function canBeImpersonated()
     {
         return !$this->hasRole('admin');
+    }
+
+    protected function getDefaultGuardName(): string
+    {
+        return $this->guard_name;
     }
 }

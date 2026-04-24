@@ -24,10 +24,10 @@ class MapController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:konfigurasi/maps-read', ['only' => ['index','show']]);
-        $this->middleware('permission:konfigurasi/maps-create', ['only' => ['create','store','importPage','importPreview','importCommit','importCreate','importTemplate','importExcel']]);
-        $this->middleware('permission:konfigurasi/maps-update', ['only' => ['edit','update']]);
-        $this->middleware('permission:konfigurasi/maps-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:maps-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:maps-create', ['only' => ['create', 'store', 'importPage', 'importPreview', 'importCommit', 'importCreate', 'importTemplate', 'importExcel']]);
+        $this->middleware('permission:maps-update', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:maps-delete', ['only' => ['destroy']]);
     }
 
     public function index(MapDataTable $dataTable)
@@ -39,9 +39,9 @@ class MapController extends Controller
     {
         $map = new Map();
         return view('konfigurasi.map-action', array_merge(
-            ['map'=> $map],
+            ['map' => $map],
             $this->_dataSelection()
-            ));
+        ));
     }
 
     public function store(Request $request)
@@ -56,9 +56,9 @@ class MapController extends Controller
     public function edit(Map $map)
     {
         return view('konfigurasi.map-action', array_merge(
-            ['map'=> $map],
+            ['map' => $map],
             $this->_dataSelection($map->subject_id),
-            ));
+        ));
     }
 
     public function update(Request $request, Map $map)
@@ -100,7 +100,7 @@ class MapController extends Controller
                 $draft = null;
             } else {
                 $previewRows = $this->buildImportPreviewRows(
-                    $this->extractImportRows(storage_path('app/'.$draft['temp_path']))
+                    $this->extractImportRows(storage_path('app/' . $draft['temp_path']))
                 );
             }
         }
@@ -125,11 +125,11 @@ class MapController extends Controller
         }
 
         $file = $request->file('file');
-        $tempPath = $file->storeAs('temp-imports', Str::uuid().'.'.$file->getClientOriginalExtension());
+        $tempPath = $file->storeAs('temp-imports', Str::uuid() . '.' . $file->getClientOriginalExtension());
 
         try {
             $this->buildImportPreviewRows(
-                $this->extractImportRows(storage_path('app/'.$tempPath))
+                $this->extractImportRows(storage_path('app/' . $tempPath))
             );
         } catch (\Throwable $exception) {
             Storage::delete($tempPath);
@@ -166,11 +166,11 @@ class MapController extends Controller
         ]);
 
         $previewRows = $this->buildImportPreviewRows(
-            $this->extractImportRows(storage_path('app/'.$draft['temp_path']))
+            $this->extractImportRows(storage_path('app/' . $draft['temp_path']))
         );
 
         $selectedRows = collect($validated['selected_rows'])
-            ->map(fn ($rowNumber) => (int) $rowNumber)
+            ->map(fn($rowNumber) => (int) $rowNumber)
             ->unique()
             ->values();
 
@@ -179,7 +179,7 @@ class MapController extends Controller
             return $previewRowsByNumber->get($rowNumber);
         });
 
-        if ($rowsToCommit->contains(fn ($row) => $row === null || !$row['is_selectable'])) {
+        if ($rowsToCommit->contains(fn($row) => $row === null || !$row['is_selectable'])) {
             throw LaravelValidationException::withMessages([
                 'selected_rows' => ['Sebagian data map yang dipilih sudah tidak valid untuk dicommit. Muat ulang preview lalu pilih ulang data baru.'],
             ]);
@@ -205,7 +205,7 @@ class MapController extends Controller
 
         return redirect()
             ->route('maps.importpage')
-            ->with('success', 'Commit import maps berhasil. Total data tersimpan: '.$insertedCount.'.');
+            ->with('success', 'Commit import maps berhasil. Total data tersimpan: ' . $insertedCount . '.');
     }
 
     public function importTemplate()
@@ -224,10 +224,10 @@ class MapController extends Controller
 
             foreach ($headers as $index => $header) {
                 $column = chr(65 + $index);
-                $sheet->setCellValue($column.'1', $header);
-                $sheet->getStyle($column.'1')->getFont()->setBold(true);
+                $sheet->setCellValue($column . '1', $header);
+                $sheet->getStyle($column . '1')->getFont()->setBold(true);
                 $sheet->getColumnDimension($column)->setAutoSize(true);
-                $sheet->setCellValue($column.'2', $sampleRow[$index]);
+                $sheet->setCellValue($column . '2', $sampleRow[$index]);
             }
 
             $lookupSheet = $spreadsheet->createSheet();
@@ -239,23 +239,23 @@ class MapController extends Controller
 
             foreach ($schools as $rowIndex => $school) {
                 $excelRow = $rowIndex + 2;
-                $lookupSheet->setCellValue('A'.$excelRow, $school->name);
-                $lookupSheet->setCellValue('B'.$excelRow, $school->id);
+                $lookupSheet->setCellValue('A' . $excelRow, $school->name);
+                $lookupSheet->setCellValue('B' . $excelRow, $school->id);
             }
 
             foreach ($subjects as $rowIndex => $subject) {
                 $excelRow = $rowIndex + 2;
-                $lookupSheet->setCellValue('D'.$excelRow, $subject->name);
-                $lookupSheet->setCellValue('E'.$excelRow, $subject->id);
+                $lookupSheet->setCellValue('D' . $excelRow, $subject->name);
+                $lookupSheet->setCellValue('E' . $excelRow, $subject->id);
             }
 
             $lastSchoolRow = max($schools->count() + 1, 2);
             $lastSubjectRow = max($subjects->count() + 1, 2);
-            $spreadsheet->addNamedRange(new NamedRange('school_options', $lookupSheet, '$A$2:$A$'.$lastSchoolRow));
-            $spreadsheet->addNamedRange(new NamedRange('subject_options', $lookupSheet, '$D$2:$D$'.$lastSubjectRow));
+            $spreadsheet->addNamedRange(new NamedRange('school_options', $lookupSheet, '$A$2:$A$' . $lastSchoolRow));
+            $spreadsheet->addNamedRange(new NamedRange('subject_options', $lookupSheet, '$D$2:$D$' . $lastSubjectRow));
 
             for ($row = 2; $row <= 300; $row++) {
-                $schoolValidation = $sheet->getCell('D'.$row)->getDataValidation();
+                $schoolValidation = $sheet->getCell('D' . $row)->getDataValidation();
                 $schoolValidation->setType(DataValidation::TYPE_LIST);
                 $schoolValidation->setErrorStyle(DataValidation::STYLE_STOP);
                 $schoolValidation->setAllowBlank(false);
@@ -268,7 +268,7 @@ class MapController extends Controller
                 $schoolValidation->setError('Pilih nama sekolah dari dropdown yang tersedia.');
                 $schoolValidation->setFormula1('=school_options');
 
-                $subjectValidation = $sheet->getCell('E'.$row)->getDataValidation();
+                $subjectValidation = $sheet->getCell('E' . $row)->getDataValidation();
                 $subjectValidation->setType(DataValidation::TYPE_LIST);
                 $subjectValidation->setErrorStyle(DataValidation::STYLE_STOP);
                 $subjectValidation->setAllowBlank(false);
@@ -298,8 +298,8 @@ class MapController extends Controller
         ]);
 
         $file = $request->file('file');
-        $tempPath = $file->storeAs('temp-imports', Str::uuid().'.'.$file->getClientOriginalExtension());
-        $absolutePath = storage_path('app/'.$tempPath);
+        $tempPath = $file->storeAs('temp-imports', Str::uuid() . '.' . $file->getClientOriginalExtension());
+        $absolutePath = storage_path('app/' . $tempPath);
         $insertedCount = 0;
 
         try {
@@ -315,7 +315,7 @@ class MapController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Import maps berhasil. Total data tersimpan: '.$insertedCount.'.',
+                'message' => 'Import maps berhasil. Total data tersimpan: ' . $insertedCount . '.',
             ]);
         } finally {
             Storage::delete($tempPath);
@@ -324,23 +324,23 @@ class MapController extends Controller
 
     private function _dataSelection($subject_id = '')
     {
-        $student_in_map = Map::whereNotNull('student_id')->where('subject_id',$subject_id)->pluck('student_id');
-        $students = User::role('mahasiswa')->where('subject_id',$subject_id)->whereNotIn('id',$student_in_map);
-        $lectures = User::role('dosen')->where('subject_id',$subject_id);
-        $teachers = User::role('guru')->where('subject_id',$subject_id);
+        $student_in_map = Map::whereNotNull('student_id')->where('subject_id', $subject_id)->pluck('student_id');
+        $students = User::role('mahasiswa')->where('subject_id', $subject_id)->whereNotIn('id', $student_in_map);
+        $lectures = User::role('dosen')->where('subject_id', $subject_id);
+        $teachers = User::role('guru')->where('subject_id', $subject_id);
         if ($subject_id == '') {
             $student_in_map = Map::whereNotNull('student_id')->pluck('student_id');
-            $students = User::role('mahasiswa')->whereNotIn('id',$student_in_map);
+            $students = User::role('mahasiswa')->whereNotIn('id', $student_in_map);
             $lectures = User::role('dosen');
             $teachers = User::role('guru');
         }
 
         return [
-            'students' => $students->select('id','name')->orderBy('name')->get(),
-            'lectures' => $lectures->select('id','name')->orderBy('name')->get(),
-            'teachers' => $teachers->select('id','name')->orderBy('name')->get(),
-            'schools' =>  School::select('id','name')->orderBy('id')->get(),
-            'subjects' =>  Subject::select('id','name')->orderBy('name')->get(),
+            'students' => $students->select('id', 'name')->orderBy('name')->get(),
+            'lectures' => $lectures->select('id', 'name')->orderBy('name')->get(),
+            'teachers' => $teachers->select('id', 'name')->orderBy('name')->get(),
+            'schools' => School::select('id', 'name')->orderBy('id')->get(),
+            'subjects' => Subject::select('id', 'name')->orderBy('name')->get(),
         ];
     }
 
@@ -366,7 +366,7 @@ class MapController extends Controller
 
         if ($headings !== $requiredHeadings) {
             throw LaravelValidationException::withMessages([
-                'file' => ['Kolom template harus persis: '.implode(', ', $requiredHeadings).'.'],
+                'file' => ['Kolom template harus persis: ' . implode(', ', $requiredHeadings) . '.'],
             ]);
         }
 
@@ -384,7 +384,7 @@ class MapController extends Controller
                 'year' => trim((string) ($row[5] ?? '')),
             ];
 
-            if (collect($item)->except('row_number')->every(fn ($value) => $value === '')) {
+            if (collect($item)->except('row_number')->every(fn($value) => $value === '')) {
                 continue;
             }
 
@@ -442,7 +442,7 @@ class MapController extends Controller
             );
 
             foreach ($validator->errors()->all() as $message) {
-                $errors[] = 'Baris '.$row['row_number'].': '.$message;
+                $errors[] = 'Baris ' . $row['row_number'] . ': ' . $message;
             }
 
             $student = $students->get($row['nim_mahasiswa']);
@@ -452,23 +452,23 @@ class MapController extends Controller
             $subject = $subjects->get($row['mapel']);
 
             if (!$student) {
-                $errors[] = 'Baris '.$row['row_number'].': nim_mahasiswa '.$row['nim_mahasiswa'].' tidak ditemukan pada user role mahasiswa.';
+                $errors[] = 'Baris ' . $row['row_number'] . ': nim_mahasiswa ' . $row['nim_mahasiswa'] . ' tidak ditemukan pada user role mahasiswa.';
             }
 
             if (!$lecture) {
-                $errors[] = 'Baris '.$row['row_number'].': nidn_dosen '.$row['nidn_dosen'].' tidak ditemukan pada user role dosen.';
+                $errors[] = 'Baris ' . $row['row_number'] . ': nidn_dosen ' . $row['nidn_dosen'] . ' tidak ditemukan pada user role dosen.';
             }
 
             if (!$teacher) {
-                $errors[] = 'Baris '.$row['row_number'].': nip_guru '.$row['nip_guru'].' tidak ditemukan pada user role guru.';
+                $errors[] = 'Baris ' . $row['row_number'] . ': nip_guru ' . $row['nip_guru'] . ' tidak ditemukan pada user role guru.';
             }
 
             if (!$school) {
-                $errors[] = 'Baris '.$row['row_number'].': nama_sekolah '.$row['nama_sekolah'].' tidak ditemukan.';
+                $errors[] = 'Baris ' . $row['row_number'] . ': nama_sekolah ' . $row['nama_sekolah'] . ' tidak ditemukan.';
             }
 
             if (!$subject) {
-                $errors[] = 'Baris '.$row['row_number'].': mapel '.$row['mapel'].' tidak ditemukan pada tabel subject.';
+                $errors[] = 'Baris ' . $row['row_number'] . ': mapel ' . $row['mapel'] . ' tidak ditemukan pada tabel subject.';
             }
 
             if (!$student || !$lecture || !$teacher || !$school || !$subject) {
@@ -478,7 +478,7 @@ class MapController extends Controller
             $compositeKey = implode('|', [$student->id, $lecture->id, $teacher->id, $subject->id, $school->id, $row['year']]);
 
             if (isset($compositeKeys[$compositeKey])) {
-                $errors[] = 'Baris '.$row['row_number'].': kombinasi student_id, lecture_id, teacher_id, subject_id, school_id, dan year duplikat di file import.';
+                $errors[] = 'Baris ' . $row['row_number'] . ': kombinasi student_id, lecture_id, teacher_id, subject_id, school_id, dan year duplikat di file import.';
                 continue;
             }
 
@@ -493,7 +493,7 @@ class MapController extends Controller
                 ->exists();
 
             if ($exists) {
-                $errors[] = 'Baris '.$row['row_number'].': data map dengan kombinasi student_id, lecture_id, teacher_id, subject_id, school_id, dan year tersebut sudah ada.';
+                $errors[] = 'Baris ' . $row['row_number'] . ': data map dengan kombinasi student_id, lecture_id, teacher_id, subject_id, school_id, dan year tersebut sudah ada.';
                 continue;
             }
 
@@ -562,23 +562,23 @@ class MapController extends Controller
             $subject = $subjects->get($row['mapel']);
 
             if (!$student) {
-                $notes[] = 'nim_mahasiswa '.$row['nim_mahasiswa'].' tidak ditemukan pada user role mahasiswa.';
+                $notes[] = 'nim_mahasiswa ' . $row['nim_mahasiswa'] . ' tidak ditemukan pada user role mahasiswa.';
             }
 
             if (!$lecture) {
-                $notes[] = 'nidn_dosen '.$row['nidn_dosen'].' tidak ditemukan pada user role dosen.';
+                $notes[] = 'nidn_dosen ' . $row['nidn_dosen'] . ' tidak ditemukan pada user role dosen.';
             }
 
             if (!$teacher) {
-                $notes[] = 'nip_guru '.$row['nip_guru'].' tidak ditemukan pada user role guru.';
+                $notes[] = 'nip_guru ' . $row['nip_guru'] . ' tidak ditemukan pada user role guru.';
             }
 
             if (!$school) {
-                $notes[] = 'nama_sekolah '.$row['nama_sekolah'].' tidak ditemukan.';
+                $notes[] = 'nama_sekolah ' . $row['nama_sekolah'] . ' tidak ditemukan.';
             }
 
             if (!$subject) {
-                $notes[] = 'mapel '.$row['mapel'].' tidak ditemukan pada tabel subject.';
+                $notes[] = 'mapel ' . $row['mapel'] . ' tidak ditemukan pada tabel subject.';
             }
 
             $studentId = $student?->id;
@@ -643,8 +643,8 @@ class MapController extends Controller
     {
         return [
             'total' => count($rows),
-            'selectable' => count(array_filter($rows, fn ($row) => $row['is_selectable'])),
-            'blocked' => count(array_filter($rows, fn ($row) => !$row['is_selectable'])),
+            'selectable' => count(array_filter($rows, fn($row) => $row['is_selectable'])),
+            'blocked' => count(array_filter($rows, fn($row) => !$row['is_selectable'])),
         ];
     }
 

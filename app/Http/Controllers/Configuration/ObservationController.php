@@ -13,10 +13,10 @@ class ObservationController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:konfigurasi/observations-read', ['only' => ['index','show']]);
-        $this->middleware('permission:konfigurasi/observations-create', ['only' => ['create','store']]);
-        $this->middleware('permission:konfigurasi/observations-update', ['only' => ['edit','update']]);
-        $this->middleware('permission:konfigurasi/observations-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:observations-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:observations-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:observations-update', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:observations-delete', ['only' => ['destroy']]);
     }
 
     public function index(ObservationDataTable $dataTable)
@@ -28,9 +28,9 @@ class ObservationController extends Controller
     {
         $observation = new Observation();
         return view('konfigurasi.observation-action', array_merge(
-            ['observation'=> $observation],
+            ['observation' => $observation],
             $this->_dataSelection()
-            ));
+        ));
     }
 
     public function store(Request $request)
@@ -45,9 +45,9 @@ class ObservationController extends Controller
     public function edit(Observation $observation)
     {
         return view('konfigurasi.observation-action', array_merge(
-            ['observation'=>$observation],
+            ['observation' => $observation],
             $this->_dataSelection()
-            ));
+        ));
     }
 
     public function update(Request $request, Observation $observation)
@@ -73,9 +73,9 @@ class ObservationController extends Controller
     private function _dataSelection()
     {
         return [
-            'maps' =>  Map::join('users','users.id','maps.student_id')->select('maps.id','maps.student_id','maps.school_id')->where('maps.year',2023)->whereNotNull('maps.student_id')->orderBy('users.name')->get(),
-            'forms' =>  Form::where('type','yes_no'),
-            'options' => ['baik','kurang','tidak']
+            'maps' => Map::join('users', 'users.id', 'maps.student_id')->select('maps.id', 'maps.student_id', 'maps.school_id')->where('maps.year', 2023)->whereNotNull('maps.student_id')->orderBy('users.name')->get(),
+            'forms' => Form::where('type', 'yes_no'),
+            'options' => ['baik', 'kurang', 'tidak']
         ];
     }
 

@@ -12,10 +12,10 @@ class SchoolController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:konfigurasi/schools-read', ['only' => ['index','show']]);
-        $this->middleware('permission:konfigurasi/schools-create', ['only' => ['create','store']]);
-        $this->middleware('permission:konfigurasi/schools-update', ['only' => ['edit','update']]);
-        $this->middleware('permission:konfigurasi/schools-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:schools-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:schools-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:schools-update', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:schools-delete', ['only' => ['destroy']]);
     }
 
     public function index(SchoolDataTable $dataTable)
@@ -27,9 +27,9 @@ class SchoolController extends Controller
     {
         $school = new School();
         return view('konfigurasi.school-action', array_merge(
-            ['school'=> $school],
+            ['school' => $school],
             $this->_dataSelection()
-            ));
+        ));
     }
 
     public function store(Request $request)
@@ -37,16 +37,16 @@ class SchoolController extends Controller
         School::create($request->all());
         return response()->json([
             'success' => true,
-            'message' => 'School <strong>'.$request->name.'</strong> telah ditambahkan'
+            'message' => 'School <strong>' . $request->name . '</strong> telah ditambahkan'
         ]);
     }
 
     public function edit(School $school)
     {
         return view('konfigurasi.school-action', array_merge(
-            ['school'=>$school],
+            ['school' => $school],
             $this->_dataSelection()
-            ));
+        ));
     }
 
     public function update(Request $request, School $school)
@@ -56,7 +56,7 @@ class SchoolController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'School <strong>'.$request->name.'</strong> telah diperbarui'
+            'message' => 'School <strong>' . $request->name . '</strong> telah diperbarui'
         ]);
     }
 
@@ -67,22 +67,22 @@ class SchoolController extends Controller
         $school->delete();
         return response()->json([
             'status' => 'success',
-            'message' => 'School <strong>'.$name.'</strong> telah dihapus'
+            'message' => 'School <strong>' . $name . '</strong> telah dihapus'
         ]);
     }
 
     private function _dataSelection()
     {
         return [
-            'kepsek' =>  User::role('kepsek')->permission('active-read')
-                        ->select('id','name')
-                        ->orderBy('name')
-                        ->get(),
-            'korgur' =>  User::role('korguru')->permission('active-read')
-                        ->select('id','name')
-                        // ->where('is_active',1)
-                        ->orderBy('name')
-                        ->get(),
+            'kepsek' => User::role('kepsek')->permission('active-read')
+                ->select('id', 'name')
+                ->orderBy('name')
+                ->get(),
+            'korgur' => User::role('korguru')->permission('active-read')
+                ->select('id', 'name')
+                // ->where('is_active',1)
+                ->orderBy('name')
+                ->get(),
         ];
     }
 

@@ -6,52 +6,52 @@ return [
         [
             'name' => 'Roles',
             'url' => 'konfigurasi/roles',
-            'permission' => 'konfigurasi/roles-read'
+            'permission' => 'roles-read'
         ],
         [
             'name' => 'Permissions',
             'url' => 'konfigurasi/permissions',
-            'permission' => 'konfigurasi/permissions-read'
+            'permission' => 'permissions-read'
         ],
         [
             'name' => 'Users',
             'url' => 'konfigurasi/users',
-            'permission' => 'konfigurasi/users-read'
+            'permission' => 'users-read'
         ],
         [
             'name' => 'Schools',
             'url' => 'konfigurasi/schools',
-            'permission' => 'konfigurasi/schools-read'
+            'permission' => 'schools-read'
         ],
         [
             'name' => 'School User Proposals',
             'url' => 'konfigurasi/schooluserproposals',
-            'permission' => 'konfigurasi/schooluserproposals-read'
+            'permission' => 'schooluserproposals-read'
         ],
         [
             'name' => 'Maps',
             'url' => 'konfigurasi/maps',
-            'permission' => 'konfigurasi/maps-read'
+            'permission' => 'maps-read'
         ],
         [
             'name' => 'Forms',
             'url' => 'konfigurasi/forms',
-            'permission' => 'konfigurasi/forms-read'
+            'permission' => 'forms-read'
         ],
         [
             'name' => 'Form Items',
             'url' => 'konfigurasi/formitems',
-            'permission' => 'konfigurasi/formitems-read'
+            'permission' => 'formitems-read'
         ],
         [
             'name' => 'Assessments',
             'url' => 'konfigurasi/assessments',
-            'permission' => 'konfigurasi/assessments-read'
+            'permission' => 'assessments-read'
         ],
         [
             'name' => 'Observations',
             'url' => 'konfigurasi/observations',
-            'permission' => 'konfigurasi/observations-read'
+            'permission' => 'observations-read'
         ],
 
         // KEPSEK/KORGURU: usulan sekolah

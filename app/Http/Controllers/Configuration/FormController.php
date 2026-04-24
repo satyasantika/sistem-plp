@@ -11,10 +11,10 @@ class FormController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:konfigurasi/forms-read', ['only' => ['index','show']]);
-        $this->middleware('permission:konfigurasi/forms-create', ['only' => ['create','store']]);
-        $this->middleware('permission:konfigurasi/forms-update', ['only' => ['edit','update']]);
-        $this->middleware('permission:konfigurasi/forms-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:forms-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:forms-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:forms-update', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:forms-delete', ['only' => ['destroy']]);
     }
 
     public function index(FormDataTable $dataTable)
@@ -26,9 +26,9 @@ class FormController extends Controller
     {
         $form = new Form();
         return view('konfigurasi.form-action', array_merge(
-            ['form'=> $form],
+            ['form' => $form],
             $this->_dataSelection()
-            ));
+        ));
     }
 
     public function store(Request $request)
@@ -36,16 +36,16 @@ class FormController extends Controller
         Form::create($request->all());
         return response()->json([
             'success' => true,
-            'message' => 'Form <strong>'.$request->id.'</strong> telah ditambahkan'
+            'message' => 'Form <strong>' . $request->id . '</strong> telah ditambahkan'
         ]);
     }
 
     public function edit(Form $form)
     {
         return view('konfigurasi.form-action', array_merge(
-            ['form'=>$form],
+            ['form' => $form],
             $this->_dataSelection()
-            ));
+        ));
     }
 
     public function update(Request $request, Form $form)
@@ -55,7 +55,7 @@ class FormController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Form <strong>'.$request->id.'</strong> telah diperbarui'
+            'message' => 'Form <strong>' . $request->id . '</strong> telah diperbarui'
         ]);
     }
 
@@ -66,14 +66,14 @@ class FormController extends Controller
         $form->delete();
         return response()->json([
             'status' => 'success',
-            'message' => 'Form <strong>'.$name.'</strong> telah dihapus'
+            'message' => 'Form <strong>' . $name . '</strong> telah dihapus'
         ]);
     }
 
     private function _dataSelection()
     {
         return [
-            'formtypes' =>  ['yes_no','skor_4','skor_40','skor_max'],
+            'formtypes' => ['yes_no', 'skor_4', 'skor_40', 'skor_max'],
         ];
     }
 
