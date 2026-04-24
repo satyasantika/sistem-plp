@@ -133,7 +133,31 @@
                     </li>
                 </ul>
             </div> --}}
-            {{-- akses to PROFILE, PASSWORD CHANGE, LOGOUT --}}
+            <div class="dropdown dropdown-menu-end me-2">
+                <a href="#" class="user-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="label">
+                        <span></span>
+                        <div>Tahun {{ $activeYear }}</div>
+                    </div>
+                    <i class="ti-calendar" style="font-size:1.2rem;"></i>
+                </a>
+                <ul class="dropdown-menu small">
+                    <li class="menu-content ps-menu">
+                        @forelse ($availableYears as $yr)
+                        <form method="POST" action="{{ route('active-year.set') }}" style="display:contents">
+                            @csrf
+                            <input type="hidden" name="year" value="{{ $yr }}">
+                            <button type="submit" class="btn btn-link w-100 text-start px-3 py-2{{ $yr == $activeYear ? ' fw-bold' : '' }}">
+                                {{ $yr }}{{ $yr == $activeYear ? ' ✓' : '' }}
+                            </button>
+                        </form>
+                        @empty
+                        <div class="px-3 py-2 text-muted">Tahun belum tersedia</div>
+                        @endforelse
+                    </li>
+                </ul>
+            </div>
+
             <div class="dropdown dropdown-menu-end">
                 <a href="#" class="user-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="label">

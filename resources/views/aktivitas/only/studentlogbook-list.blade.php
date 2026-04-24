@@ -29,7 +29,7 @@
                                 </thead>
                                 <tbody>
                                     @php
-                                        $maps = App\Models\Map::where('lecture_id',auth()->user()->id)->where('year',2025)
+                                        $maps = App\Models\Map::where('lecture_id',auth()->user()->id)->where('year',$activeYear)
                                                                 ->get()
                                     @endphp
                                     @forelse ($maps as $map)

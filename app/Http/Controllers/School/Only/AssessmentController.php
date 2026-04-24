@@ -23,7 +23,7 @@ class AssessmentController extends Controller
     // Rekap Penilaian
     public function index()
     {
-        $maps = $this->_myMap(2025);
+        $maps = $this->_myMap(Map::activeYear());
 
         if (auth()->user()->hasrole('dosen'))
         {
@@ -70,7 +70,7 @@ class AssessmentController extends Controller
     // Menu Setiap Form
     public function show($form_id)
     {
-        $maps = $this->_myMap(2025);
+        $maps = $this->_myMap(Map::activeYear());
 
         return view('aktivitas.only.assessment',compact('maps','form_id'));
     }

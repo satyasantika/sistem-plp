@@ -14,7 +14,7 @@
                     <a href="{{ route('only.generateCover') }}" class="btn btn-outline-primary mb-2">Download</a>
                     Cover Laporan PLP <br>
                     <a href="https://docs.google.com/document/d/1bbfXIjsT6U2qUY_RU0K1BM9wdREGr6q2/edit" class="btn btn-outline-primary">Download</a>
-                    Template Formulir Bimbingan PLP 2025
+                    Template Formulir Bimbingan PLP {{ $activeYear }}
                 </div>
             </div>
             <div class="card">
@@ -25,10 +25,7 @@
                     <div class="table-responsive">
                         <table class="table small-font table-striped table-hover table-sm">
                             <tbody>
-                                @php
-                                    $maps = App\Models\Map::where('student_id',auth()->user()->id)->where('year',2025)->get();
-                                @endphp
-                                @forelse ($maps as $map)
+                                @forelse ($studentMaps as $map)
                                 <tr>
                                     <td>Nama</td>
                                     <td>{{ $map->students->name ?? '-' }}</td>
@@ -105,14 +102,7 @@
                     <div class="table-responsive">
                         <table class="table small-font table-striped table-hover table-sm">
                             <tbody>
-                                @php
-                                $students = App\Models\Map::where('student_id',auth()->user()->id)->where('year',2025)->get();
-                                @endphp
-                                @forelse ($students as $student)
-                                    @php
-                                    $maps = App\Models\Map::where('school_id',$student->school_id)->where('year',2025)->get();
-                                    @endphp
-                                    @forelse ($maps as $map)
+                                @forelse ($studentSchoolmates as $map)
                                     <tr>
                                         <td>
                                             @if (isset($map->students->phone))
@@ -121,10 +111,6 @@
                                             {{ $map->students->name ?? '-' }} <span class="badge bg-light text-dark">{{ $map->students->subjects->name ?? '-' }}</span>
                                         </td>
                                     </tr>
-                                    @empty
-                                    <div class="alert alert-info">Kelompok belum ada</div>
-                                    @endforelse
-
                                 @empty
                                 <div class="alert alert-info">Anda belum diplot oleh Jurusan</div>
                                 @endforelse

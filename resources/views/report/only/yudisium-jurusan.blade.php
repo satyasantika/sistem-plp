@@ -25,7 +25,7 @@
                                     @php
                                         $maps = App\Models\Map::join('users','users.id','maps.student_id')
                                                         ->where([
-                                                            'maps.year'=>2025,
+                                                            'maps.year'=>$activeYear,
                                                             'maps.subject_id'=>auth()->user()->subject_id
                                                         ])
                                                         ->whereNotNull('maps.student_id')

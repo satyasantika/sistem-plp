@@ -32,7 +32,7 @@
                                     <tr>
                                         <th>{{ $subject->name }}</th>
                                         @php
-                                            $student_plp = App\Models\Map::where('year',2025)
+                                            $student_plp = App\Models\Map::where('year',$activeYear)
                                                                 ->where('plp',1)
                                                                 ->where('subject_id',$subject->id)
                                                                 ->whereNotNull('student_id')
@@ -40,7 +40,7 @@
                                         @endphp
                                         <td class="text-end">{{ $student_plp }}</td>
                                         @php
-                                            $lecture = App\Models\Map::where('year',2025)
+                                            $lecture = App\Models\Map::where('year',$activeYear)
                                                                 ->where('subject_id',$subject->id)
                                                                 ->whereNotNull('lecture_id')
                                                                 ->select('lecture_id')
@@ -50,7 +50,7 @@
                                         @endphp
                                         <td class="text-end">{{ $lecture }}</td>
                                         @php
-                                            $teacher = App\Models\Map::where('year',2025)
+                                            $teacher = App\Models\Map::where('year',$activeYear)
                                                                 ->where('subject_id',$subject->id)
                                                                 ->whereNotNull('teacher_id')
                                                                 ->select('teacher_id')
@@ -63,17 +63,17 @@
                                     @endforeach
                                     <tr class="text-primary">
                                         <th>Total:</th>
-                                        <th class="text-end">{{ App\Models\Map::where('year',2025)
+                                        <th class="text-end">{{ App\Models\Map::where('year',$activeYear)
                                                                                 ->whereNotNull('student_id')
                                                                                 ->where('plp',1)
                                                                                 ->count() }}</th>
-                                        <th class="text-end">{{ App\Models\Map::where('year',2025)
+                                        <th class="text-end">{{ App\Models\Map::where('year',$activeYear)
                                                                                 ->whereNotNull('lecture_id')
                                                                                 ->select('lecture_id')
                                                                                 ->groupBy('lecture_id')
                                                                                 ->get()
                                                                                 ->count() }}</th>
-                                        <th class="text-end">{{ App\Models\Map::where('year',2025)
+                                        <th class="text-end">{{ App\Models\Map::where('year',$activeYear)
                                                                                 ->whereNotNull('teacher_id')
                                                                                 ->select('teacher_id')
                                                                                 ->groupBy('teacher_id')

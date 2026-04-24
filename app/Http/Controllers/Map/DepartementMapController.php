@@ -52,16 +52,16 @@ class DepartementMapController extends Controller
 
     private function _mySubjectMap()
     {
-        return Map::where([
-            'subject_id'=>$this->_mySubjectId(),
-            'year'=>2025
-            ])->orderBy('school_id')->get();
+        return Map::forActiveYear()
+            ->where('subject_id', $this->_mySubjectId())
+            ->orderBy('school_id')
+            ->get();
 
     }
     private function _dataSelection()
     {
         $my_student_id_in_maps = Map::where('subject_id',$this->_mySubjectId())
-                                    ->where('year',2025)
+                                    ->forActiveYear()
                                     ->whereNotNull('student_id')
                                     ->pluck('student_id');
         $my_lectures = User::role('dosen')->where('subject_id',$this->_mySubjectId())->get();

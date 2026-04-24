@@ -21,13 +21,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                    $maps = App\Models\Map::where('subject_id',auth()->user()->subject_id)
-                                                            ->where('teacher_id',auth()->user()->id)
-                                                            ->where('year',2025)
-                                                            ->get()
-                                @endphp
-                                @forelse ($maps as $map)
+                                @forelse ($teacherMaps as $map)
                                 <tr>
                                     <td class="text-end">
                                         @if (isset($map->students->phone))

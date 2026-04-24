@@ -19,6 +19,6 @@
     <p class="font-14 text-center">
         FAKULTAS KEGURUAN DAN ILMU PENDIDIKAN<br>
         UNIVERSITAS SILIWANGI<br>
-        2025<br>
+        {{ $my_map->year ?? $activeYear }}<br>
     </p>
 </div>

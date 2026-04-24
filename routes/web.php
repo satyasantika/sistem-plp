@@ -25,9 +25,9 @@ Route::get('/', function () {
 
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
+
+Route::post('/active-year', [App\Http\Controllers\ActiveYearController::class, 'set'])->middleware('auth')->name('active-year.set');
 
 // require __DIR__.'/auth.php';
 Route::middleware('auth')->group(function () {

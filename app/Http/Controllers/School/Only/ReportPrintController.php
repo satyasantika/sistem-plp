@@ -15,13 +15,14 @@ class ReportPrintController extends Controller
 
     public function generateCover()
     {
-        $my_map = Map::where('year',2025)->firstWhere('student_id',auth()->user()->id);
+        $year = Map::activeYear();
+        $my_map = Map::forActiveYear()->firstWhere('student_id', auth()->user()->id);
         $my_school_id = $my_map->school_id;
         $my_lecture_id = $my_map->lecture_id;
         $maps = Map::where([
             'school_id' => $my_school_id,
             'lecture_id' => $my_lecture_id,
-            'year' => 2025,
+            'year' => $year,
         ])->get();
 
         $data = [

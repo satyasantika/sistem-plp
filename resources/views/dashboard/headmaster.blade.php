@@ -2,10 +2,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 @endpush
 
-@php
-    $schools = App\Models\School::where('headmaster_id',auth()->user()->id)->get();
-@endphp
-@foreach ($schools as $school)
+@foreach ($headmasterSchools as $school)
 <div class="content-wrapper">
     <div class="row same-height">
         <div class="col-md">
@@ -25,10 +22,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                    $maps = App\Models\Map::where('school_id',$school->id)->where('year',2025)->get();
-                                @endphp
-                                @forelse ($maps as $map)
+                                @forelse ($school->maps as $map)
                                 <tr>
                                     <td>{{ $map->subjects->name }}</td>
                                     <td>

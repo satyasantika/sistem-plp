@@ -6,7 +6,7 @@
     </p>
     <p class="text-center vertical-space-paragraph">
         Laporan ini telah diperiksa dan disetujui pada:<br>
-        Hari ………, Tanggal ……, Bulan…….............., Tahun 2025
+        Hari ………, Tanggal ……, Bulan…….............., Tahun {{ $my_map->year ?? $activeYear }}
     </p>
     <p class="text-center">
         Menyetujui:

@@ -15,7 +15,7 @@
             @foreach ($subjects as $subject)
             @php
                 $quota = App\Models\Map::where([
-                                            'year'=>2025,
+                                            'year'=>$activeYear,
                                             'subject_id'=>$subject->id,
                                         ])->whereNotNull('student_id')
                                         ->get();
@@ -71,7 +71,7 @@
                                             // List dosen
                                             $lectures = App\Models\Map::distinct()
                                                                         ->where('subject_id',$subject->id)
-                                                                        ->where('year',2025)
+                                                                        ->where('year',$activeYear)
                                                                         ->pluck('lecture_id');
                                             @endphp
                                         {{-- masing-masing dosen --}}
@@ -97,7 +97,7 @@
                                                             // dosen dalam mapping
                                                             $quota = App\Models\Map::where([
                                                                                         'lecture_id'=>$lecture,
-                                                                                        'year'=>2025,
+                                                                                        'year'=>$activeYear,
                                                                                         'subject_id'=>$subject->id,
                                                                                     ])->whereNotNull('student_id')
                                                                                     ->pluck('id');
