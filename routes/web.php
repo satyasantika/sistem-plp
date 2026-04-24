@@ -156,9 +156,8 @@ Route::middleware('auth')->group(function () {
         })->middleware('permission:data/progress/profile-read');
         Route::get('yudisium/plp{plp_order}', [App\Http\Controllers\Report\YudisiumReportController::class, 'show'])
             ->middleware('permission:yudisium/plp1-read|yudisium/plp2-read');
-        Route::get('data/progress/plp{plp_order}', function ($plp_order) {
-            return view('report.assessment-result', compact('plp_order'));
-        })->middleware('permission:data/progress/plp1-read|data/progress/plp2-read|' . request()->segment(3) . '-read');
+        Route::get('data/progress/plp{plp_order}', [App\Http\Controllers\Report\ProgressReportController::class, 'show'])
+            ->middleware('permission:data/progress/plp1-read|data/progress/plp2-read');
         //NEW
         Route::get('report/summary/plp', function () {
             return view('report.only.summary');
@@ -166,9 +165,8 @@ Route::middleware('auth')->group(function () {
         Route::get('aktivitas/reportprint/plp', [App\Http\Controllers\School\Only\ReportPrintController::class, 'generateCover'])->name('only.generateCover');
         Route::get('yudisium/plp', [App\Http\Controllers\Report\YudisiumReportController::class, 'showOnly'])
             ->middleware('permission:yudisium/plp-read|yudisium/plp1-read|yudisium/plp2-read');
-        Route::get('data/progress/plp', function () {
-            return view('report.only.assessment-result');
-        })->middleware('permission:data/progress/plp-read');
+        Route::get('data/progress/plp', [App\Http\Controllers\Report\ProgressReportController::class, 'showOnly'])
+            ->middleware('permission:data/progress/plp-read|data/progress/plp1-read|data/progress/plp2-read');
         //TMP
         Route::get('data/schooluserapprovals', [App\Http\Controllers\School\SchoolUserController::class, 'index']);
     });
