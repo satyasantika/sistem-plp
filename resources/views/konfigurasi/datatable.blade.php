@@ -7,14 +7,14 @@
 @endpush
 @section('content')
 <div class="main-content">
-        {{ ucFirst(request()->segment(1)) }} {{ ucFirst(request()->segment(2)) }}
+        <h3>
+            {{ ucFirst(request()->segment(1)) }} {{ ucFirst(request()->segment(2)) }}
+        </h3>
     <div class="content-wrapper">
         <div class="row same-height">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">{{ ucFirst(request()->segment(1)) }} {{ ucFirst(request()->segment(2)) }}</h4>
-                    </div>
                     <div class="card-body">
+                        @stack('import')
                         <div class="d-flex flex-wrap gap-2 mb-3">
                             <button type="button" class="btn btn-primary btn-sm btn-add">+ {{ request()->segment(2) }}</button>
                                 Reload Table
