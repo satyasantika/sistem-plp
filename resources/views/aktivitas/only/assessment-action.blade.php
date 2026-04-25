@@ -365,7 +365,18 @@
         <div class="modal-footer">
             <button type="button" class="btn btn-modern btn-modern-secondary"
                 data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-modern btn-modern-primary">Save</button>
+            @if (!empty($assessmentLockedByYear))
+                <div class="me-auto text-start">
+                    <small class="text-danger d-block">
+                        Perubahan tidak dapat disimpan.
+                    </small>
+                </div>
+            @endif
+            <button
+                type="submit"
+                class="btn btn-modern btn-modern-primary"
+                @if (!empty($assessmentLockedByYear)) disabled aria-disabled="true" title="Submit hanya tersedia pada tahun default" @endif
+            >Save</button>
         </div>
     </form>
 </div>

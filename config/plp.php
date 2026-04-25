@@ -8,5 +8,5 @@ return [
     | Digunakan sebagai fallback jika user belum memilih tahun aktif.
     | Nilai aktif disimpan per-session melalui dropdown di header.
     */
-    'default_year' => 2025,
+    'default_year' => 2026,
 ];

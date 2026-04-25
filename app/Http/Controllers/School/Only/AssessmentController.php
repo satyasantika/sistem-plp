@@ -132,6 +132,7 @@ class AssessmentController extends Controller
     private function _dataSelection($form_id, $form_order, $map_id)
     {
         $plpOrder = $this->_resolvePlpOrder($map_id);
+        $activeYear = Map::activeYear(auth()->user());
 
         return [
             'form' => Form::find($form_id),
@@ -141,6 +142,8 @@ class AssessmentController extends Controller
             'form_extras' => $this->_formByComponent($form_id,'tambahan'),
             'kebaikan' => ['sangat kurang','kurang','baik', 'sangat baik'],
             'keterpenuhan' => ['tidak terpenuhi semua aspek','hanya 1 aspek ada','2 aspek ada', '3 aspek ada'],
+            'activeYear' => $activeYear,
+            'assessmentLockedByYear' => (int) $activeYear !== (int) config('plp.default_year'),
             'parameters' => [
                 'form_id'=>$form_id,
                 'form_order' => $form_order,
