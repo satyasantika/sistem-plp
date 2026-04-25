@@ -88,129 +88,201 @@
     <script src="{{ asset('') }}vendor/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
     <script src="{{ asset('') }}vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('') }}vendor/izitoast/dist/js/iziToast.min.js"></script>
-        <script>
-        if (typeof window.crudDataTables !== 'function') {
-            window.crudDataTables = function(table) {
-                const modalElement = document.getElementById('modalAction');
-                const getModal = () => {
-                    if (!modalElement || !window.bootstrap || !window.bootstrap.Modal) {
-                        return null;
+    <script>
+        var initOnlyLogbookCrud = function(table) {
+            const baseUrl = "{{ route('studentdiaries.only.index') }}";
+            const createUrl = "{{ route('studentdiaries.only.create') }}";
+            const $modal = $('#modalAction');
+            const modalElement = document.getElementById('modalAction');
+
+            const showModal = () => {
+                try {
+                    if (window.bootstrap && window.bootstrap.Modal && modalElement) {
+                        window.bootstrap.Modal.getOrCreateInstance(modalElement).show();
+                        return;
                     }
-
-                    return window.bootstrap.Modal.getOrCreateInstance(modalElement);
-                };
-
-                $('.btn-add').off('click.legacyCrud').on('click.legacyCrud', function() {
-                    $.ajax({
-                        method: 'GET',
-                        url: document.URL + '/create',
-                        success: function(response) {
-                            $('#modalAction').find('.modal-dialog').html(response);
-                            const modal = getModal();
-                            modal?.show();
-                            store();
-                        },
-                    });
-                });
-
-                function store() {
-                    $(document)
-                        .off('submit.legacyCrudStore', '#formAction')
-                        .on('submit.legacyCrudStore', '#formAction', function(e) {
-                            e.preventDefault();
-                            const _form = this;
-                            const formData = new FormData(_form);
-
-                            const url = this.getAttribute('action');
-
-                            $.ajax({
-                                method: 'POST',
-                                url,
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                                },
-                                data: formData,
-                                processData: false,
-                                contentType: false,
-                                success: function(response) {
-                                    $(`#${table}`).load(document.URL + ` #${table}`);
-                                    const modal = getModal();
-                                    modal?.hide();
-                                    iziToast.success({
-                                        title: 'Saved!',
-                                        message: response.message,
-                                        position: 'topRight',
-                                    });
-                                },
-                                error: function(response) {
-                                    let errors = response.responseJSON?.errors;
-
-                                    if (errors) {
-                                        for (const [key, value] of Object.entries(errors)) {
-                                            $(`[name='${key}']`)
-                                                .parent()
-                                                .append(`<span class='text-danger text-small'>${value}</span>`);
-                                        }
-                                    }
-                                },
-                            });
-                        });
+                } catch (e) {
+                    // fallback below
                 }
 
-                $(`#${table}`)
-                    .off('click.legacyCrudAction', '.action')
-                    .on('click.legacyCrudAction', '.action', function() {
-                        let data = $(this).data();
-                        let id = data.id;
-                        let jenis = data.jenis;
+                try {
+                    if (typeof $modal.modal === 'function') {
+                        $modal.modal('show');
+                        return;
+                    }
+                } catch (e) {
+                    // fallback below
+                }
 
-                        if (jenis == 'delete') {
-                            Swal.fire({
-                                title: 'Hapus permanen?',
-                                text: 'Data sepenuhnya akan terhapus dari sistem!',
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Yes, delete it!',
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    $.ajax({
-                                        method: 'DELETE',
-                                        url: document.URL + `/${id}`,
-                                        headers: {
-                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                                        },
-                                        success: function(response) {
-                                            $(`#${table}`).load(document.URL + ` #${table}`);
-                                            iziToast.warning({
-                                                title: 'Deleted!',
-                                                message: response.message,
-                                                position: 'topRight',
-                                            });
-                                        },
-                                    });
-                                }
-                            });
-                            return;
-                        }
+                $modal.addClass('show').css('display', 'block').attr('aria-modal', 'true').removeAttr('aria-hidden');
+                if (!$('.modal-backdrop').length) {
+                    $('<div class="modal-backdrop fade show"></div>').appendTo(document.body);
+                }
+                $('body').addClass('modal-open');
+            };
+
+            const hideModal = () => {
+                try {
+                    if (window.bootstrap && window.bootstrap.Modal && modalElement) {
+                        window.bootstrap.Modal.getOrCreateInstance(modalElement).hide();
+                        return;
+                    }
+                } catch (e) {
+                    // fallback below
+                }
+
+                try {
+                    if (typeof $modal.modal === 'function') {
+                        $modal.modal('hide');
+                        return;
+                    }
+                } catch (e) {
+                    // fallback below
+                }
+
+                $modal.removeClass('show').css('display', 'none').attr('aria-hidden', 'true').removeAttr('aria-modal');
+                $('.modal-backdrop').remove();
+                $('body').removeClass('modal-open');
+            };
+
+            const reloadTable = () => {
+                $(`#${table}`).load(`${baseUrl} #${table}`);
+            };
+
+            const bindStore = () => {
+                $(document)
+                    .off('submit.onlyLogbookStore', '#formAction')
+                    .on('submit.onlyLogbookStore', '#formAction', function(e) {
+                        e.preventDefault();
+                        const _form = this;
+                        const formData = new FormData(_form);
+                        const url = this.getAttribute('action');
+
+                        $('.text-danger.text-small').remove();
 
                         $.ajax({
-                            method: 'GET',
-                            url: document.URL + `/${id}/edit`,
+                            method: 'POST',
+                            url,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            },
+                            data: formData,
+                            processData: false,
+                            contentType: false,
                             success: function(response) {
-                                $('#modalAction').find('.modal-dialog').html(response);
-                                const modal = getModal();
-                                modal?.show();
-                                store();
+                                reloadTable();
+                                hideModal();
+                                iziToast.success({
+                                    title: 'Saved!',
+                                    message: response.message,
+                                    position: 'topRight',
+                                });
+                            },
+                            error: function(response) {
+                                const errors = response.responseJSON?.errors;
+
+                                if (errors) {
+                                    for (const [key, value] of Object.entries(errors)) {
+                                        $(`[name='${key}']`).parent().append(`<span class='text-danger text-small'>${value}</span>`);
+                                    }
+                                    return;
+                                }
+
+                                iziToast.error({
+                                    title: 'Error',
+                                    message: 'Gagal menyimpan data logbook.',
+                                    position: 'topRight',
+                                });
                             },
                         });
                     });
             };
-        }
+
+            window.openOnlyLogbookCreate = function() {
+                $.ajax({
+                    method: 'GET',
+                    url: createUrl,
+                    success: function(response) {
+                        $modal.find('.modal-dialog').html(response);
+                        showModal();
+                        bindStore();
+                    },
+                    error: function() {
+                        iziToast.error({
+                            title: 'Error',
+                            message: 'Form tambah logbook tidak bisa dimuat.',
+                            position: 'topRight',
+                        });
+                    },
+                });
+            };
+
+            $(document)
+                .off('click.onlyLogbookAdd', '.btn-add')
+                .on('click.onlyLogbookAdd', '.btn-add', function(e) {
+                    e.preventDefault();
+                    window.openOnlyLogbookCreate();
+                });
+
+            $(`#${table}`)
+                .off('click.onlyLogbookAction', '.action')
+                .on('click.onlyLogbookAction', '.action', function() {
+                    let data = $(this).data();
+                    let id = data.id;
+                    let jenis = data.jenis;
+
+                    if (jenis === 'delete') {
+                        Swal.fire({
+                            title: 'Hapus permanen?',
+                            text: 'Data sepenuhnya akan terhapus dari sistem!',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes, delete it!',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.ajax({
+                                    method: 'DELETE',
+                                    url: `${baseUrl}/${id}`,
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                    },
+                                    success: function(response) {
+                                        reloadTable();
+                                        iziToast.warning({
+                                            title: 'Deleted!',
+                                            message: response.message,
+                                            position: 'topRight',
+                                        });
+                                    },
+                                });
+                            }
+                        });
+                        return;
+                    }
+
+                    $.ajax({
+                        method: 'GET',
+                        url: `${baseUrl}/${id}/edit`,
+                        success: function(response) {
+                            $modal.find('.modal-dialog').html(response);
+                            showModal();
+                            bindStore();
+                        },
+                        error: function() {
+                            iziToast.error({
+                                title: 'Error',
+                                message: 'Form edit logbook tidak bisa dimuat.',
+                                position: 'topRight',
+                            });
+                        },
+                    });
+                });
+        };
     </script>
 
     <script>
-        crudDataTables('studentdiary-table')
+        initOnlyLogbookCrud('studentdiary-table')
     </script>
 @endpush

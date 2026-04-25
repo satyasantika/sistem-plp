@@ -70,7 +70,63 @@
     <script src="{{ asset('') }}vendor/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
     <script src="{{ asset('') }}vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('') }}vendor/izitoast/dist/js/iziToast.min.js"></script>
-    @include('partials.datatables.verifikasi')
+    <script>
+        var updateOnly = function(table) {
+            $(`#${table}`)
+                .off('click.verifikasiAction', '.action')
+                .on('click.verifikasiAction', '.action', function() {
+                    let data = $(this).data();
+                    let id = data.id;
+
+                    const $modal = $('#modalAction');
+                    const modalElement = document.getElementById('modalAction');
+                    const modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+                    $modal.find('.modal-dialog').html(`
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Verifikasi Catatan</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Catatan ini akan diverifikasi. Lanjutkan?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                                <button type="button" class="btn btn-primary" id="confirmVerifikasi">Ya, verifikasi</button>
+                            </div>
+                        </div>
+                    `);
+
+                    $modal
+                        .off('click.verifikasiConfirm', '#confirmVerifikasi')
+                        .on('click.verifikasiConfirm', '#confirmVerifikasi', function() {
+                            const basePath = window.location.pathname.replace(/\/+$/, '');
+
+                            $.ajax({
+                                method: 'PUT',
+                                url: `${basePath}/${id}`,
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                success: function(response) {
+                                    modalInstance.hide();
+                                    $(`#${table}`).load(document.URL + ` #${table}`, function() {
+                                        updateOnly(table);
+                                    });
+                                    iziToast.success({
+                                        title: 'OK!',
+                                        message: response.message,
+                                        position: 'topRight'
+                                    });
+                                }
+                            });
+                        });
+
+                    modalInstance.show();
+                });
+        };
+    </script>
     <script>
         updateOnly('studentlogbook-table')
     </script>
