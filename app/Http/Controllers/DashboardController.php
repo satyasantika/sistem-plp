@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Assessment;
+use App\Models\Form;
 use App\Models\Map;
 use App\Models\School;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +21,7 @@ class DashboardController extends Controller
         $activeYear = Map::activeYear($user);
 
         $studentMaps = collect();
+        $studentAssessmentStatuses = collect();
         $studentSchoolmates = collect();
         $lectureMaps = collect();
         $teacherMaps = collect();
@@ -42,6 +45,19 @@ class DashboardController extends Controller
                     'lectures',
                 ])
                 ->get();
+
+            $lectureForms = ['2024N2', '2024N6', '2024N7'];
+            $teacherForms = ['2024N1', '2024N3', '2024N4', '2024N5', '2024N6', '2024N7'];
+            $lectureFormDefinitions = $this->buildAssessmentFormDefinitions($lectureForms);
+            $teacherFormDefinitions = $this->buildAssessmentFormDefinitions($teacherForms);
+
+            $studentAssessmentStatuses = $studentMaps->map(function ($map) use ($lectureForms, $teacherForms, $lectureFormDefinitions, $teacherFormDefinitions) {
+                return (object) [
+                    'map' => $map,
+                    'lecture' => $this->buildAssessmentActorStatus($map->id, 'dosen', 'Dosen pembimbing lapangan', $lectureForms, $lectureFormDefinitions),
+                    'teacher' => $this->buildAssessmentActorStatus($map->id, 'guru', 'Guru pamong', $teacherForms, $teacherFormDefinitions),
+                ];
+            })->values();
 
             $schoolIds = $studentMaps->pluck('school_id')->filter()->unique()->values();
 
@@ -170,6 +186,7 @@ class DashboardController extends Controller
 
         return view('dashboard', compact(
             'studentMaps',
+            'studentAssessmentStatuses',
             'studentSchoolmates',
             'lectureMaps',
             'teacherMaps',
@@ -181,5 +198,76 @@ class DashboardController extends Controller
             'adminSubjectSummaries',
             'adminSchoolSummaries'
         ));
+    }
+
+    private function buildAssessmentFormDefinitions(array $formIds): array
+    {
+        $formLookup = Form::whereIn('id', $formIds)
+            ->get(['id', 'times'])
+            ->keyBy('id');
+
+        $definitions = [];
+
+        foreach ($formIds as $formId) {
+            $times = max(1, (int) optional($formLookup->get($formId))->times);
+            $baseCode = substr($formId, -2);
+
+            for ($formOrder = 1; $formOrder <= $times; $formOrder++) {
+                $definitions[] = [
+                    'form_id' => $formId,
+                    'form_order' => $formOrder,
+                    'code' => $times > 1 ? $baseCode . '.' . $formOrder : $baseCode,
+                ];
+            }
+        }
+
+        return $definitions;
+    }
+
+    private function buildAssessmentActorStatus(int $mapId, string $assessor, string $actorLabel, array $formIds, array $definitions): array
+    {
+        $assessmentLookup = Assessment::where('map_id', $mapId)
+            ->where('assessor', $assessor)
+            ->whereIn('form_id', $formIds)
+            ->get(['form_id', 'form_order'])
+            ->keyBy(function ($assessment) {
+                return $assessment->form_id . ':' . $assessment->form_order;
+            });
+
+        $items = collect($definitions)->map(function ($definition) use ($assessmentLookup) {
+            $key = $definition['form_id'] . ':' . $definition['form_order'];
+            $exists = $assessmentLookup->has($key);
+
+            return [
+                'code' => $definition['code'],
+                'label' => $exists ? 'Sudah dinilai' : 'Belum dinilai',
+                'tone' => $exists ? 'done' : 'pending',
+            ];
+        })->values();
+
+        $completedCount = $items->where('tone', 'done')->count();
+        $expectedCount = $items->count();
+
+        if ($completedCount <= 0) {
+            $label = 'Belum dinilai';
+            $tone = 'pending';
+            $detail = $actorLabel . ' belum mengisi penilaian apa pun.';
+        } elseif ($completedCount < $expectedCount) {
+            $label = 'Sebagian dinilai';
+            $tone = 'progress';
+            $detail = $actorLabel . ' sudah menilai sebagian form yang diwajibkan.';
+        } else {
+            $label = 'Sudah dinilai';
+            $tone = 'done';
+            $detail = $actorLabel . ' sudah menyelesaikan seluruh form penilaian.';
+        }
+
+        return [
+            'label' => $label,
+            'tone' => $tone,
+            'detail' => $detail,
+            'progress' => $completedCount . '/' . $expectedCount . ' form',
+            'items' => $items,
+        ];
     }
 }
