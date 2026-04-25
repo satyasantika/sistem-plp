@@ -12,30 +12,6 @@
 			Import Mahasiswa
 		</a>
 	</div>
-
-		<!-- Import Excel -->
-		{{-- <div class="modal fade" id="importExcel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<form method="post" action="{{ route('users.import') }}" enctype="multipart/form-data" id="import">
-                    @csrf
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">Import Excel</h5>
-						</div>
-						<div class="modal-body">
-							<label>Pilih file excel</label>
-							<div class="form-group">
-								<input type="file" name="file" required="required">
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-							<button type="submit" class="btn btn-primary">Import</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div> --}}
 @endpush
 
 @push('jscode')
@@ -319,10 +295,76 @@
 			ensureModalInBody()
 		})()
 	</script>
-	<script src="{{ asset('') }}assets/js/resetpassword-datatables.js?v={{ filemtime(public_path('assets/js/resetpassword-datatables.js')) }}"></script>
-    <script> updateOnly('user-table') </script>
-	<script src="{{ asset('') }}assets/js/activation-datatables.js?v={{ filemtime(public_path('assets/js/activation-datatables.js')) }}"></script>
-    <script> updateActivation('user-table') </script>
+	<script>
+		var updateOnly = function(table) {
+			$(`#${table}`)
+				.off('click.userResetPassword', '.reset')
+				.on('click.userResetPassword', '.reset', function() {
+					const data = $(this).data()
+					const id = data.id
+					const basePath = window.location.pathname.replace(/\/+$/, '')
+
+					Swal.fire({
+						title: 'Reset Password?',
+						text: 'Password user ini akan direset sehingga USERNAME = PASSWORD!',
+						icon: 'info',
+						showCancelButton: true,
+						confirmButtonColor: '#3085d6',
+						cancelButtonColor: '#d33',
+						confirmButtonText: 'Ya, reset!'
+					}).then((result) => {
+						if (!result.isConfirmed) {
+							return
+						}
+
+						$.ajax({
+							method: 'POST',
+							url: `${basePath}/password/reset/${id}`,
+							headers: {
+								'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+							},
+							success: function(response) {
+								iziToast.success({
+									title: 'OK!',
+									message: response.message,
+									position: 'topRight'
+								})
+							}
+						})
+					})
+				})
+		}
+
+		var updateActivation = function(table) {
+			$(`#${table}`)
+				.off('click.userActivation', '.activation')
+				.on('click.userActivation', '.activation', function() {
+					const data = $(this).data()
+					const id = data.id
+
+					$.ajax({
+						method: 'POST',
+						url: `/konfigurasi/users/${id}/activation`,
+						headers: {
+							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+						},
+						success: function(response) {
+							if (window.LaravelDataTables?.[`${table}`]) {
+								window.LaravelDataTables[`${table}`].ajax.reload(null, false)
+							}
+
+							iziToast.success({
+								title: 'OK!',
+								message: response.message,
+								position: 'topRight'
+							})
+						}
+					})
+				})
+		}
+	</script>
+	<script> updateOnly('user-table') </script>
+	<script> updateActivation('user-table') </script>
 	<script>
 		(function () {
 			const modalSelector = '#modalAction'

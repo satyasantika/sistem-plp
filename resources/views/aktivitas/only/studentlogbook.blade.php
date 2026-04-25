@@ -70,7 +70,7 @@
     <script src="{{ asset('') }}vendor/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
     <script src="{{ asset('') }}vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('') }}vendor/izitoast/dist/js/iziToast.min.js"></script>
-    <script src="{{ asset('') }}assets/js/verifikasi-datatables.js"></script>
+    @include('partials.datatables.verifikasi')
     <script>
         updateOnly('studentlogbook-table')
     </script>

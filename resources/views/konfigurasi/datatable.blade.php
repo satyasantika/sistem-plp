@@ -46,7 +46,10 @@
     <script src="{{ asset('') }}vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('') }}vendor/izitoast/dist/js/iziToast.min.js"></script>
     {{ $dataTable->scripts() }}
-    <script src="{{ asset('') }}assets/js/crud-datatables.js?v={{ filemtime(public_path('assets/js/crud-datatables.js')) }}"></script>
+    <script>
+        // Compatibility shim after removing legacy crud-datatables.js.
+        window.crudDataTables = window.crudDataTables || function() {};
+    </script>
     <script>
         $(function() {
             $('.btn-reload-table').on('click', function() {
