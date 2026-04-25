@@ -207,7 +207,7 @@
 			$(document)
 				.off('click.userAdd', '.btn-add')
 				.on('click.userAdd', '.btn-add', function () {
-					loadModalContent('/konfigurasi/users/create', 'Form tambah user gagal dimuat.')
+					loadModalContent('{{ url('konfigurasi/users/create') }}', 'Form tambah user gagal dimuat.')
 				})
 
 			$(document)
@@ -233,7 +233,7 @@
 
 							$.ajax({
 								method: 'DELETE',
-								url: `/konfigurasi/users/${id}`,
+							url: `{{ url('konfigurasi/users') }}/${id}`,
 								headers: {
 									'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 								},
@@ -254,7 +254,7 @@
 						return
 					}
 
-					loadModalContent(`/konfigurasi/users/${id}/edit`, 'Form edit user gagal dimuat.')
+					loadModalContent(`{{ url('konfigurasi/users') }}/${id}/edit`, 'Form edit user gagal dimuat.')
 				})
 
 			$(document)
@@ -265,16 +265,16 @@
 					const jenis = data.jenis
 
 					if (jenis === 'rolepermission') {
-						loadModalContent(`/konfigurasi/rolepermissions/${id}/edit`, 'Form role permission gagal dimuat.')
+						loadModalContent(`{{ url('konfigurasi/rolepermissions') }}/${id}/edit`, 'Form role permission gagal dimuat.')
 						return
 					}
 
 					if (jenis === 'userpermission') {
-						loadModalContent(`/konfigurasi/userpermissions/${id}/edit`, 'Form user permission gagal dimuat.')
+						loadModalContent(`{{ url('konfigurasi/userpermissions') }}/${id}/edit`, 'Form user permission gagal dimuat.')
 						return
 					}
 
-					loadModalContent(`/konfigurasi/userroles/${id}/edit`, 'Form user role gagal dimuat.')
+					loadModalContent(`{{ url('konfigurasi/userroles') }}/${id}/edit`, 'Form user role gagal dimuat.')
 				})
 
 			$(document)
@@ -344,7 +344,7 @@
 
 					$.ajax({
 						method: 'POST',
-						url: `/konfigurasi/users/${id}/activation`,
+						url: `{{ url('konfigurasi/users') }}/${id}/activation`,
 						headers: {
 							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 						},
@@ -549,7 +549,7 @@
 				if (addButton) {
 					event.preventDefault()
 					event.stopPropagation()
-					loadModal('/konfigurasi/users/create', 'Form tambah user gagal dimuat.')
+					loadModal('{{ url('konfigurasi/users/create') }}', 'Form tambah user gagal dimuat.')
 					return
 				}
 
@@ -561,16 +561,16 @@
 					const jenis = rolePermissionButton.getAttribute('data-jenis')
 
 					if (jenis === 'rolepermission') {
-						loadModal(`/konfigurasi/rolepermissions/${id}/edit`, 'Form role permission gagal dimuat.')
-						return
-					}
+					loadModal(`{{ url('konfigurasi/rolepermissions') }}/${id}/edit`, 'Form role permission gagal dimuat.')
+					return
+				}
 
 					if (jenis === 'userpermission') {
-						loadModal(`/konfigurasi/userpermissions/${id}/edit`, 'Form user permission gagal dimuat.')
+						loadModal(`{{ url('konfigurasi/userpermissions') }}/${id}/edit`, 'Form user permission gagal dimuat.')
 						return
 					}
 
-					loadModal(`/konfigurasi/userroles/${id}/edit`, 'Form user role gagal dimuat.')
+					loadModal(`{{ url('konfigurasi/userroles') }}/${id}/edit`, 'Form user role gagal dimuat.')
 					return
 				}
 
@@ -598,7 +598,7 @@
 							}
 
 							try {
-								const response = await fetch(`/konfigurasi/users/${id}`, {
+								const response = await fetch(`{{ url('konfigurasi/users') }}/${id}`, {
 									method: 'DELETE',
 									headers: {
 										'X-CSRF-TOKEN': getCsrf(),
@@ -623,7 +623,7 @@
 						return
 					}
 
-					loadModal(`/konfigurasi/users/${id}/edit`, 'Form edit user gagal dimuat.')
+					loadModal(`{{ url('konfigurasi/users') }}/${id}/edit`, 'Form edit user gagal dimuat.')
 				}
 			}, true)
 
