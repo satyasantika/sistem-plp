@@ -24,7 +24,9 @@ class DashboardController extends Controller
         $studentAssessmentStatuses = collect();
         $studentSchoolmates = collect();
         $lectureMaps = collect();
+        $lectureMapBadges = [];
         $teacherMaps = collect();
+        $teacherMapBadges = [];
         $headmasterSchools = collect();
         $teacherCoordinatorSchools = collect();
         $departementSchoolSummaries = collect();
@@ -70,23 +72,68 @@ class DashboardController extends Controller
         }
 
         if ($user->can('dashboard/dosen-read')) {
+            $lectureForms = ['2024N2', '2024N6', '2024N7'];
+            $lectureFormDefs = $this->buildAssessmentFormDefinitions($lectureForms);
+
             $lectureMaps = Map::forYear($activeYear)
                 ->where('subject_id', $user->subject_id)
                 ->where('lecture_id', $user->id)
                 ->whereNotNull('student_id')
                 ->with(['students', 'schools'])
+                ->orderBy('school_id')
                 ->orderBy('student_id')
                 ->get();
+
+            $mapIds = $lectureMaps->pluck('id');
+            $lectureAssessments = Assessment::whereIn('map_id', $mapIds)
+                ->where('assessor', 'dosen')
+                ->whereIn('form_id', $lectureForms)
+                ->get(['map_id', 'form_id', 'form_order'])
+                ->groupBy('map_id');
+
+            foreach ($lectureMaps as $map) {
+                $lookup = ($lectureAssessments->get($map->id) ?? collect())
+                    ->keyBy(fn($a) => $a->form_id . ':' . $a->form_order);
+                $lectureMapBadges[$map->id] = collect($lectureFormDefs)->map(function ($def) use ($lookup) {
+                    return [
+                        'code' => $def['code'],
+                        'done' => $lookup->has($def['form_id'] . ':' . $def['form_order']),
+                    ];
+                })->values()->all();
+            }
         }
 
         if ($user->can('dashboard/guru-read')) {
+            $teacherForms = ['2024N1', '2024N3', '2024N4', '2024N5', '2024N6', '2024N7'];
+            $teacherFormDefs = $this->buildAssessmentFormDefinitions($teacherForms);
+
             $teacherMaps = Map::forYear($activeYear)
                 ->where('subject_id', $user->subject_id)
                 ->where('teacher_id', $user->id)
                 ->whereNotNull('student_id')
                 ->with(['students', 'schools'])
+                ->orderBy('school_id')
                 ->orderBy('student_id')
                 ->get();
+
+            $mapIds = $teacherMaps->pluck('id');
+            $teacherAssessments = Assessment::whereIn('map_id', $mapIds)
+                ->where('assessor', 'guru')
+                ->whereIn('form_id', $teacherForms)
+                ->get(['map_id', 'form_id', 'form_order'])
+                ->groupBy('map_id');
+
+            foreach ($teacherMaps as $map) {
+                $lookup = ($teacherAssessments->get($map->id) ?? collect())
+                    ->keyBy(fn($a) => $a->form_id . ':' . $a->form_order);
+
+                $teacherMapBadges[$map->id] = collect($teacherFormDefs)->map(function ($def) use ($lookup) {
+                    return [
+                        'code' => $def['code'],
+                        'done' => $lookup->has($def['form_id'] . ':' . $def['form_order']),
+                    ];
+                })->values()->all();
+            }
         }
 
         if ($user->can('dashboard/kepsek-read')) {
@@ -189,7 +236,9 @@ class DashboardController extends Controller
             'studentAssessmentStatuses',
             'studentSchoolmates',
             'lectureMaps',
+            'lectureMapBadges',
             'teacherMaps',
+            'teacherMapBadges',
             'headmasterSchools',
             'teacherCoordinatorSchools',
             'departementSchoolSummaries',
