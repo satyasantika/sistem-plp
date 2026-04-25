@@ -382,7 +382,7 @@
                                                 @endphp
                                                 @if ($form_times > 1)
                                                     <a
-                                                        href="{{ route('schoolassessments.only.show',['form_id' => $form]) }}"
+                                                        href="{{ route('schoolassessments.only.show',['form_id' => $form, 'map_id' => $map->id]) }}"
                                                         class="btn btn-modern btn-modern-success btn-sm mb-2">
                                                         {{ $grade }}
                                                     </a>
@@ -407,7 +407,7 @@
                                                 @else
                                                 @if ($form_times > 1)
                                                     <a
-                                                        href="{{ route('schoolassessments.only.show',['form_id' => $form]) }}"
+                                                        href="{{ route('schoolassessments.only.show',['form_id' => $form, 'map_id' => $map->id]) }}"
                                                         class="btn btn-modern btn-modern-outline-danger btn-sm mb-2">
                                                         {{ 0 }}
                                                     </a>
@@ -500,6 +500,7 @@
 
             const $modal = $('#modalAction');
             const modalElement = document.getElementById('modalAction');
+            let lastViewportY = window.scrollY || window.pageYOffset || 0;
 
             const buildUrl = (template, replacements) => {
                 let url = template;
@@ -559,6 +560,41 @@
                 $('body').removeClass('modal-open');
             };
 
+            const restoreViewport = () => {
+                window.requestAnimationFrame(() => {
+                    window.scrollTo({
+                        top: lastViewportY,
+                        left: 0,
+                        behavior: 'auto',
+                    });
+                });
+            };
+
+            const reloadTable = (callback) => {
+                $(`#${table}`).load(`${baseUrl} #${table} > *`, function() {
+                    restoreViewport();
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                });
+            };
+
+            const showResumeSubmitStatus = (actionType, responseMessage) => {
+                const statusText = actionType === 'update'
+                    ? 'Update data penilaian berhasil disimpan.'
+                    : 'Input data penilaian berhasil disimpan.';
+
+                const $status = $('#submit-status-resume');
+                $('#submit-status-resume-text').text(statusText);
+                $status.removeClass('d-none');
+
+                iziToast.success({
+                    title: 'Berhasil',
+                    message: responseMessage || statusText,
+                    position: 'topRight',
+                });
+            };
+
             const bindStore = () => {
                 $(document)
                     .off('submit.onlyAssessmentResumeStore', '#formAction')
@@ -583,13 +619,9 @@
                             contentType: false,
                             success: function(response) {
                                 hideModal();
-                                iziToast.success({
-                                    title: 'Saved!',
-                                    message: response.message,
-                                    position: 'topRight',
+                                reloadTable(function() {
+                                    showResumeSubmitStatus(actionType, response.message);
                                 });
-                                const redirectUrl = `${baseUrl}?submit_status=success&submit_action=${actionType}`;
-                                window.location.href = redirectUrl;
                             },
                             error: function(response) {
                                 const errors = response.responseJSON?.errors;
@@ -614,6 +646,7 @@
             $(`#${table}`)
                 .off('click.onlyAssessmentResumeAction', '.action')
                 .on('click.onlyAssessmentResumeAction', '.action', function() {
+                    lastViewportY = window.scrollY || window.pageYOffset || 0;
                     const data = $(this).data();
                     const id = data.id;
                     const jenis = data.jenis;
@@ -653,37 +686,6 @@
                 });
         };
 
-        var showResumeSubmitStatusFromQuery = function() {
-            const params = new URLSearchParams(window.location.search);
-            const submitStatus = params.get('submit_status');
-            const submitAction = params.get('submit_action');
-
-            if (submitStatus !== 'success') {
-                return;
-            }
-
-            const statusText = submitAction === 'update'
-                ? 'Update data penilaian berhasil disimpan.'
-                : 'Input data penilaian berhasil disimpan.';
-
-            const $status = $('#submit-status-resume');
-            $('#submit-status-resume-text').text(statusText);
-            $status.removeClass('d-none');
-
-            iziToast.success({
-                title: 'Berhasil',
-                message: statusText,
-                position: 'topRight',
-            });
-
-            params.delete('submit_status');
-            params.delete('submit_action');
-            const cleanedQuery = params.toString();
-            const cleanedUrl = `${window.location.pathname}${cleanedQuery ? `?${cleanedQuery}` : ''}`;
-            window.history.replaceState({}, document.title, cleanedUrl);
-        };
-
         initOnlyAssessmentResumeCrud('assessment-table');
-        showResumeSubmitStatusFromQuery();
     </script>
 @endpush

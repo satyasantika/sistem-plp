@@ -1,12 +1,98 @@
 <script>
     var crudDataTables = function(table) {
         const modalElement = document.getElementById('modalAction');
+        const $modal = $('#modalAction');
+        const basePath = window.location.pathname.replace(/\/+$/, '');
+        const currentViewUrl = `${basePath}${window.location.search || ''}`;
+        let lastViewportY = window.scrollY || window.pageYOffset || 0;
+        const createUrlTemplate = "{{ route('schoolassessments.only.create', ['form_id' => '__FORM__', 'form_order' => '__ORDER__', 'map_id' => '__MAP__']) }}";
+        const editUrlTemplate = "{{ route('schoolassessments.only.edit', ['form_id' => '__FORM__', 'form_order' => '__ORDER__', 'map_id' => '__MAP__', 'schoolassessment' => '__ID__']) }}";
+
+        const buildUrl = (template, replacements) => {
+            let url = template;
+            Object.entries(replacements).forEach(([key, value]) => {
+                url = url.replace(key, encodeURIComponent(String(value)));
+            });
+            return url;
+        };
+
         const getModal = () => {
             if (!modalElement || !window.bootstrap || !window.bootstrap.Modal) {
                 return null;
             }
 
             return window.bootstrap.Modal.getOrCreateInstance(modalElement);
+        };
+
+        const showModal = () => {
+            try {
+                const modal = getModal();
+                if (modal) {
+                    modal.show();
+                    return;
+                }
+            } catch (e) {
+                // fallback below
+            }
+
+            try {
+                if (typeof $modal.modal === 'function') {
+                    $modal.modal('show');
+                    return;
+                }
+            } catch (e) {
+                // fallback below
+            }
+
+            $modal.addClass('show').css('display', 'block').attr('aria-modal', 'true').removeAttr('aria-hidden');
+            if (!$('.modal-backdrop').length) {
+                $('<div class="modal-backdrop fade show"></div>').appendTo(document.body);
+            }
+            $('body').addClass('modal-open');
+        };
+
+        const hideModal = () => {
+            try {
+                const modal = getModal();
+                if (modal) {
+                    modal.hide();
+                    return;
+                }
+            } catch (e) {
+                // fallback below
+            }
+
+            try {
+                if (typeof $modal.modal === 'function') {
+                    $modal.modal('hide');
+                    return;
+                }
+            } catch (e) {
+                // fallback below
+            }
+
+            $modal.removeClass('show').css('display', 'none').attr('aria-hidden', 'true').removeAttr('aria-modal');
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open');
+        };
+
+        const restoreViewport = () => {
+            window.requestAnimationFrame(() => {
+                window.scrollTo({
+                    top: lastViewportY,
+                    left: 0,
+                    behavior: 'auto',
+                });
+            });
+        };
+
+        const reloadView = (callback) => {
+            $(`#${table}`).load(`${currentViewUrl} #${table} > *`, function() {
+                restoreViewport();
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            });
         };
 
         function store() {
@@ -33,19 +119,18 @@
                         processData: false,
                         contentType: false,
                         success: function(response) {
-                            $(`#${table}`).load(document.URL + ` #${table}`);
-                            const modal = getModal();
-                            modal?.hide();
+                            hideModal();
+                            reloadView(function() {
+                                if (typeof window.showOnlyAssessmentSubmitStatus === 'function') {
+                                    window.showOnlyAssessmentSubmitStatus(actionType, response.message);
+                                    return;
+                                }
 
-                            if (typeof window.showOnlyAssessmentSubmitStatus === 'function') {
-                                window.showOnlyAssessmentSubmitStatus(actionType, response.message);
-                                return;
-                            }
-
-                            iziToast.success({
-                                title: 'Saved!',
-                                message: response.message,
-                                position: 'topRight',
+                                iziToast.success({
+                                    title: 'Saved!',
+                                    message: response.message,
+                                    position: 'topRight',
+                                });
                             });
                         },
                         error: function(response) {
@@ -73,21 +158,42 @@
         $(`#${table}`)
             .off('click.assessmentAction', '.action')
             .on('click.assessmentAction', '.action', function() {
+                lastViewportY = window.scrollY || window.pageYOffset || 0;
                 let data = $(this).data();
                 let id = data.id;
                 let jenis = data.jenis;
+                let formid = data.formid;
                 let form_order = data.form_order;
                 let map_id = data.map_id;
+
+                const actionUrl = jenis == 'add'
+                    ? buildUrl(createUrlTemplate, {
+                        '__FORM__': formid,
+                        '__ORDER__': form_order,
+                        '__MAP__': map_id,
+                    })
+                    : buildUrl(editUrlTemplate, {
+                        '__FORM__': formid,
+                        '__ORDER__': form_order,
+                        '__MAP__': map_id,
+                        '__ID__': id,
+                    });
 
                 if (jenis == 'add') {
                     $.ajax({
                         method: 'GET',
-                        url: document.URL + `/${form_order}/${map_id}/create`,
+                        url: actionUrl,
                         success: function(response) {
                             $('#modalAction').find('.modal-dialog').html(response);
-                            const modal = getModal();
-                            modal?.show();
+                            showModal();
                             store();
+                        },
+                        error: function() {
+                            iziToast.error({
+                                title: 'Error',
+                                message: 'Form penilaian tidak bisa dimuat.',
+                                position: 'topRight',
+                            });
                         },
                     });
                     return;
@@ -95,12 +201,18 @@
 
                 $.ajax({
                     method: 'GET',
-                    url: document.URL + `/${form_order}/${map_id}/${id}/edit`,
+                    url: actionUrl,
                     success: function(response) {
                         $('#modalAction').find('.modal-dialog').html(response);
-                        const modal = getModal();
-                        modal?.show();
+                        showModal();
                         store();
+                    },
+                    error: function() {
+                        iziToast.error({
+                            title: 'Error',
+                            message: 'Form penilaian tidak bisa dimuat.',
+                            position: 'topRight',
+                        });
                     },
                 });
             });

@@ -113,6 +113,12 @@
             background: rgba(255, 255, 255, 0.62);
         }
 
+        .btn-modern-outline-danger {
+            color: #b53143;
+            border-color: rgba(220, 53, 69, 0.42);
+            background: rgba(255, 245, 246, 0.84);
+        }
+
         .assessment-wrap {
             border: 1px solid rgba(82, 112, 154, 0.22);
             border-radius: 14px;
@@ -169,6 +175,93 @@
             border: 1px solid rgba(24, 151, 105, 0.25);
         }
 
+        .single-student-panel {
+            border: 1px solid rgba(82, 112, 154, 0.22);
+            border-radius: 14px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(245, 250, 255, 0.96));
+            padding: 14px;
+            margin-bottom: 16px;
+        }
+
+        .single-student-title {
+            margin: 0 0 4px;
+            font-size: 0.86rem;
+            text-transform: uppercase;
+            letter-spacing: 0.36px;
+            color: #58719a;
+            font-weight: 700;
+        }
+
+        .single-student-name {
+            margin: 0;
+            font-size: 1.08rem;
+            font-weight: 800;
+            color: #233754;
+        }
+
+        .single-student-meta {
+            margin: 3px 0 0;
+            color: #6a7f9e;
+            font-size: 0.83rem;
+        }
+
+        .single-student-note {
+            margin: 10px 0 0;
+            color: #345175;
+            font-size: 0.83rem;
+        }
+
+        .focus-assessment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+        }
+
+        .focus-assessment-card {
+            border: 1px solid rgba(82, 112, 154, 0.22);
+            border-radius: 16px;
+            background: linear-gradient(155deg, rgba(255, 255, 255, 0.98), rgba(245, 250, 255, 0.98));
+            padding: 14px;
+            box-shadow: 0 10px 24px rgba(37, 56, 84, 0.08);
+        }
+
+        .focus-assessment-order {
+            margin: 0 0 6px;
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 0.36px;
+            color: #58719a;
+            font-weight: 700;
+        }
+
+        .focus-assessment-title {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 800;
+            color: #223653;
+        }
+
+        .focus-assessment-caption {
+            margin: 6px 0 12px;
+            color: #6a7f9e;
+            font-size: 0.82rem;
+            min-height: 38px;
+        }
+
+        .focus-assessment-action {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .focus-assessment-state {
+            font-size: 0.79rem;
+            font-weight: 700;
+            color: #526789;
+        }
+
         body.dark .identity-card {
             border-color: rgba(157, 185, 224, 0.24);
             background: linear-gradient(155deg, rgba(24, 37, 57, 0.95), rgba(17, 30, 48, 0.95));
@@ -218,6 +311,12 @@
             background: rgba(43, 66, 103, 0.36);
         }
 
+        body.dark .btn-modern-outline-danger {
+            color: #ffc7cd;
+            border-color: rgba(220, 53, 69, 0.48);
+            background: rgba(97, 28, 38, 0.35);
+        }
+
         body.dark .submit-status {
             border-color: rgba(78, 203, 153, 0.34);
             background: linear-gradient(145deg, rgba(21, 60, 48, 0.72), rgba(18, 44, 36, 0.72));
@@ -228,6 +327,37 @@
             background: rgba(66, 191, 144, 0.26);
             color: #c6f6e3;
             border-color: rgba(76, 211, 159, 0.34);
+        }
+
+        body.dark .single-student-panel {
+            border-color: rgba(157, 185, 224, 0.24);
+            background: linear-gradient(145deg, rgba(24, 37, 57, 0.95), rgba(17, 30, 48, 0.95));
+        }
+
+        body.dark .single-student-title,
+        body.dark .single-student-meta,
+        body.dark .single-student-note {
+            color: #abc0e0;
+        }
+
+        body.dark .single-student-name {
+            color: #e2ecff;
+        }
+
+        body.dark .focus-assessment-card {
+            border-color: rgba(157, 185, 224, 0.24);
+            background: linear-gradient(155deg, rgba(24, 37, 57, 0.98), rgba(17, 30, 48, 0.98));
+            box-shadow: none;
+        }
+
+        body.dark .focus-assessment-order,
+        body.dark .focus-assessment-caption,
+        body.dark .focus-assessment-state {
+            color: #abc0e0;
+        }
+
+        body.dark .focus-assessment-title {
+            color: #e2ecff;
         }
     </style>
 @endpush
@@ -265,71 +395,145 @@
                             <span class="submit-status-badge" id="submit-status-assessment-badge">BERHASIL</span>
                         </div>
 
-                        <div class="table-responsive">
-                            <div id="role-table_wrapper" class="dataTables_wrapper no-footer assessment-wrap">
-                                <table class="display dataTable no-footer" id="assessment-table" role="grid">
-                                    @php
-                                        $form_times = App\Models\Form::find($form_id)->times;
-                                    @endphp
-                                    <thead>
-                                        <tr role="row">
-                                            <th>Mahasiswa</th>
-                                            @for ($i = 0; $i < $form_times; $i++)
-                                                @if (substr($form_id,-2) == 'N3')
-                                                <th>Perangkat ke-{{ $i+1 }}</th>
-                                                @elseif (substr($form_id,-2) == 'N5')
-                                                <th>Tampil ke-{{ $i+1 }}</th>
-                                                @else
-                                                <th>Nilai {{ substr($form_id,-2) }}</th>
-                                                @endif
-                                            @endfor
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @forelse($maps as $map)
-                                        <tr>
-                                            <td>
-                                                {{ $map->students->name ?? '' }}
-                                            </td>
-                                            @for ($i = 0; $i < $form_times; $i++)
-                                            <td>
-                                                @php
-                                                $assessment = App\Models\Assessment::where([
-                                                    'assessor' => (auth()->user()->hasrole('guru')) ? 'guru' : 'dosen',
-                                                    'map_id' => $map->id,
-                                                    'form_id' => $form_id,
-                                                    'form_order' => $i+1
-                                                ]);
-                                                @endphp
-                                                @if ($assessment->exists())
-                                                {{ $assessment->first()->grade }} &nbsp;
-                                                @can('aktivitas/schoolassessments/plp-update')
-                                                <button type="button"
-                                                    data-id={{ $assessment->first()->id }}
-                                                    data-form_order="{{ $i+1 }}"
-                                                    data-map_id="{{ $map->id }}"
-                                                    data-jenis="edit"
-                                                    class="btn btn-modern btn-modern-success btn-sm mb-2 action"
-                                                >Edit</button>
-                                                @endcanany
-                                                @else
-                                                <button
-                                                    type="button"
-                                                    data-form_order="{{ $i+1 }}"
-                                                    data-map_id="{{ $map->id }}"
-                                                    data-jenis="add"
-                                                    class="btn btn-modern btn-modern-primary btn-sm mb-2 action"
-                                                >Isi</button>
-                                                @endif
-                                            </td>
-                                            @endfor
-                                        </tr>
-                                        @empty
-                                        <div class="alert alert-info">Belum ada catatan</div>
-                                        @endforelse
-                                    </tbody>
-                                </table>
+                        @if (!empty($isFocusedAssessment) && $maps->count() === 1)
+                            @php
+                                $singleMap = $maps->first();
+                            @endphp
+                            <div class="single-student-panel">
+                                <p class="single-student-title">Mode Fokus Penilaian Form</p>
+                                <p class="single-student-name">{{ $singleMap->students->name ?? '-' }}</p>
+                                <p class="single-student-meta">{{ $singleMap->schools->name ?? '-' }} • {{ $singleMap->subjects->name ?? '-' }}</p>
+                                <p class="single-student-note">Silakan klik pada tombol angka untuk menilai, belum diisi (merah), sudah diisi (hijau)</p>
                             </div>
+                        @endif
+
+                        <div id="assessment-table">
+                            @php
+                                $form_times = App\Models\Form::find($form_id)->times;
+                                $assessorType = auth()->user()->hasrole('guru') ? 'guru' : 'dosen';
+                            @endphp
+
+                            @if (!empty($isFocusedAssessment) && $maps->count() === 1)
+                                @php
+                                    $singleMap = $maps->first();
+                                @endphp
+                                <div class="focus-assessment-grid">
+                                    @for ($i = 0; $i < $form_times; $i++)
+                                        @php
+                                            $attemptOrder = $i + 1;
+                                            $attemptLabel = substr($form_id, -2) == 'N3'
+                                                ? 'Perangkat ke-' . $attemptOrder
+                                                : (substr($form_id, -2) == 'N5' ? 'Tampil ke-' . $attemptOrder : 'Nilai ' . substr($form_id, -2));
+                                            $assessmentRecord = App\Models\Assessment::where([
+                                                'assessor' => $assessorType,
+                                                'map_id' => $singleMap->id,
+                                                'form_id' => $form_id,
+                                                'form_order' => $attemptOrder,
+                                            ])->first();
+                                        @endphp
+                                        <div class="focus-assessment-card">
+                                            <p class="focus-assessment-order">{{ $attemptLabel }}</p>
+                                            <p class="focus-assessment-title">{{ $assessmentRecord?->grade ?? 0 }}</p>
+                                            <p class="focus-assessment-caption">
+                                                {{ $assessmentRecord ? 'Nilai sudah tersimpan dan siap diperbarui bila diperlukan.' : 'Belum ada nilai tersimpan untuk sesi ini.' }}
+                                            </p>
+                                            <div class="focus-assessment-action">
+                                                <span class="focus-assessment-state">{{ $assessmentRecord ? 'Sudah dinilai' : 'Belum dinilai' }}</span>
+                                                @if ($assessmentRecord)
+                                                    @can('aktivitas/schoolassessments/plp-update')
+                                                        <button
+                                                            type="button"
+                                                            data-id="{{ $assessmentRecord->id }}"
+                                                            data-formid="{{ $form_id }}"
+                                                            data-form_order="{{ $attemptOrder }}"
+                                                            data-map_id="{{ $singleMap->id }}"
+                                                            data-jenis="edit"
+                                                            class="btn btn-modern btn-modern-success btn-sm action"
+                                                        >{{ $assessmentRecord->grade }}</button>
+                                                    @endcan
+                                                @else
+                                                    <button
+                                                        type="button"
+                                                        data-formid="{{ $form_id }}"
+                                                        data-form_order="{{ $attemptOrder }}"
+                                                        data-map_id="{{ $singleMap->id }}"
+                                                        data-jenis="add"
+                                                        class="btn btn-modern btn-modern-outline-danger btn-sm action"
+                                                    >0</button>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endfor
+                                </div>
+                            @else
+                                <div class="table-responsive">
+                                    <div id="role-table_wrapper" class="dataTables_wrapper no-footer assessment-wrap">
+                                        <table class="display dataTable no-footer" role="grid">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th>Mahasiswa</th>
+                                                    @for ($i = 0; $i < $form_times; $i++)
+                                                        @if (substr($form_id,-2) == 'N3')
+                                                        <th>Perangkat ke-{{ $i+1 }}</th>
+                                                        @elseif (substr($form_id,-2) == 'N5')
+                                                        <th>Tampil ke-{{ $i+1 }}</th>
+                                                        @else
+                                                        <th>Nilai {{ substr($form_id,-2) }}</th>
+                                                        @endif
+                                                    @endfor
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse($maps as $map)
+                                                <tr>
+                                                    <td>
+                                                        {{ $map->students->name ?? '' }}
+                                                    </td>
+                                                    @for ($i = 0; $i < $form_times; $i++)
+                                                    <td>
+                                                        @php
+                                                        $assessment = App\Models\Assessment::where([
+                                                            'assessor' => $assessorType,
+                                                            'map_id' => $map->id,
+                                                            'form_id' => $form_id,
+                                                            'form_order' => $i+1
+                                                        ]);
+                                                        @endphp
+                                                        @if ($assessment->exists())
+                                                        @php
+                                                            $assessmentRecord = $assessment->first();
+                                                        @endphp
+                                                        @can('aktivitas/schoolassessments/plp-update')
+                                                        <button type="button"
+                                                            data-id="{{ $assessmentRecord->id }}"
+                                                            data-formid="{{ $form_id }}"
+                                                            data-form_order="{{ $i+1 }}"
+                                                            data-map_id="{{ $map->id }}"
+                                                            data-jenis="edit"
+                                                            class="btn btn-modern btn-modern-success btn-sm mb-2 action"
+                                                        >{{ $assessmentRecord->grade }}</button>
+                                                        @endcan
+                                                        @else
+                                                        <button
+                                                            type="button"
+                                                            data-formid="{{ $form_id }}"
+                                                            data-form_order="{{ $i+1 }}"
+                                                            data-map_id="{{ $map->id }}"
+                                                            data-jenis="add"
+                                                            class="btn btn-modern btn-modern-outline-danger btn-sm mb-2 action"
+                                                        >0</button>
+                                                        @endif
+                                                    </td>
+                                                    @endfor
+                                                </tr>
+                                                @empty
+                                                <div class="alert alert-info">Belum ada catatan</div>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -27,12 +27,7 @@ class AssessmentController extends Controller
         $activeYear = Map::activeYear($user);
         $maps = $this->_myMap($activeYear);
 
-        if (auth()->user()->hasrole('dosen'))
-        {
-            $forms = ['2024N2','2024N6','2024N7'];
-        } else {
-            $forms = ['2024N1','2024N3','2024N4','2024N5','2024N6','2024N7'];
-        }
+        $forms = $this->_allowedFormsForUser($user);
 
         return view('aktivitas.only.assessment-resume', compact('maps', 'forms', 'user', 'activeYear'));
     }
@@ -72,13 +67,33 @@ class AssessmentController extends Controller
     }
 
     // Menu Setiap Form
-    public function show($form_id)
+    public function show($form_id, Request $request)
     {
         $user = auth()->user();
         $activeYear = Map::activeYear($user);
-        $maps = $this->_myMap($activeYear);
+        $allowedForms = $this->_allowedFormsForUser($user);
+        $maps = in_array($form_id, $allowedForms, true)
+            ? $this->_myMap($activeYear)
+            : collect();
 
-        return view('aktivitas.only.assessment', compact('maps', 'form_id', 'user', 'activeYear'));
+        $focusMapId = $request->integer('map_id');
+        $isFocusedAssessment = false;
+
+        if ($focusMapId) {
+            $maps = $maps->where('id', $focusMapId)->values();
+            $isFocusedAssessment = $maps->count() === 1;
+        }
+
+        return view('aktivitas.only.assessment', compact('maps', 'form_id', 'user', 'activeYear', 'focusMapId', 'isFocusedAssessment'));
+    }
+
+    private function _allowedFormsForUser($user)
+    {
+        if ($user->hasRole('dosen')) {
+            return ['2024N2', '2024N6', '2024N7'];
+        }
+
+        return ['2024N1', '2024N3', '2024N4', '2024N5', '2024N6', '2024N7'];
     }
 
     public function edit($form_id, $form_order, $map_id, Assessment $schoolassessment)
@@ -174,10 +189,17 @@ class AssessmentController extends Controller
             $query->where('subject_id', $user->subject_id);
         }
 
-        if ($isLecture && !$isTeacher) {
+        if ($user->hasRole('dosen') && !$user->hasRole('guru')) {
+            $query->where('lecture_id', $user->id);
+        } elseif ($user->hasRole('guru') && !$user->hasRole('dosen')) {
+            $query->where('teacher_id', $user->id);
+        } elseif ($isLecture && !$isTeacher) {
             $query->where('lecture_id', $user->id);
         } elseif ($isTeacher && !$isLecture) {
             $query->where('teacher_id', $user->id);
+        } elseif ($user->hasRole('dosen') && $user->hasRole('guru')) {
+            // Prefer dosen scope for users with double role so list remains consistent with dashboard card entry.
+            $query->where('lecture_id', $user->id);
         } elseif ($isLecture && $isTeacher) {
             $query->where(function ($builder) use ($user) {
                 $builder->where('lecture_id', $user->id)

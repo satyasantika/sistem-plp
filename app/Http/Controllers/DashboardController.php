@@ -57,7 +57,9 @@ class DashboardController extends Controller
             $lectureMaps = Map::forYear($activeYear)
                 ->where('subject_id', $user->subject_id)
                 ->where('lecture_id', $user->id)
+                ->whereNotNull('student_id')
                 ->with(['students', 'schools'])
+                ->orderBy('student_id')
                 ->get();
         }
 
@@ -65,7 +67,9 @@ class DashboardController extends Controller
             $teacherMaps = Map::forYear($activeYear)
                 ->where('subject_id', $user->subject_id)
                 ->where('teacher_id', $user->id)
-                ->with('students')
+                ->whereNotNull('student_id')
+                ->with(['students', 'schools'])
+                ->orderBy('student_id')
                 ->get();
         }
 
