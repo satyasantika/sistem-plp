@@ -7,19 +7,16 @@
 @endpush
 @section('content')
 <div class="main-content">
-            const appBase = @json(rtrim(url('/'), '/'))
-            const rolePermissionUrl = (jenis, id) => {
         {{ ucFirst(request()->segment(1)) }} {{ ucFirst(request()->segment(2)) }}
-                    return `${appBase}/konfigurasi/rolepermissions/${id}/edit`
     <div class="content-wrapper">
         <div class="row same-height">
-                    return `${appBase}/konfigurasi/userpermissions/${id}/edit`
                 <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">{{ ucFirst(request()->segment(1)) }} {{ ucFirst(request()->segment(2)) }}</h4>
+                    </div>
                     <div class="card-body">
-                return `${appBase}/konfigurasi/userroles/${id}/edit`
                         <div class="d-flex flex-wrap gap-2 mb-3">
                             <button type="button" class="btn btn-primary btn-sm btn-add">+ {{ request()->segment(2) }}</button>
-            const resourceBase = `${appBase}/konfigurasi/${resource}`
                                 Reload Table
                             </button>
                         </div>
