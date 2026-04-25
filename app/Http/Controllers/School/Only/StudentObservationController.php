@@ -22,9 +22,13 @@ class StudentObservationController extends Controller
     public function index()
     {
         $forms = Form::whereIn('id',['2024L1','2024L2','2024L3'])->get();
-        $map_id = Map::forActiveYear()->firstWhere('student_id', auth()->user()->id)->id;
+        $map = Map::forActiveYear()
+            ->with(['students', 'schools', 'subjects', 'lectures', 'teachers'])
+            ->firstWhere('student_id', auth()->user()->id);
 
-        return view('aktivitas.only.observation',compact('forms','map_id'));
+        $map_id = $map->id;
+
+        return view('aktivitas.only.observation', compact('forms', 'map_id', 'map'));
     }
 
     public function create($form_id)

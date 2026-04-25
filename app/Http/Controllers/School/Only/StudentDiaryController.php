@@ -20,10 +20,14 @@ class StudentDiaryController extends Controller
     public function index()
     {
         $id = auth()->user()->id;
-        $myMapId = Map::forActiveYear()->firstWhere('student_id', $id)->id;
-        $diaries = Diary::where('map_id',$myMapId)->orderBy('day_order')->get();
+        $map = Map::forActiveYear()
+            ->with(['students', 'schools', 'subjects', 'lectures', 'teachers'])
+            ->firstWhere('student_id', $id);
 
-        return view('aktivitas.only.logbook',compact('diaries'));
+        $myMapId = $map->id;
+        $diaries = Diary::where('map_id', $myMapId)->orderBy('day_order')->get();
+
+        return view('aktivitas.only.logbook', compact('diaries', 'map'));
     }
 
     public function create()
