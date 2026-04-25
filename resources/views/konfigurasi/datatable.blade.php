@@ -7,18 +7,19 @@
 @endpush
 @section('content')
 <div class="main-content">
-    <div class="title">
+            const appBase = @json(rtrim(url('/'), '/'))
+            const rolePermissionUrl = (jenis, id) => {
         {{ ucFirst(request()->segment(1)) }} {{ ucFirst(request()->segment(2)) }}
-    </div>
+                    return `${appBase}/konfigurasi/rolepermissions/${id}/edit`
     <div class="content-wrapper">
         <div class="row same-height">
-            <div class="col-md-12">
+                    return `${appBase}/konfigurasi/userpermissions/${id}/edit`
                 <div class="card">
                     <div class="card-body">
-                        @stack('import')
+                return `${appBase}/konfigurasi/userroles/${id}/edit`
                         <div class="d-flex flex-wrap gap-2 mb-3">
                             <button type="button" class="btn btn-primary btn-sm btn-add">+ {{ request()->segment(2) }}</button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm btn-reload-table" data-table-id="{{ $dataTable->getTableAttribute('id') }}">
+            const resourceBase = `${appBase}/konfigurasi/${resource}`
                                 Reload Table
                             </button>
                         </div>
@@ -261,16 +262,16 @@
 
             const rolePermissionUrl = (jenis, id) => {
                 if (jenis === 'rolepermission') {
-                    return `/konfigurasi/rolepermissions/${id}/edit`
+                    return `{{ url('konfigurasi/rolepermissions') }}/${id}/edit`
                 }
                 if (jenis === 'userpermission') {
-                    return `/konfigurasi/userpermissions/${id}/edit`
+                    return `{{ url('konfigurasi/userpermissions') }}/${id}/edit`
                 }
 
-                return `/konfigurasi/userroles/${id}/edit`
+                return `{{ url('konfigurasi/userroles') }}/${id}/edit`
             }
 
-            const resourceBase = `/konfigurasi/${resource}`
+            const resourceBase = `{{ url('konfigurasi') }}/${resource}`
 
             document.addEventListener('click', function(event) {
                 const dismissButton = event.target.closest(`${modalSelector} [data-bs-dismiss="modal"]`)
