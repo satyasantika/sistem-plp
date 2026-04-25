@@ -16,8 +16,12 @@
                     e.preventDefault();
                     const _form = this;
                     const formData = new FormData(_form);
+                    const isUpdate = !!_form.querySelector("input[name='_method'][value='PUT']");
+                    const actionType = isUpdate ? 'update' : 'create';
 
                     const url = this.getAttribute('action');
+
+                    $('.text-danger.text-small').remove();
 
                     $.ajax({
                         method: 'POST',
@@ -32,6 +36,12 @@
                             $(`#${table}`).load(document.URL + ` #${table}`);
                             const modal = getModal();
                             modal?.hide();
+
+                            if (typeof window.showOnlyAssessmentSubmitStatus === 'function') {
+                                window.showOnlyAssessmentSubmitStatus(actionType, response.message);
+                                return;
+                            }
+
                             iziToast.success({
                                 title: 'Saved!',
                                 message: response.message,
@@ -47,7 +57,14 @@
                                         .parent()
                                         .append(`<span class='text-danger text-small'>${value}</span>`);
                                 }
+                                return;
                             }
+
+                            iziToast.error({
+                                title: 'Error',
+                                message: 'Form penilaian gagal disimpan.',
+                                position: 'topRight',
+                            });
                         },
                     });
                 });

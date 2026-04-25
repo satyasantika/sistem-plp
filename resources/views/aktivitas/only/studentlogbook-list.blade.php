@@ -75,6 +75,28 @@
             transform: translateY(0);
         }
 
+        .btn-modern {
+            border-radius: 999px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            padding: 0.42rem 0.86rem;
+            border: 1px solid transparent;
+            transition: transform 0.18s ease, box-shadow 0.22s ease, filter 0.2s ease;
+        }
+
+        .btn-modern:hover,
+        .btn-modern:focus {
+            transform: translateY(-1px);
+            filter: saturate(1.08);
+        }
+
+        .btn-modern-outline {
+            border-color: rgba(74, 105, 148, 0.34);
+            color: #264063;
+            background: rgba(255, 255, 255, 0.62);
+        }
+
         .badge-modern {
             display: inline-flex;
             align-items: center;
@@ -192,6 +214,12 @@
             box-shadow: 0 10px 18px rgba(28, 191, 130, 0.32);
         }
 
+        body.dark .btn-modern-outline {
+            border-color: rgba(146, 182, 230, 0.45);
+            color: #cfe3ff;
+            background: rgba(43, 66, 103, 0.36);
+        }
+
         body.dark .badge-modern-year {
             background: rgba(76, 194, 211, 0.2);
             color: #bdebf2;
@@ -280,7 +308,7 @@
                     <div class="card-header">
                         <h5>Data Mahasiswa Pamongan
 
-                            <a href="{{ route('dashboard') }}" class="btn btn-sm btn-outline-primary btn-rounded btn-modern-back float-end">< Dashboard</a>
+                            <a href="{{ route('dashboard') }}" class="btn btn-modern btn-modern-outline float-end">Dashboard</a>
                         </h5>
                     </div>
                     <div class="card-body">
@@ -293,7 +321,7 @@
                         <div class="owner-summary-card">
                             <div class="owner-summary-top">
                                 <div>
-                                    <p class="owner-summary-title">Identitas Dosen Pamong</p>
+                                    <p class="owner-summary-title">Identitas Dosen Pembimbing Lapangan</p>
                                     <p class="owner-summary-name">{{ $user->name ?? '-' }}</p>
                                     <p class="owner-summary-meta">{{ $user->username ?? '-' }}</p>
                                 </div>

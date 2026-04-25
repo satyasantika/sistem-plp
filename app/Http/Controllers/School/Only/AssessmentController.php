@@ -23,7 +23,9 @@ class AssessmentController extends Controller
     // Rekap Penilaian
     public function index()
     {
-        $maps = $this->_myMap(Map::activeYear());
+        $user = auth()->user();
+        $activeYear = Map::activeYear($user);
+        $maps = $this->_myMap($activeYear);
 
         if (auth()->user()->hasrole('dosen'))
         {
@@ -32,7 +34,7 @@ class AssessmentController extends Controller
             $forms = ['2024N1','2024N3','2024N4','2024N5','2024N6','2024N7'];
         }
 
-        return view('aktivitas.only.assessment-resume',compact('maps','forms'));
+        return view('aktivitas.only.assessment-resume', compact('maps', 'forms', 'user', 'activeYear'));
     }
 
     public function create($form_id, $form_order, $map_id)
@@ -49,13 +51,15 @@ class AssessmentController extends Controller
         $form = Form::find($form_id);
         $grade = 0;
         for ($i=0; $i < $form->count; $i++) {
-            $score = 'score'.$i+1;
+            $score = 'score' . ($i + 1);
             $grade += $request->$score;
         }
         $final_grade = ($form->type == 'skor_4') ? round(100 * $grade/(4*$form->count),2) : $grade;
 
+        $plpOrder = $request->input('plp_order', $this->_resolvePlpOrder($map_id));
         $data = $request->merge([
             'grade' => $final_grade,
+            'plp_order' => $plpOrder,
         ]);
         Assessment::create($data->all());
 
@@ -70,9 +74,11 @@ class AssessmentController extends Controller
     // Menu Setiap Form
     public function show($form_id)
     {
-        $maps = $this->_myMap(Map::activeYear());
+        $user = auth()->user();
+        $activeYear = Map::activeYear($user);
+        $maps = $this->_myMap($activeYear);
 
-        return view('aktivitas.only.assessment',compact('maps','form_id'));
+        return view('aktivitas.only.assessment', compact('maps', 'form_id', 'user', 'activeYear'));
     }
 
     public function edit($form_id, $form_order, $map_id, Assessment $schoolassessment)
@@ -90,12 +96,13 @@ class AssessmentController extends Controller
         $form = Form::find($form_id);
         $grade = 0;
         for ($i=0; $i < $form->count; $i++) {
-            $score = 'score'.$i+1;
+            $score = 'score' . ($i + 1);
             $grade += $request->$score;
         }
 
         $final_grade = ($form->type == 'skor_4') ? round(100 * $grade/(4*$form->count),2) : $grade;
         $schoolassessment->grade = $final_grade;
+        $schoolassessment->plp_order = $request->input('plp_order', $schoolassessment->plp_order ?? $this->_resolvePlpOrder($map_id));
 
         $schoolassessment->fill($data)->save();
 
@@ -109,8 +116,11 @@ class AssessmentController extends Controller
 
     private function _dataSelection($form_id, $form_order, $map_id)
     {
+        $plpOrder = $this->_resolvePlpOrder($map_id);
+
         return [
             'form' => Form::find($form_id),
+            'map' => Map::with(['students', 'schools', 'subjects', 'lectures', 'teachers'])->find($map_id),
             'form_guides' => $this->_formByComponent($form_id,'petunjuk'),
             'form_items' => $this->_formByComponent($form_id,'item'),
             'form_extras' => $this->_formByComponent($form_id,'tambahan'),
@@ -120,8 +130,29 @@ class AssessmentController extends Controller
                 'form_id'=>$form_id,
                 'form_order' => $form_order,
                 'map_id' => $map_id,
+                'plp_order' => $plpOrder,
                 ]
         ];
+    }
+
+    private function _resolvePlpOrder($map_id)
+    {
+        $map = Map::select('id', 'plp1', 'plp2')->find($map_id);
+
+        if (!$map) {
+            return 2;
+        }
+
+        if ((int) $map->plp2 === 1) {
+            return 2;
+        }
+
+        if ((int) $map->plp1 === 1) {
+            return 1;
+        }
+
+        // Fallback default for current academic cycle.
+        return 2;
     }
 
     private function _formByComponent($form_id, $component)
@@ -131,13 +162,32 @@ class AssessmentController extends Controller
 
     private function _myMap($year)
     {
-        return  Map::where('year',$year)
-                ->where(function($query) {
-                $query->where('teacher_id',auth()->user()->id)
-                        ->orWhere('lecture_id',auth()->user()->id);
-                })
-                ->whereNotNull('student_id')
-                ->get();
+        $user = auth()->user();
+        $isLecture = $user->hasRole('dosen') || $user->can('dashboard/dosen-read');
+        $isTeacher = $user->hasRole('guru') || $user->can('dashboard/guru-read');
+
+        $query = Map::forYear($year)
+            ->whereNotNull('student_id')
+            ->with(['students', 'schools', 'subjects', 'lectures', 'teachers']);
+
+        if (!empty($user->subject_id)) {
+            $query->where('subject_id', $user->subject_id);
+        }
+
+        if ($isLecture && !$isTeacher) {
+            $query->where('lecture_id', $user->id);
+        } elseif ($isTeacher && !$isLecture) {
+            $query->where('teacher_id', $user->id);
+        } elseif ($isLecture && $isTeacher) {
+            $query->where(function ($builder) use ($user) {
+                $builder->where('lecture_id', $user->id)
+                    ->orWhere('teacher_id', $user->id);
+            });
+        } else {
+            $query->whereRaw('1 = 0');
+        }
+
+        return $query->orderBy('student_id')->get();
     }
 
     private function _yudicium($map_id)
