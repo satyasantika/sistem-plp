@@ -302,11 +302,11 @@
 				.on('click.userResetPassword', '.reset', function() {
 					const data = $(this).data()
 					const id = data.id
-					const basePath = window.location.pathname.replace(/\/+$/, '')
+					const resetPasswordUrl = @json(route('reset-password', ['id' => '__USER_ID__'])).replace('__USER_ID__', String(id))
 
 					Swal.fire({
 						title: 'Reset Password?',
-						text: 'Password user ini akan direset sehingga USERNAME = PASSWORD!',
+						text: 'Password user ini akan direset sehingga PASSWORDnya adalah nama role masing-masing!',
 						icon: 'info',
 						showCancelButton: true,
 						confirmButtonColor: '#3085d6',
@@ -319,7 +319,7 @@
 
 						$.ajax({
 							method: 'POST',
-							url: `${basePath}/password/reset/${id}`,
+							url: resetPasswordUrl,
 							headers: {
 								'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 							},
