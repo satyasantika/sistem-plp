@@ -29,7 +29,7 @@
         </div>
     </div>
     <div class="modal fade" id="modalAction" tabindex="-1" aria-labelledby="largeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
 
         </div>
     </div>
@@ -209,6 +209,11 @@
                     }
 
                     dialog.innerHTML = html
+
+                    if (typeof window.wireKonfigRolesPermissionModal === 'function') {
+                        window.wireKonfigRolesPermissionModal()
+                    }
+
                     openModal()
                 } catch (error) {
                     toastError(error.message || fallbackMessage)

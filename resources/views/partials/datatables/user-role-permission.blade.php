@@ -178,6 +178,10 @@
                     }
 
                     bindStore();
+
+                    if (typeof window.wireKonfigRolesPermissionModal === 'function') {
+                        window.wireKonfigRolesPermissionModal();
+                    }
                 },
                 error: function(response) {
                     showAjaxError(response, fallbackMessage);

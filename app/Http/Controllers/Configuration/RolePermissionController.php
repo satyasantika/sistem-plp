@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Configuration;
 
-
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Spatie\Permission\Models\Role;
+use App\Support\RolePermissionUi;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
-use DB;
+use Spatie\Permission\Models\Role;
 
 class RolePermissionController extends Controller
 {
@@ -18,13 +18,18 @@ class RolePermissionController extends Controller
 
     public function edit($id)
     {
-        $role = Role::find($id);
-        $permissions = Permission::orderBy('name')->pluck('name','id');
-        $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
-            ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
+        $role = Role::findOrFail($id);
+
+        $permissions = Permission::orderBy('name')->get(['id', 'name']);
+
+        $rolePermissions = DB::table('role_has_permissions')
+            ->where('role_has_permissions.role_id', $id)
+            ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
             ->all();
 
-        return view('konfigurasi.rolepermission-action',compact('role','permissions','rolePermissions'));
+        $permissionUi = RolePermissionUi::build($permissions, $rolePermissions);
+
+        return view('konfigurasi.rolepermission-action', compact('role', 'rolePermissions', 'permissionUi'));
     }
 
     public function update(Request $request, $id)

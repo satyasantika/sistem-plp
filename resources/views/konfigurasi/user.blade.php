@@ -15,6 +15,7 @@
 @endpush
 
 @push('jscode')
+	@include('konfigurasi.partials.role-permissions-modal-wire')
 	<script>
 		(function () {
 			const tableSelector = '#user-table'
@@ -197,6 +198,10 @@
 						}
 
 						bindFormAction()
+
+						if (typeof window.wireKonfigPermissionModal === 'function') {
+							window.wireKonfigPermissionModal()
+						}
 					},
 					error: function (response) {
 						showAjaxError(response, fallbackMessage)
@@ -480,6 +485,11 @@
 					}
 
 					dialog.innerHTML = html
+
+					if (typeof window.wireKonfigPermissionModal === 'function') {
+						window.wireKonfigPermissionModal()
+					}
+
 					openModal()
 				} catch (error) {
 					toastError(error.message || fallbackMessage)
