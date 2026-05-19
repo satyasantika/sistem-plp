@@ -7,11 +7,14 @@ use App\Models\Form;
 use App\Models\Assessment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\GuardsAssessmentDuplicates;
 use App\DataTables\AssessmentDataTable;
 use App\Http\Controllers\Controller\Map\YudisiumController;
 
 class AssessmentController extends Controller
 {
+    use GuardsAssessmentDuplicates;
+
     function __construct()
     {
         $this->middleware('permission:assessments-read', ['only' => ['index', 'show']]);
@@ -36,6 +39,10 @@ class AssessmentController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge(['assessor' => $this->normalizedAssessor($request)]);
+        if ($response = $this->assertAssessmentSlotAvailable($request)) {
+            return $response;
+        }
 
         $data = $request->merge([
             'grade' => $request->score1
@@ -69,6 +76,11 @@ class AssessmentController extends Controller
 
     public function update(Request $request, Assessment $assessment)
     {
+        $request->merge(['assessor' => $this->normalizedAssessor($request)]);
+        if ($response = $this->assertAssessmentSlotAvailable($request, $assessment)) {
+            return $response;
+        }
+
         $data = $request->all();
         $data['grade'] = $request->score1
             + $request->score2

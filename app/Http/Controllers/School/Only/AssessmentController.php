@@ -9,9 +9,12 @@ use App\Models\Assessment;
 use Illuminate\Http\Request;
 // use Illuminate\Auth\Access\Gate;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\GuardsAssessmentDuplicates;
 
 class AssessmentController extends Controller
 {
+    use GuardsAssessmentDuplicates;
+
     function __construct()
     {
         $this->middleware('permission:aktivitas/schoolassessments/plp-read', ['only' => ['index','show']]);
@@ -52,11 +55,19 @@ class AssessmentController extends Controller
         $final_grade = ($form->type == 'skor_4') ? round(100 * $grade/(4*$form->count),2) : $grade;
 
         $plpOrder = $request->input('plp_order', $this->_resolvePlpOrder($map_id));
-        $data = $request->merge([
-            'grade' => $final_grade,
+        $request->merge([
+            'map_id' => (int) $map_id,
+            'form_id' => (string) $form_id,
+            'form_order' => (int) $form_order,
             'plp_order' => $plpOrder,
+            'grade' => $final_grade,
+            'assessor' => $this->normalizedAssessor($request),
         ]);
-        Assessment::create($data->all());
+        if ($response = $this->assertAssessmentSlotAvailable($request)) {
+            return $response;
+        }
+
+        Assessment::create($request->all());
 
         $this->_yudicium($map_id);
 
@@ -118,6 +129,17 @@ class AssessmentController extends Controller
         $final_grade = ($form->type == 'skor_4') ? round(100 * $grade/(4*$form->count),2) : $grade;
         $schoolassessment->grade = $final_grade;
         $schoolassessment->plp_order = $request->input('plp_order', $schoolassessment->plp_order ?? $this->_resolvePlpOrder($map_id));
+
+        $request->merge([
+            'map_id' => (int) $map_id,
+            'form_id' => (string) $form_id,
+            'form_order' => (int) $form_order,
+            'plp_order' => $schoolassessment->plp_order,
+            'assessor' => $this->normalizedAssessor($request),
+        ]);
+        if ($response = $this->assertAssessmentSlotAvailable($request, $schoolassessment)) {
+            return $response;
+        }
 
         $schoolassessment->fill($data)->save();
 

@@ -9,9 +9,12 @@ use App\Models\Assessment;
 use Illuminate\Http\Request;
 // use Illuminate\Auth\Access\Gate;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\GuardsAssessmentDuplicates;
 
 class AssessmentController extends Controller
 {
+    use GuardsAssessmentDuplicates;
+
     function __construct()
     {
         $this->middleware('permission:aktivitas/schoolassessments/plp1-read|aktivitas/schoolassessments/plp2-read', ['only' => ['index','show']]);
@@ -49,6 +52,17 @@ class AssessmentController extends Controller
 
     public function store($plp_order, $form_id, $form_order, $map_id, Request $request)
     {
+        $request->merge([
+            'map_id' => (int) $map_id,
+            'plp_order' => (int) $plp_order,
+            'form_id' => (string) $form_id,
+            'form_order' => (int) $form_order,
+        ]);
+        $request->merge(['assessor' => $this->normalizedAssessor($request)]);
+        if ($response = $this->assertAssessmentSlotAvailable($request)) {
+            return $response;
+        }
+
         $form = Form::find($form_id);
         $grade = 0;
         for ($i=0; $i < $form->count; $i++) {
@@ -88,6 +102,17 @@ class AssessmentController extends Controller
 
     public function update($plp_order, $form_id, $form_order, $map_id, Request $request, Assessment $schoolassessment)
     {
+        $request->merge([
+            'map_id' => (int) $map_id,
+            'plp_order' => (int) $plp_order,
+            'form_id' => (string) $form_id,
+            'form_order' => (int) $form_order,
+        ]);
+        $request->merge(['assessor' => $this->normalizedAssessor($request)]);
+        if ($response = $this->assertAssessmentSlotAvailable($request, $schoolassessment)) {
+            return $response;
+        }
+
         $data = $request->all();
 
         $form = Form::find($form_id);

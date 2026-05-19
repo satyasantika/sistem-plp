@@ -6,9 +6,12 @@ use App\Models\Map;
 use App\Models\Diary;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\GuardsDiaryDuplicates;
 
 class StudentDiaryController extends Controller
 {
+    use GuardsDiaryDuplicates;
+
     function __construct()
     {
         $this->middleware('permission:aktivitas/studentdiaries/plp1-read|aktivitas/studentdiaries/plp2-read', ['only' => ['index','show']]);
@@ -41,6 +44,23 @@ class StudentDiaryController extends Controller
 
     public function store(Request $request, $plp)
     {
+        $map = Map::where('year', 2023)->firstWhere('student_id', auth()->user()->id);
+        if (! $map) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Plot mahasiswa tidak ditemukan.',
+            ], 422);
+        }
+
+        $plpOrder = (int) $plp;
+        $request->merge([
+            'map_id' => $map->id,
+            'plp_order' => $plpOrder,
+        ]);
+        if ($response = $this->assertDiaryDateUnique($request, $map, $plpOrder)) {
+            return $response;
+        }
+
         Diary::create($request->all());
         return response()->json([
             'success' => true,
@@ -61,6 +81,15 @@ class StudentDiaryController extends Controller
 
     public function update($plp, Request $request, Diary $studentdiary)
     {
+        $map = Map::findOrFail($studentdiary->map_id);
+        $plpOrder = (int) $request->input('plp_order', $plp);
+        $request->merge([
+            'plp_order' => $plpOrder,
+        ]);
+        if ($response = $this->assertDiaryDateUnique($request, $map, $plpOrder, $studentdiary)) {
+            return $response;
+        }
+
         $data = $request->all();
         $studentdiary->fill($data)->save();
 
