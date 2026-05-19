@@ -318,14 +318,31 @@
         <h1>Dashboard</h1>
         <p>Informasi Umum kegiatan PLP disajikan sebagai berikut</p>
     </div>
-    @if(auth()->user()->can('active-read') || auth()->user()->hasRole('admin'))
-        @includeWhen(auth()->user()->can('dashboard/ketua-read') || auth()->user()->hasRole('admin'),'dashboard.chairman')
-        @includeWhen(auth()->user()->can('dashboard/kajur-read'),'dashboard.departement')
-        @includeWhen(auth()->user()->can('dashboard/dosen-read'),'dashboard.lecture')
-        @includeWhen(auth()->user()->can('dashboard/mahasiswa-read'),'dashboard.student')
-        @includeWhen(auth()->user()->can('dashboard/guru-read'),'dashboard.teacher')
-        @includeWhen(auth()->user()->canAny('dashboard/kepsek-read'),'dashboard.headmaster')
-        @includeWhen(auth()->user()->can('dashboard/korguru-read'),'dashboard.teachercoordinator')
+    @php
+        $hideOperationalRolePanels = auth()->user()->hasRole('admin');
+    @endphp
+    @if (auth()->user()->can('active-read') || auth()->user()->hasRole('admin'))
+        @includeWhen(
+            auth()->user()->can('dashboard/ketua-read') || auth()->user()->hasRole('admin'),
+            'dashboard.chairman')
+        @includeWhen(
+            ! $hideOperationalRolePanels && auth()->user()->can('dashboard/kajur-read'),
+            'dashboard.departement')
+        @includeWhen(
+            ! $hideOperationalRolePanels && auth()->user()->can('dashboard/dosen-read'),
+            'dashboard.lecture')
+        @includeWhen(
+            ! $hideOperationalRolePanels && auth()->user()->can('dashboard/mahasiswa-read'),
+            'dashboard.student')
+        @includeWhen(
+            ! $hideOperationalRolePanels && auth()->user()->can('dashboard/guru-read'),
+            'dashboard.teacher')
+        @includeWhen(
+            ! $hideOperationalRolePanels && auth()->user()->can('dashboard/kepsek-read'),
+            'dashboard.headmaster')
+        @includeWhen(
+            ! $hideOperationalRolePanels && auth()->user()->can('dashboard/korguru-read'),
+            'dashboard.teachercoordinator')
     @else
         <div class="dashboard-inactive">
             Saat ini akun anda tidak aktif, silakan hubungi panitia PLP.

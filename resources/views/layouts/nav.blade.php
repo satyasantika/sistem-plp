@@ -25,8 +25,17 @@
                         </a>
                     </li>
                     @can('active-read')
-                        {{-- static MENU from config/menu.php --}}
-                        @foreach (config('menu.items', []) as $menu)
+                        @php
+                            $menuItems = config('menu.items', []);
+                            if (auth()->user()->hasRole('admin')) {
+                                $menuItems = array_values(array_filter($menuItems, function ($menu) {
+                                    return isset($menu['url'])
+                                        && str_starts_with(ltrim((string) $menu['url'], '/'), 'konfigurasi/');
+                                }));
+                            }
+                        @endphp
+                        {{-- static MENU from config/menu.php (dibatasi otomatis ke /konfigurasi untuk role admin) --}}
+                        @foreach ($menuItems as $menu)
                         @php
                             $menuAllowed = false;
                             if (isset($menu['permissions_any']) && is_array($menu['permissions_any'])) {
