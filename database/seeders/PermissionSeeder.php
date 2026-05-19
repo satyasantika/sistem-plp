@@ -220,6 +220,10 @@ class PermissionSeeder extends Seeder
             Permission::create(['name' => $permission])->syncRoles(['kepsek', 'korguru']);
         }
 
+        // Role Data: pembersihan record penilaian duplikat (/data/cleaningassessments)
+        Permission::create(['name' => 'data/cleaningassessments-read'])->assignRole('data');
+        Permission::create(['name' => 'data/cleaningassessments-delete'])->assignRole('data');
+
         // Safety net: pastikan semua permission yang dipakai menu statis tersedia.
         $menuPermissions = collect(config('menu.items', []))
             ->pluck('permission')

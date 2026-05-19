@@ -251,6 +251,12 @@ return [
             'permission' => 'data/progress/profile-read',
             'icon' => 'ti-id-badge'
         ],
+        [
+            'name' => 'Pembersihan Data Penilaian',
+            'url' => 'data/cleaningassessments',
+            'permission' => 'data/cleaningassessments-read',
+            'icon' => 'ti-alert'
+        ],
 
         // KAJUR: yudisium/progress PLP per periode
         [

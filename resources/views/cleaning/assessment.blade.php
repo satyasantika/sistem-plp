@@ -32,12 +32,9 @@
                                         @forelse ($assessments as $assessment)
                                         <tr>
                                             <td class="text-center align-top">
-                                                {{-- @can('usulan/schoolassessments-update')
-                                                <button type="button" data-id="{{ $assessment->id }}" data-jenis="edit" class="btn btn-primary btn-sm action">Edit</button>
-                                                @endcan
-                                                @can('usulan/schoolassessments-delete') --}}
+                                                @can('data/cleaningassessments-delete')
                                                 <button type="button" data-id="{{ $assessment->id }}" data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>
-                                                {{-- @endcan --}}
+                                                @endcan
                                             </td>
                                             <td>
                                                 {{ $assessment->maps->students->name }}
