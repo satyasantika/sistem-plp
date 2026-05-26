@@ -8,17 +8,21 @@
 @section('content')
 <div class="main-content">
         <h3>
-            {{ ucFirst(request()->segment(1)) }} {{ ucFirst(request()->segment(2)) }}
+            @if(!empty($datatableHeading))
+                {{ $datatableHeading }}
+            @else
+                {{ ucFirst(request()->segment(1)) }} {{ ucFirst(request()->segment(2)) }}
+            @endif
         </h3>
     <div class="content-wrapper">
         <div class="row same-height">
                 <div class="card">
                     <div class="card-body">
                         @stack('import')
+                        @stack('datatable.toolbar')
                         <div class="d-flex flex-wrap gap-2 mb-3">
-                            <button type="button" class="btn btn-primary btn-sm btn-add">+ {{ request()->segment(2) }}</button>
-                                Reload Table
-                            </button>
+                            <button type="button" class="btn btn-primary btn-sm btn-add">+ {{ $datatableAddLabel ?? request()->segment(2) }}</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-reload-table">Reload table</button>
                         </div>
                         <div class="table-responsive">
                         {{ $dataTable->table(['class' => 'display nowrap']) }}
@@ -273,7 +277,7 @@
                 return `{{ url('konfigurasi/userroles') }}/${id}/edit`
             }
 
-            const resourceBase = `{{ url('konfigurasi') }}/${resource}`
+            const resourceBase = {!! json_encode($datatableResourceBase ?? null) !!} || `{{ url('konfigurasi') }}/${resource}`
 
             document.addEventListener('click', function(event) {
                 const dismissButton = event.target.closest(`${modalSelector} [data-bs-dismiss="modal"]`)

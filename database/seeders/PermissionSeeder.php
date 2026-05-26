@@ -71,7 +71,7 @@ class PermissionSeeder extends Seeder
             ['school user proposal', 'konfigurasi/schooluserproposals'],
             ['map', 'konfigurasi/maps'],
             ['form', 'konfigurasi/forms'],
-            ['form item', 'konfigurasi/formitems'],
+            ['form item', 'forms.items'],
             ['assessment', 'konfigurasi/assessments'],
             ['observation', 'konfigurasi/observations'],
             ['diary', 'konfigurasi/diaries'],

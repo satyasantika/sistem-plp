@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Form;
+use App\Models\FormItem;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -27,6 +29,18 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->configureRateLimiting();
+
+        Route::bind('formItem', function (string $value, \Illuminate\Routing\Route $route): FormItem {
+            $form = $route->parameter('form');
+            if (! $form instanceof Form) {
+                abort(404);
+            }
+
+            return FormItem::query()
+                ->where('form_id', $form->getKey())
+                ->whereKey($value)
+                ->firstOrFail();
+        });
 
         $this->routes(function () {
             Route::middleware('api')

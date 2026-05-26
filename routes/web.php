@@ -63,8 +63,16 @@ Route::middleware('auth')->group(function () {
     Route::resource('konfigurasi/schooluserproposals', App\Http\Controllers\Configuration\SchoolUserProposalController::class)->except('show');
     Route::resource('konfigurasi/maps', App\Http\Controllers\Configuration\MapController::class)->except('show');
     Route::resource('konfigurasi/diaries', App\Http\Controllers\Configuration\DiaryController::class)->except('show');
+    Route::prefix('konfigurasi/forms/{form}')->controller(App\Http\Controllers\Configuration\FormItemController::class)->name('forms.items.')->group(function () {
+        Route::get('items/create', 'create')->name('create');
+        Route::get('items', 'index')->name('index');
+        Route::post('items/reorder', 'reorder')->name('reorder');
+        Route::post('items', 'store')->name('store');
+        Route::get('items/{formItem}/edit', 'edit')->name('edit');
+        Route::put('items/{formItem}', 'update')->name('update');
+        Route::delete('items/{formItem}', 'destroy')->name('destroy');
+    });
     Route::resource('konfigurasi/forms', App\Http\Controllers\Configuration\FormController::class)->except('show');
-    Route::resource('konfigurasi/formitems', App\Http\Controllers\Configuration\FormItemController::class)->except('show');
     Route::resource('konfigurasi/assessments', App\Http\Controllers\Configuration\AssessmentController::class)->except('show');
     Route::resource('konfigurasi/observations', App\Http\Controllers\Configuration\ObservationController::class)->except('show');
     Route::resource('data/cleaningassessments', App\Http\Controllers\School\CleaningAssessmentController::class)->only(['index', 'destroy']);

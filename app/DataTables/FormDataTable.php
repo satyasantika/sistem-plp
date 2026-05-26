@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Services\DataTable;
 
 class FormDataTable extends DataTable
@@ -21,8 +20,13 @@ class FormDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', function($row){
+            ->addColumn('action', function ($row) {
                 $action = '';
+
+                if (auth()->user()?->can('formitems-read')) {
+                    $action .= ' <a href="'.e(route('forms.items.index', $row->getKey())).'" class="btn btn-info btn-sm my-1" title="Kelola item"><i class="ti-list"></i></a>';
+                }
+
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="edit" class="btn btn-primary btn-sm my-1 action"><i class="ti-pencil"></i></button>';
 
                 $isUsedInOtherTables =
@@ -33,6 +37,7 @@ class FormDataTable extends DataTable
                 if (!$isUsedInOtherTables) {
                     $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm my-1 action"><i class="ti-trash"></i></button>';
                 }
+
                 return $action;
             })
             ->setRowId('id');
@@ -41,12 +46,11 @@ class FormDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Form $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Form $model): QueryBuilder
+    public function query(): QueryBuilder
     {
-        return $model->newQuery()->withCount([
+        return Form::query()->withCount([
             'formItems',
             'assessments',
             'observations',
@@ -70,7 +74,7 @@ class FormDataTable extends DataTable
     /**
      * Get columns.
      *
-     * @return array
+     * @return array<int, Column>
      */
     protected function getColumns(): array
     {
@@ -79,7 +83,7 @@ class FormDataTable extends DataTable
                     ->title('')
                     ->exportable(false)
                     ->printable(false)
-                    ->width(60)
+                    ->width(96)
                     ->addClass('text-center'),
             Column::make('id'),
             Column::make('name'),
@@ -96,6 +100,6 @@ class FormDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Form_' . date('YmdHis');
+        return 'Form_'.date('YmdHis');
     }
 }

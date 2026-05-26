@@ -46,12 +46,6 @@ return [
             'icon' => 'ti-layout-list-thumb'
         ],
         [
-            'name' => 'Form Items',
-            'url' => 'konfigurasi/formitems',
-            'permission' => 'formitems-read',
-            'icon' => 'ti-list'
-        ],
-        [
             'name' => 'Assessments',
             'url' => 'konfigurasi/assessments',
             'permission' => 'assessments-read',
