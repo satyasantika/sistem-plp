@@ -57,6 +57,12 @@ return [
             'permission' => 'observations-read',
             'icon' => 'ti-eye'
         ],
+        [
+            'name' => 'Diaries',
+            'url' => 'konfigurasi/diaries',
+            'permission' => 'diaries-read',
+            'icon' => 'ti-agenda'
+        ],
 
         // KEPSEK/KORGURU: usulan sekolah
         [
