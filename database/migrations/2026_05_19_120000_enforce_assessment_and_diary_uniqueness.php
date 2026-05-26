@@ -112,12 +112,18 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // MySQL/InnoDB dapat memakai indeks komposit sebagai indeks bagi FK kolom pertama
+        // (mis. map_id), sehingga unique harus di-drop setelah FK ke map_id dicabut.
         Schema::table('diaries', function (Blueprint $table): void {
+            $table->dropForeign(['map_id']);
             $table->dropUnique('diaries_map_plp_log_date_unique');
+            $table->foreign('map_id')->references('id')->on('maps');
         });
 
         Schema::table('assessments', function (Blueprint $table): void {
+            $table->dropForeign(['map_id']);
             $table->dropUnique('assessments_map_plp_form_slot_assessor_unique');
+            $table->foreign('map_id')->references('id')->on('maps');
         });
     }
 };
