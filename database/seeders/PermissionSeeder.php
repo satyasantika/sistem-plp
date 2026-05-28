@@ -122,6 +122,7 @@ class PermissionSeeder extends Seeder
         }
 
         $kajur_access = [
+            ['Yudisium PLP', 'yudisium/plp'],
             ['Yudisium PLP 1', 'yudisium/plp1'],
             ['Yudisium PLP 2', 'yudisium/plp2'],
         ];
@@ -224,6 +225,21 @@ class PermissionSeeder extends Seeder
         // Role Data: pembersihan record penilaian duplikat (/data/cleaningassessments)
         Permission::create(['name' => 'data/cleaningassessments-read'])->assignRole('data');
         Permission::create(['name' => 'data/cleaningassessments-delete'])->assignRole('data');
+
+        $progress_access = [
+            ['Progress PLP', 'data/progress/plp'],
+            ['Progress PLP 1', 'data/progress/plp1'],
+            ['Progress PLP 2', 'data/progress/plp2'],
+        ];
+        $permissions = [];
+        foreach ($progress_access as $value1) {
+            foreach ($action as $value2) {
+                array_push($permissions, $value1[1].'-'.$value2);
+            }
+        }
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission])->assignRole('data');
+        }
 
         // Safety net: pastikan semua permission yang dipakai menu statis tersedia.
         $menuPermissions = collect(config('menu.items', []))

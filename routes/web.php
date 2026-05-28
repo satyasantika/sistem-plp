@@ -168,14 +168,21 @@ Route::middleware('auth')->group(function () {
             return view('report.profile');
         })->middleware('permission:data/progress/profile-read');
         Route::get('yudisium/plp{plp_order}', [App\Http\Controllers\Report\YudisiumReportController::class, 'show'])
-            ->middleware('permission:yudisium/plp1-read|yudisium/plp2-read');
+            ->where('plp_order', '[0-2]')
+            ->middleware('permission:yudisium/plp-read|yudisium/plp1-read|yudisium/plp2-read');
         Route::get('data/progress/plp{plp_order}', [App\Http\Controllers\Report\ProgressReportController::class, 'show'])
-            ->middleware('permission:data/progress/plp1-read|data/progress/plp2-read');
+            ->where('plp_order', '[0-2]')
+            ->middleware('permission:data/progress/plp-read|data/progress/plp1-read|data/progress/plp2-read');
         //NEW
         Route::get('report/summary/plp', function () {
             return view('report.only.summary');
         })->middleware('permission:report/summary/plp-read');
         Route::get('aktivitas/reportprint/plp', [App\Http\Controllers\School\Only\ReportPrintController::class, 'generateCover'])->name('only.generateCover');
+        Route::post('yudisium/plp/recalculate-grades', [App\Http\Controllers\Report\YudisiumReportController::class, 'recalculateGrades'])
+            ->name('yudisium.only.recalculate-grades')
+            ->middleware('role:kajur');
+        Route::get('yudisium/plp/tab', [App\Http\Controllers\Report\YudisiumReportController::class, 'loadTab'])
+            ->middleware('permission:yudisium/plp-read|yudisium/plp1-read|yudisium/plp2-read');
         Route::get('yudisium/plp', [App\Http\Controllers\Report\YudisiumReportController::class, 'showOnly'])
             ->middleware('permission:yudisium/plp-read|yudisium/plp1-read|yudisium/plp2-read');
         Route::get('data/progress/plp', [App\Http\Controllers\Report\ProgressReportController::class, 'showOnly'])

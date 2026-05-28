@@ -3,11 +3,11 @@
         <div class="col-auto">
             <div class="card">
                 <div class="card-header">
-                    <h5>Rekap Hasil Penilaian PLP</h5>
+                    <h5>Rekap Hasil Penilaian {{ $plp_label ?? 'PLP' }}</h5>
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive yudisium-table-wrap">
-                        <table id="{{ $tableId ?? 'yudisium-only-dekanat-table' }}" class="table small-font table-striped table-hover table-sm yudisium-table js-yudisium-table">
+                    <div class="yudisium-datatable-shell">
+                        <table id="{{ $tableId ?? 'yudisium-only-dekanat-table' }}" class="table small-font table-striped table-hover table-sm yudisium-table js-yudisium-table w-100">
                             @php
                                 $letters = $dekanatSummary['letters'];
                             @endphp

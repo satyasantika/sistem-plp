@@ -260,61 +260,56 @@
         Progress Penilaian PLP {{ $activeYear }}
     </div>
     <div class="content-wrapper">
-        @if($useLegacyTabs && count($legacyTabs) > 0)
-            <ul class="nav nav-tabs progress-tabs mb-3" id="progressTabs" role="tablist">
-                @foreach($legacyTabs as $tab)
-                    <li class="nav-item" role="presentation">
-                        <button
-                            class="nav-link {{ $activeLegacyTab === $tab['key'] ? 'active' : '' }}"
-                            id="tab-{{ $tab['key'] }}"
-                            data-bs-toggle="tab"
-                            data-bs-target="#content-{{ $tab['key'] }}"
-                            type="button"
-                            role="tab"
-                            aria-controls="content-{{ $tab['key'] }}"
-                            aria-selected="{{ $activeLegacyTab === $tab['key'] ? 'true' : 'false' }}"
-                        >
-                            {{ $tab['label'] }}
-                        </button>
-                    </li>
-                @endforeach
-            </ul>
+        @if(count($plpTabs) > 0)
+            @if(count($plpTabs) > 1)
+                <ul class="nav nav-tabs progress-tabs mb-3" id="progressTabs" role="tablist">
+                    @foreach($plpTabs as $tab)
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link {{ $activeTab === $tab['key'] ? 'active' : '' }}"
+                                id="tab-{{ $tab['key'] }}"
+                                data-bs-toggle="tab"
+                                data-bs-target="#content-{{ $tab['key'] }}"
+                                type="button"
+                                role="tab"
+                                aria-controls="content-{{ $tab['key'] }}"
+                                aria-selected="{{ $activeTab === $tab['key'] ? 'true' : 'false' }}"
+                            >
+                                {{ $tab['label'] }}
+                            </button>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
 
             <div class="tab-content" id="progressTabsContent">
-                @foreach($legacyTabs as $tab)
+                @foreach($plpTabs as $tab)
                     <div
-                        class="tab-pane fade {{ $activeLegacyTab === $tab['key'] ? 'show active' : '' }}"
+                        class="tab-pane fade {{ ($activeTab === $tab['key'] || count($plpTabs) === 1) ? 'show active' : '' }}"
                         id="content-{{ $tab['key'] }}"
                         role="tabpanel"
                         aria-labelledby="tab-{{ $tab['key'] }}"
                     >
                         <div class="row">
-                            @includeWhen(auth()->user()->hasAnyRole('data','kajur'), 'report.assessment-result-departement', [
-                                'plp_order' => $tab['plp_order'],
-                                'departmentData' => $tab['departmentData'],
-                            ])
-                            @if($tab['plp_order'] === 2)
-                                @can('plp2-read')
-                                    @includeWhen(auth()->user()->hasAnyRole('kepsek','korguru','data'), 'report.assessment-result-school', [
-                                        'plp_order' => 2,
-                                        'schoolData' => $tab['schoolData'],
-                                    ])
-                                @endcan
-                            @endif
+                            @includeWhen(
+                                auth()->user()->hasAnyRole('data','kajur') && !empty($tab['departmentData']),
+                                $useLegacyTabs ? 'report.assessment-result-departement' : 'report.only.assessment-result-departement',
+                                ['plp_order' => $tab['plp_order'], 'departmentData' => $tab['departmentData']]
+                            )
+
+                            @includeWhen(
+                                auth()->user()->hasAnyRole('kepsek','korguru','data') && !empty($tab['hasSchool']),
+                                $useLegacyTabs ? 'report.assessment-result-school' : 'report.only.assessment-result-school',
+                                ['plp_order' => $tab['plp_order'], 'schoolData' => $tab['schoolData']]
+                            )
                         </div>
                     </div>
                 @endforeach
             </div>
         @else
-            <div class="row">
-                @includeWhen(auth()->user()->hasAnyRole('data','kajur'), 'report.only.assessment-result-departement', [
-                    'departmentData' => $departmentData,
-                ])
-                @can('plp2-read')
-                    @includeWhen(auth()->user()->hasAnyRole('kepsek','korguru','data'), 'report.only.assessment-result-school', [
-                        'schoolData' => $schoolData,
-                    ])
-                @endcan
+            <div class="alert alert-info mt-3">
+                Belum ada data progress penilaian PLP untuk tahun {{ $activeYear }}.
+                Pastikan Sebaran Form sudah diatur dan ada mahasiswa yang ikut PLP pada tahun ini.
             </div>
         @endif
     </div>
