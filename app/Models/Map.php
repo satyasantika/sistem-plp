@@ -111,14 +111,15 @@ class Map extends Model
         return 2;
     }
 
-    /** Sesi PLP untuk query/simpan assessment menurut bucket tampilan (0 = ringkas, pakai sesi efektif map). */
+    /**
+     * Nilai plp_order pada assessment = bucket tampilan (0 = PLP, 1 = PLP 1, 2 = PLP 2),
+     * selaras dengan Sebaran Form dan parameter ?plp= pada halaman penilaian.
+     */
     public function assessmentPlpOrderForBucket(int $bucketPlpOrder): int
     {
-        if ($bucketPlpOrder === 1 || $bucketPlpOrder === 2) {
-            return $bucketPlpOrder;
-        }
-
-        return $this->resolvedAssessmentPlpOrder();
+        return in_array($bucketPlpOrder, [0, 1, 2], true)
+            ? $bucketPlpOrder
+            : $this->resolvedAssessmentPlpOrder();
     }
 
     public function scopeForYear(Builder $query, int $year): Builder

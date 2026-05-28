@@ -142,7 +142,7 @@ class AssessmentController extends Controller
 
         return view('aktivitas.only.assessment-action', array_merge(
             ['schoolassessment' => $schoolassessment],
-            $this->_dataSelection($form_id, $form_order, $map_id, $this->bucketPlpFromRequest($request))
+            $this->_dataSelection($form_id, $form_order, $map_id, $this->resolveBucketForAssessment($request, $form_id, (int) $map_id))
         ));
     }
 
@@ -156,7 +156,7 @@ class AssessmentController extends Controller
         }
         $final_grade = ($form->type == 'skor_4') ? round(100 * $grade/(4*$form->count),2) : $grade;
 
-        $plpOrder = $request->input('plp_order', $this->_resolvePlpOrder($map_id));
+        $plpOrder = $this->resolveStoragePlpOrder($request, $form_id, (int) $map_id);
         $request->merge([
             'map_id' => (int) $map_id,
             'form_id' => (string) $form_id,
@@ -174,7 +174,7 @@ class AssessmentController extends Controller
 
         Assessment::create($request->all());
 
-        $this->refreshMapGrades((int) $map_id, (int) $request->input('plp_order', $this->_resolvePlpOrder($map_id)));
+        $this->refreshMapGrades((int) $map_id, $plpOrder);
 
         return response()->json([
             'success' => true,
@@ -337,7 +337,7 @@ class AssessmentController extends Controller
 
     public function edit($form_id, $form_order, $map_id, Assessment $schoolassessment, Request $request)
     {
-        $bucket = $this->bucketPlpFromRequest($request) ?? (int) $schoolassessment->plp_order;
+        $bucket = $this->resolveBucketForAssessment($request, $form_id, (int) $map_id, $schoolassessment);
 
         return view('aktivitas.only.assessment-action', array_merge(
             ['schoolassessment' => $schoolassessment],
@@ -358,7 +358,7 @@ class AssessmentController extends Controller
 
         $final_grade = ($form->type == 'skor_4') ? round(100 * $grade/(4*$form->count),2) : $grade;
         $schoolassessment->grade = $final_grade;
-        $schoolassessment->plp_order = $request->input('plp_order', $schoolassessment->plp_order ?? $this->_resolvePlpOrder($map_id));
+        $schoolassessment->plp_order = $this->resolveStoragePlpOrder($request, $form_id, (int) $map_id, $schoolassessment);
 
         $request->merge([
             'map_id' => (int) $map_id,
@@ -396,35 +396,74 @@ class AssessmentController extends Controller
     }
 
     /**
-     * plp_order yang disimpan di assessment: bucket 1/2 eksplisit; bucket 0 (PLP ringkas) = sesi efektif per map.
+     * plp_order yang disimpan di assessment = bucket PLP dari tampilan (0/1/2).
      */
-    private function storagePlpOrderForMap(Map $map, ?int $bucketPlpOrder): int
+    private function storagePlpOrderForMap(Map $map, int $bucketPlpOrder): int
     {
-        if ($bucketPlpOrder === null) {
-            return $map->resolvedAssessmentPlpOrder();
+        return $map->assessmentPlpOrderForBucket($bucketPlpOrder);
+    }
+
+    private function resolveBucketForAssessment(
+        Request $request,
+        string $formId,
+        int $mapId,
+        ?Assessment $existing = null
+    ): int {
+        $bucket = $this->_resolveBucketFromRequest(
+            $request,
+            $formId,
+            $this->normalizedAssessor($request),
+            (int) Map::activeYear()
+        );
+
+        if ($bucket !== null) {
+            return $bucket;
         }
 
-        return $map->assessmentPlpOrderForBucket($bucketPlpOrder);
+        if ($existing !== null && in_array((int) $existing->plp_order, [0, 1, 2], true)) {
+            return (int) $existing->plp_order;
+        }
+
+        $map = Map::find($mapId);
+        if ($map instanceof Map) {
+            return $this->_inferBucketForMapAndForm(
+                $map,
+                $formId,
+                $this->_assessorForUser(auth()->user()),
+                (int) Map::activeYear()
+            );
+        }
+
+        return 0;
+    }
+
+    private function resolveStoragePlpOrder(
+        Request $request,
+        string $formId,
+        int $mapId,
+        ?Assessment $existing = null
+    ): int {
+        $map = Map::find($mapId);
+        if (! $map instanceof Map) {
+            return 0;
+        }
+
+        $bucket = $this->resolveBucketForAssessment($request, $formId, $mapId, $existing);
+
+        return $this->storagePlpOrderForMap($map, $bucket);
     }
 
     private function _dataSelection($form_id, $form_order, $map_id, ?int $bucketPlpOrder = null)
     {
         $map = Map::with(['students', 'schools', 'subjects', 'lectures', 'teachers'])->find($map_id);
-        $plpOrder = $map
-            ? $this->storagePlpOrderForMap($map, $bucketPlpOrder)
-            : 2;
         $user = auth()->user();
         $activeYear = Map::activeYear($user);
         $assessorRole = $this->_assessorForUser($user);
-        $bucket = $bucketPlpOrder;
-        if ($bucket === null && $map instanceof Map) {
-            $bucket = $this->_inferBucketForMapAndForm($map, $form_id, $assessorRole, $activeYear);
-        }
-        $bucket ??= 0;
+        $bucket = $bucketPlpOrder ?? 0;
+        $plpOrder = $map
+            ? $this->storagePlpOrderForMap($map, $bucket)
+            : $bucket;
         $ruleTimes = $this->_formRuleTimes($form_id, $assessorRole, $activeYear, $bucket) ?? 1;
-        if ($bucketPlpOrder === null) {
-            $bucketPlpOrder = $bucket;
-        }
 
         return [
             'form' => Form::find($form_id),

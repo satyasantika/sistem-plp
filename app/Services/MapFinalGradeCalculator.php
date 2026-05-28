@@ -87,7 +87,7 @@ final class MapFinalGradeCalculator
         $year = (int) ($map->year ?? 0);
 
         if (PlpFinalGradeFormRule::query()->forYear($year)->where('plp_order', 0)->exists()) {
-            $this->applyCombinedFromPlpBucketRules($map, $resolved, 0);
+            $this->applyCombinedFromPlpBucketRules($map, 0, 0);
 
             $map->save();
 
@@ -112,7 +112,7 @@ final class MapFinalGradeCalculator
 
     /**
      * Nilai gabungan (grade / letter) dari aturan plp_bucket (biasanya 0 = "PLP"),
-     * dengan summing assessments pada sesi PLP efektif $assessmentPlpOrder.
+     * dengan summing assessments yang plp_order = $assessmentPlpOrder (biasanya sama dengan $plpBucket).
      */
     protected function applyCombinedFromPlpBucketRules(Map $map, int $assessmentPlpOrder, int $plpBucket): void
     {

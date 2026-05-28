@@ -286,9 +286,7 @@ class DashboardController extends Controller
                     continue;
                 }
 
-                $lookupPlpOrder = (int) $plpOrder === 0
-                    ? $map->resolvedAssessmentPlpOrder()
-                    : (int) $plpOrder;
+                $lookupPlpOrder = (int) $plpOrder;
 
                 $lookup = $mapAssessments
                     ->filter(fn ($a) => (int) $a->plp_order === $lookupPlpOrder)

@@ -286,11 +286,8 @@
                 <input type="hidden" value="{{ $parameters['form_id'] }}" name="form_id" class="form-control" id="form_id" >
                 <input type="hidden" value="{{ $parameters['form_order'] }}" name="form_order" class="form-control" id="form_order" >
                 <input type="hidden" value="{{ $parameters['map_id'] }}" name="map_id" class="form-control" id="map_id" >
-                <input type="hidden" value="{{ $parameters['plp_order'] ?? 2 }}" name="plp_order" class="form-control" id="plp_order" >
+                <input type="hidden" name="plp_bucket" value="{{ $bucketPlpOrder ?? 0 }}">
                 <input type="hidden" value="{{ $assessorRole ?? 'dosen' }}" name="assessor" class="form-control" id="assessor" >
-                @if (isset($bucketPlpOrder) && $bucketPlpOrder !== null)
-                    <input type="hidden" name="plp_bucket" value="{{ $bucketPlpOrder }}">
-                @endif
                 <p class="guide-title">Petunjuk</p>
                 <div class="col-md-12">
                     <div class="mb-3">
