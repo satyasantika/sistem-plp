@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Report;
 
+use App\Exports\ExportYudisiumJurusan;
 use App\Http\Controllers\Controller;
 use App\Models\Map;
 use App\Services\MapFinalGradeCalculator;
 use App\Services\YudisiumReportService;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class YudisiumReportController extends Controller
 {
@@ -102,6 +105,47 @@ class YudisiumReportController extends Controller
             'plpTabs' => $plpTabs,
             'activeTab' => $activeTab,
         ]);
+    }
+
+    public function exportXlsx(Request $request): BinaryFileResponse
+    {
+        $user = auth()->user();
+
+        if (! $user->hasRole('kajur')) {
+            abort(403, 'Hanya kajur yang dapat mengunduh rekap yudisium jurusan.');
+        }
+
+        $subjectId = (string) ($user->subject_id ?? '');
+        if ($subjectId === '') {
+            abort(422, 'Akun kajur belum memiliki jurusan (subject) yang terhubung.');
+        }
+
+        $activeYear = (int) Map::activeYear($user);
+        $useLegacyTabs = $this->usesLegacyTabs($activeYear, $user);
+        $tabStubs = $this->collectTabStubs($activeYear, $user, $useLegacyTabs);
+        $tabKey = $this->resolveActiveTabKey($tabStubs, (string) $request->query('tab', ''));
+
+        if ($tabKey === null) {
+            abort(404, 'Tab yudisium tidak ditemukan.');
+        }
+
+        $bucket = $this->tabKeyToBucket($tabKey);
+        if ($bucket === null) {
+            abort(404, 'Tab yudisium tidak valid.');
+        }
+
+        $jurusanData = $useLegacyTabs
+            ? $this->service->getJurusanRows($activeYear, $subjectId, $bucket)
+            : $this->service->getBucketJurusanRows($activeYear, $subjectId, $bucket);
+
+        $label = Map::plpBucketLabel($bucket);
+        $safeLabel = preg_replace('/[^a-zA-Z0-9_-]+/', '-', $label) ?: 'plp';
+        $fileName = sprintf('yudisium-%s-%d-%s.xlsx', $safeLabel, $activeYear, date('YmdHis'));
+
+        return Excel::download(
+            new ExportYudisiumJurusan($jurusanData['rows']),
+            $fileName
+        );
     }
 
     public function loadTab(Request $request)
@@ -294,6 +338,15 @@ class YudisiumReportController extends Controller
             'teacherForms' => $jurusanData['teacherForms'],
             'gradeRecap' => $jurusanData['gradeRecap'] ?? null,
         ];
+    }
+
+    private function tabKeyToBucket(string $tabKey): ?int
+    {
+        if (! preg_match('/^plp([0-2])$/', $tabKey, $matches)) {
+            return null;
+        }
+
+        return (int) $matches[1];
     }
 
     private function userCanViewBucket($user, int $bucket): bool

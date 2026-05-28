@@ -8,13 +8,24 @@
         <span>Yudisium PLP {{ $activeYear }}</span>
         @role('kajur')
             @if(count($plpTabs) > 0)
-                <button type="button"
-                        id="btn-yudisium-recalculate-grades"
-                        class="btn btn-sm btn-outline-primary"
-                        data-url="{{ route('yudisium.only.recalculate-grades', array_filter(['tab' => $activeTab])) }}"
-                        title="Hitung ulang nilai akhir semua mahasiswa jurusan pada tahun {{ $activeYear }}">
-                    Hitung ulang nilai
-                </button>
+                <div class="d-flex flex-wrap gap-2">
+                    <a
+                        id="btn-yudisium-export-xlsx"
+                        href="{{ route('yudisium.plp.export', array_filter(['tab' => $activeTab])) }}"
+                        class="btn btn-sm btn-outline-success"
+                        data-export-base="{{ route('yudisium.plp.export') }}"
+                        title="Unduh NIM, nama, nilai akhir, dan huruf untuk tab aktif"
+                    >
+                        Download XLSX
+                    </a>
+                    <button type="button"
+                            id="btn-yudisium-recalculate-grades"
+                            class="btn btn-sm btn-outline-primary"
+                            data-url="{{ route('yudisium.only.recalculate-grades', array_filter(['tab' => $activeTab])) }}"
+                            title="Hitung ulang nilai akhir semua mahasiswa jurusan pada tahun {{ $activeYear }}">
+                        Hitung ulang nilai
+                    </button>
+                </div>
             @endif
         @endrole
     </div>
@@ -79,6 +90,19 @@
     <script src="{{ asset('') }}vendor/izitoast/dist/js/iziToast.min.js"></script>
     <script>
         (function () {
+            const exportBtn = document.getElementById('btn-yudisium-export-xlsx');
+            if (exportBtn) {
+                const baseUrl = exportBtn.getAttribute('data-export-base') || exportBtn.href.split('?')[0];
+                document.querySelectorAll('#yudisiumTabs [data-bs-toggle="tab"]').forEach(function (tabBtn) {
+                    tabBtn.addEventListener('shown.bs.tab', function () {
+                        const tabKey = (tabBtn.id || '').replace(/^tab-/, '');
+                        if (tabKey) {
+                            exportBtn.href = baseUrl + '?tab=' + encodeURIComponent(tabKey);
+                        }
+                    });
+                });
+            }
+
             const btn = document.getElementById('btn-yudisium-recalculate-grades');
             if (!btn) {
                 return;

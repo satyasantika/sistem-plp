@@ -181,6 +181,9 @@ Route::middleware('auth')->group(function () {
         Route::post('yudisium/plp/recalculate-grades', [App\Http\Controllers\Report\YudisiumReportController::class, 'recalculateGrades'])
             ->name('yudisium.only.recalculate-grades')
             ->middleware('role:kajur');
+        Route::get('yudisium/plp/export', [App\Http\Controllers\Report\YudisiumReportController::class, 'exportXlsx'])
+            ->name('yudisium.plp.export')
+            ->middleware('role:kajur');
         Route::get('yudisium/plp/tab', [App\Http\Controllers\Report\YudisiumReportController::class, 'loadTab'])
             ->middleware('permission:yudisium/plp-read|yudisium/plp1-read|yudisium/plp2-read');
         Route::get('yudisium/plp', [App\Http\Controllers\Report\YudisiumReportController::class, 'showOnly'])

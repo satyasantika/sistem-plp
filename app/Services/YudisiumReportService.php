@@ -291,7 +291,7 @@ class YudisiumReportService
             ->orderBy('students_order.name')
             ->select('maps.*')
             ->with([
-                'students:id,name',
+                'students:id,name,username',
                 'lectures:id,name',
                 'teachers:id,name',
             ]);
@@ -370,6 +370,7 @@ class YudisiumReportService
             $gradeMeta = $this->buildGradeDisplayMeta($grade, $letter, $filledSlots, $requiredSlots);
 
             $rows[] = [
+                'student_nim' => $map->students->username ?? '',
                 'student_name' => $map->students->name ?? '',
                 'lecture_name' => $map->lectures->name ?? '',
                 'teacher_name' => $map->teachers->name ?? 'belum diset',
