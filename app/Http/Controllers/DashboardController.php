@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Assessment;
 use App\Models\Form;
 use App\Models\Map;
+use App\Models\PlpFinalGradeFormRule;
 use App\Models\School;
 use Illuminate\Support\Facades\DB;
 
@@ -25,8 +26,12 @@ class DashboardController extends Controller
         $studentSchoolmates = collect();
         $lectureMaps = collect();
         $lectureMapBadges = [];
+        $lecturePlpSections = [];
+        $lectureActivePlps = [];
         $teacherMaps = collect();
         $teacherMapBadges = [];
+        $teacherPlpSections = [];
+        $teacherActivePlps = [];
         $headmasterSchools = collect();
         $teacherCoordinatorSchools = collect();
         $departementSchoolSummaries = collect();
@@ -72,8 +77,7 @@ class DashboardController extends Controller
         }
 
         if ($user->can('dashboard/dosen-read')) {
-            $lectureForms = ['2024N2', '2024N6', '2024N7'];
-            $lectureFormDefs = $this->buildAssessmentFormDefinitions($lectureForms);
+            $lecturePlpSections = $this->buildPlpSectionsForAssessor($activeYear, 'dosen');
 
             $lectureMaps = Map::forYear($activeYear)
                 ->where('subject_id', $user->subject_id)
@@ -84,28 +88,12 @@ class DashboardController extends Controller
                 ->orderBy('student_id')
                 ->get();
 
-            $mapIds = $lectureMaps->pluck('id');
-            $lectureAssessments = Assessment::whereIn('map_id', $mapIds)
-                ->where('assessor', 'dosen')
-                ->whereIn('form_id', $lectureForms)
-                ->get(['map_id', 'form_id', 'form_order'])
-                ->groupBy('map_id');
-
-            foreach ($lectureMaps as $map) {
-                $lookup = ($lectureAssessments->get($map->id) ?? collect())
-                    ->keyBy(fn($a) => $a->form_id . ':' . $a->form_order);
-                $lectureMapBadges[$map->id] = collect($lectureFormDefs)->map(function ($def) use ($lookup) {
-                    return [
-                        'code' => $def['code'],
-                        'done' => $lookup->has($def['form_id'] . ':' . $def['form_order']),
-                    ];
-                })->values()->all();
-            }
+            $lectureMapBadges = $this->buildMapBadgesForAssessor($lectureMaps, $lecturePlpSections, 'dosen');
+            $lectureActivePlps = $this->resolveActivePlps($lectureMaps, $lecturePlpSections);
         }
 
         if ($user->can('dashboard/guru-read')) {
-            $teacherForms = ['2024N1', '2024N3', '2024N4', '2024N5', '2024N6', '2024N7'];
-            $teacherFormDefs = $this->buildAssessmentFormDefinitions($teacherForms);
+            $teacherPlpSections = $this->buildPlpSectionsForAssessor($activeYear, 'guru');
 
             $teacherMaps = Map::forYear($activeYear)
                 ->where('subject_id', $user->subject_id)
@@ -116,24 +104,8 @@ class DashboardController extends Controller
                 ->orderBy('student_id')
                 ->get();
 
-            $mapIds = $teacherMaps->pluck('id');
-            $teacherAssessments = Assessment::whereIn('map_id', $mapIds)
-                ->where('assessor', 'guru')
-                ->whereIn('form_id', $teacherForms)
-                ->get(['map_id', 'form_id', 'form_order'])
-                ->groupBy('map_id');
-
-            foreach ($teacherMaps as $map) {
-                $lookup = ($teacherAssessments->get($map->id) ?? collect())
-                    ->keyBy(fn($a) => $a->form_id . ':' . $a->form_order);
-
-                $teacherMapBadges[$map->id] = collect($teacherFormDefs)->map(function ($def) use ($lookup) {
-                    return [
-                        'code' => $def['code'],
-                        'done' => $lookup->has($def['form_id'] . ':' . $def['form_order']),
-                    ];
-                })->values()->all();
-            }
+            $teacherMapBadges = $this->buildMapBadgesForAssessor($teacherMaps, $teacherPlpSections, 'guru');
+            $teacherActivePlps = $this->resolveActivePlps($teacherMaps, $teacherPlpSections);
         }
 
         if ($user->can('dashboard/kepsek-read')) {
@@ -237,8 +209,12 @@ class DashboardController extends Controller
             'studentSchoolmates',
             'lectureMaps',
             'lectureMapBadges',
+            'lecturePlpSections',
+            'lectureActivePlps',
             'teacherMaps',
             'teacherMapBadges',
+            'teacherPlpSections',
+            'teacherActivePlps',
             'headmasterSchools',
             'teacherCoordinatorSchools',
             'departementSchoolSummaries',
@@ -249,7 +225,112 @@ class DashboardController extends Controller
         ));
     }
 
-    private function buildAssessmentFormDefinitions(array $formIds): array
+    /**
+     * @return array<int, array{form_ids: array, form_defs: array}>
+     */
+    private function buildPlpSectionsForAssessor(int $year, string $assessor): array
+    {
+        return PlpFinalGradeFormRule::query()
+            ->where('year', $year)
+            ->where('assessor', $assessor)
+            ->whereIn('plp_order', [0, 1, 2])
+            ->where('form_id', 'not like', '%L1')
+            ->where('form_id', 'not like', '%L2')
+            ->where('form_id', 'not like', '%L3')
+            ->orderBy('plp_order')
+            ->orderBy('form_id')
+            ->get()
+            ->groupBy('plp_order')
+            ->map(fn ($rules) => [
+                'form_ids' => $rules->pluck('form_id')->all(),
+                'form_defs' => $this->buildAssessmentFormDefinitions(
+                    $rules->pluck('form_id')->all(),
+                    $rules->pluck('times', 'form_id')->map(fn ($t) => max(1, (int) $t))->all()
+                ),
+            ])
+            ->all();
+    }
+
+    /**
+     * @param  \Illuminate\Support\Collection<int, Map>  $maps
+     * @param  array<int, array{form_ids: array, form_defs: array}>  $plpSections
+     * @return array<int, array<int, array<int, array{code: string, done: bool}>>>
+     */
+    private function buildMapBadgesForAssessor($maps, array $plpSections, string $assessor): array
+    {
+        $allFormIds = collect($plpSections)
+            ->flatMap(fn ($s) => $s['form_ids'] ?? [])
+            ->unique()
+            ->values()
+            ->all();
+
+        if ($maps->isEmpty() || empty($allFormIds)) {
+            return [];
+        }
+
+        $assessmentsByMap = Assessment::query()
+            ->whereIn('map_id', $maps->pluck('id'))
+            ->where('assessor', $assessor)
+            ->whereIn('form_id', $allFormIds)
+            ->get(['map_id', 'form_id', 'form_order', 'plp_order'])
+            ->groupBy('map_id');
+
+        $badges = [];
+
+        foreach ($maps as $map) {
+            $mapAssessments = $assessmentsByMap->get($map->id) ?? collect();
+            $badges[$map->id] = [];
+
+            foreach ($plpSections as $plpOrder => $section) {
+                if (! $map->participatesInPlpOrder((int) $plpOrder)) {
+                    continue;
+                }
+
+                $lookupPlpOrder = (int) $plpOrder === 0
+                    ? $map->resolvedAssessmentPlpOrder()
+                    : (int) $plpOrder;
+
+                $lookup = $mapAssessments
+                    ->filter(fn ($a) => (int) $a->plp_order === $lookupPlpOrder)
+                    ->keyBy(fn ($a) => $a->form_id . ':' . $a->form_order);
+
+                $badges[$map->id][$plpOrder] = collect($section['form_defs'])
+                    ->map(fn ($def) => [
+                        'code' => $def['code'],
+                        'done' => $lookup->has($def['form_id'] . ':' . $def['form_order']),
+                    ])
+                    ->values()
+                    ->all();
+            }
+        }
+
+        return $badges;
+    }
+
+    /**
+     * @param  \Illuminate\Support\Collection<int, Map>  $maps
+     * @param  array<int, array{form_ids: array}>  $plpSections
+     * @return array<int, int>
+     */
+    private function resolveActivePlps($maps, array $plpSections): array
+    {
+        $active = [];
+
+        foreach ([0, 1, 2] as $plpOrder) {
+            $hasMaps = $maps->contains(fn ($m) => $m->participatesInPlpOrder($plpOrder));
+            $hasRules = ! empty($plpSections[$plpOrder]['form_ids'] ?? []);
+
+            if ($hasMaps && $hasRules) {
+                $active[] = $plpOrder;
+            }
+        }
+
+        sort($active);
+
+        return $active;
+    }
+
+    private function buildAssessmentFormDefinitions(array $formIds, array $formTimesById = []): array
     {
         $formLookup = Form::whereIn('id', $formIds)
             ->get(['id', 'times'])
@@ -258,7 +339,7 @@ class DashboardController extends Controller
         $definitions = [];
 
         foreach ($formIds as $formId) {
-            $times = max(1, (int) optional($formLookup->get($formId))->times);
+            $times = max(1, (int) ($formTimesById[$formId] ?? optional($formLookup->get($formId))->times ?? 1));
             $baseCode = substr($formId, -2);
 
             for ($formOrder = 1; $formOrder <= $times; $formOrder++) {

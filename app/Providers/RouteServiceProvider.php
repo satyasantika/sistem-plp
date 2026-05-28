@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Form;
 use App\Models\FormItem;
+use App\Models\PlpFinalGradeFormRule;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -30,8 +31,14 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->configureRateLimiting();
 
+        Route::bind('plpfinalgraderule', fn (string $value) => PlpFinalGradeFormRule::query()->whereKey($value)->firstOrFail());
+
         Route::bind('formItem', function (string $value, \Illuminate\Routing\Route $route): FormItem {
             $form = $route->parameter('form');
+            if (is_string($form)) {
+                $form = Form::findOrFail($form);
+                $route->setParameter('form', $form);
+            }
             if (! $form instanceof Form) {
                 abort(404);
             }

@@ -14,12 +14,18 @@ class FormItemController extends Controller
     /** Komponen standar (tiga bagian utama). */
     private const CANONICAL_COMPONENTS = ['petunjuk', 'item', 'tambahan'];
 
+    /** Form nama mengandung teks ini: bagian item dikunci di UI; skor maksimal bisa diedit (nilai awal tambah item = 0). */
+    private static function isLearningDeviceAssessmentForm(Form $form): bool
+    {
+        return str_contains(strtolower((string) $form->name), 'perangkat pembelajaran');
+    }
+
     public function __construct()
     {
-        $this->middleware('permission:formitems-read', ['only' => ['index']]);
-        $this->middleware('permission:formitems-create', ['only' => ['create', 'store']]);
-        $this->middleware('permission:formitems-update', ['only' => ['edit', 'update', 'reorder']]);
-        $this->middleware('permission:formitems-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:forms.items-read', ['only' => ['index', 'create', 'edit']]);
+        $this->middleware('permission:forms.items-create', ['only' => ['store']]);
+        $this->middleware('permission:forms.items-update', ['only' => ['update', 'reorder']]);
+        $this->middleware('permission:forms.items-delete', ['only' => ['destroy']]);
     }
 
     /**
@@ -53,7 +59,7 @@ class FormItemController extends Controller
 
         $sectionCreateUrls = [];
         foreach (self::CANONICAL_COMPONENTS as $key) {
-            $sectionCreateUrls[$key] = route('forms.items.create', $form).'?component='.$key;
+            $sectionCreateUrls[$key] = url('/konfigurasi/forms/'.$form->getKey().'/items/create').'?component='.$key;
         }
 
         return view('konfigurasi.form-items', [
@@ -61,9 +67,9 @@ class FormItemController extends Controller
             'sectionLabels' => $sectionLabels,
             'groupedRows' => $groupedRows,
             'otherItems' => $otherItems,
-            'itemsResourceBase' => url('/konfigurasi/forms/'.$form->getKey().'/items'),
-            'formsItemsReorderUrl' => route('forms.items.reorder', $form),
-            'enableFormItemsReorder' => auth()->user()?->can('formitems-update') ?? false,
+            'itemsResourceBase' => '/konfigurasi/forms/'.$form->getKey().'/items',
+            'formsItemsReorderUrl' => url('/konfigurasi/forms/'.$form->getKey().'/items/reorder'),
+            'enableFormItemsReorder' => auth()->user()?->can('forms.items-update') ?? false,
             'sectionCreateUrls' => $sectionCreateUrls,
         ]);
     }
@@ -80,11 +86,16 @@ class FormItemController extends Controller
             ->where('component', $component)
             ->max('component_order');
 
-        $formitem = new FormItem([
+        $attrs = [
             'form_id' => $form->getKey(),
             'component' => $component,
             'component_order' => is_null($maxOrder) ? 1 : ((int) $maxOrder + 1),
-        ]);
+        ];
+        if (self::isLearningDeviceAssessmentForm($form) && $component === 'item') {
+            $attrs['max_score'] = 0;
+        }
+
+        $formitem = new FormItem($attrs);
 
         return view('konfigurasi.formitem-action', array_merge(
             [
@@ -97,7 +108,7 @@ class FormItemController extends Controller
 
     public function store(Request $request, Form $form)
     {
-        $data = $this->validatedPayload($request, $form);
+        $data = $this->validatedPayload($request, $form, null);
         $data['form_id'] = $form->getKey();
         FormItem::create($data);
 
@@ -120,7 +131,7 @@ class FormItemController extends Controller
 
     public function update(Request $request, Form $form, FormItem $formItem)
     {
-        $data = $this->validatedPayload($request, $form);
+        $data = $this->validatedPayload($request, $form, $formItem);
         $data['form_id'] = $form->getKey();
         $formItem->fill($data)->save();
 
@@ -195,7 +206,7 @@ class FormItemController extends Controller
     /**
      * @return array<string, mixed>
      */
-    private function validatedPayload(Request $request, Form $form): array
+    private function validatedPayload(Request $request, Form $form, ?FormItem $formItem): array
     {
         $rules = [
             'component' => ['required', 'string', 'max:191'],
@@ -214,6 +225,16 @@ class FormItemController extends Controller
         }
 
         unset($data['form_id']);
+
+        if (self::isLearningDeviceAssessmentForm($form)) {
+            if ($formItem !== null) {
+                $data['component'] = $formItem->component;
+            } elseif (! in_array($data['component'], self::CANONICAL_COMPONENTS, true)) {
+                throw ValidationException::withMessages([
+                    'component' => ['Bagian tidak valid.'],
+                ]);
+            }
+        }
 
         return $data;
     }

@@ -67,6 +67,60 @@ class Map extends Model
             : (int) $availableYears->first();
     }
 
+    public static function plpBucketLabel(int $plpOrder): string
+    {
+        return match ($plpOrder) {
+            0 => 'PLP',
+            1 => 'PLP 1',
+            2 => 'PLP 2',
+            default => 'PLP '.$plpOrder,
+        };
+    }
+
+    /**
+     * Apakah map ikut penilaian untuk bucket PLP tertentu.
+     * Kolom {@see $plp} = "Ikut PLP" di form map (bukan PLP 1/2) tetap dihitung untuk PLP 1 dan 2.
+     */
+    public function participatesInPlpOrder(int $plpOrder): bool
+    {
+        return match ($plpOrder) {
+            0 => (bool) $this->plp || (bool) $this->plp1 || (bool) $this->plp2,
+            1 => (bool) $this->plp1 || (bool) $this->plp,
+            2 => (bool) $this->plp2 || (bool) $this->plp,
+            default => false,
+        };
+    }
+
+    /**
+     * Sesi PLP efektif untuk menyimpan/mencari assessment (selaras dengan kalkulator nilai akhir).
+     */
+    public function resolvedAssessmentPlpOrder(): int
+    {
+        if ((int) $this->plp2 === 1) {
+            return 2;
+        }
+
+        if ((int) $this->plp1 === 1) {
+            return 1;
+        }
+
+        if ((bool) $this->plp) {
+            return 2;
+        }
+
+        return 2;
+    }
+
+    /** Sesi PLP untuk query/simpan assessment menurut bucket tampilan (0 = ringkas, pakai sesi efektif map). */
+    public function assessmentPlpOrderForBucket(int $bucketPlpOrder): int
+    {
+        if ($bucketPlpOrder === 1 || $bucketPlpOrder === 2) {
+            return $bucketPlpOrder;
+        }
+
+        return $this->resolvedAssessmentPlpOrder();
+    }
+
     public function scopeForYear(Builder $query, int $year): Builder
     {
         return $query->where('year', $year);

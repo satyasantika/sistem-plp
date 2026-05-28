@@ -7,6 +7,16 @@
         let lastViewportY = window.scrollY || window.pageYOffset || 0;
         const createUrlTemplate = "{{ route('schoolassessments.only.create', ['form_id' => '__FORM__', 'form_order' => '__ORDER__', 'map_id' => '__MAP__']) }}";
         const editUrlTemplate = "{{ route('schoolassessments.only.edit', ['form_id' => '__FORM__', 'form_order' => '__ORDER__', 'map_id' => '__MAP__', 'schoolassessment' => '__ID__']) }}";
+        const urlPlpParam = new URLSearchParams(window.location.search).get('plp');
+
+        const appendPlpQuery = (url, bucket) => {
+            const plp = bucket !== undefined && bucket !== null && bucket !== '' ? bucket : urlPlpParam;
+            if (plp === null || plp === '') {
+                return url;
+            }
+            const sep = url.includes('?') ? '&' : '?';
+            return `${url}${sep}plp=${encodeURIComponent(plp)}`;
+        };
 
         const buildUrl = (template, replacements) => {
             let url = template;
@@ -165,8 +175,9 @@
                 let formid = data.formid;
                 let form_order = data.form_order;
                 let map_id = data.map_id;
+                let plpBucket = data.plpBucket;
 
-                const actionUrl = jenis == 'add'
+                let actionUrl = jenis == 'add'
                     ? buildUrl(createUrlTemplate, {
                         '__FORM__': formid,
                         '__ORDER__': form_order,
@@ -178,6 +189,7 @@
                         '__MAP__': map_id,
                         '__ID__': id,
                     });
+                actionUrl = appendPlpQuery(actionUrl, plpBucket);
 
                 if (jenis == 'add') {
                     $.ajax({

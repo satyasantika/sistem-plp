@@ -302,6 +302,18 @@
             color: #dc3545;
         }
 
+        .lec-plp-label {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: #7a92b2;
+            padding: 0 0.2rem;
+            margin-right: 2px;
+        }
+
         .lec-form-icon {
             font-size: 0.64rem;
         }
@@ -442,6 +454,10 @@
             color: #ff8091;
         }
 
+        body.dark .lec-plp-label {
+            color: #7a9fc0;
+        }
+
         body.dark .lec-student-progress-complete {
             background: rgba(18, 163, 111, 0.18);
             color: #a0e8cc;
@@ -480,7 +496,13 @@
                     <p class="lec-identity-meta">{{ auth()->user()->username ?? '-' }}</p>
                     <span class="lec-identity-badge">{{ auth()->user()->subjects->name ?? 'Prodi belum diatur' }}</span>
                     <div class="lec-action-list">
-                        <a href="{{ route('schoolassessments.only.index') }}" class="lec-action-btn lec-action-primary">Mulai Menilai</a>
+                        @forelse ($lectureActivePlps ?? [] as $activePlp)
+                            <a href="{{ route('schoolassessments.only.index', ['plp' => $activePlp]) }}" class="lec-action-btn lec-action-primary">
+                                Mulai menilai {{ $activePlp === 0 ? 'PLP' : 'PLP '.$activePlp }}
+                            </a>
+                        @empty
+                            <span class="small text-muted">Belum ada setelan PLP pada mahasiswa bimbingan tahun ini.</span>
+                        @endforelse
                         <a href="{{ route('diaryverifications.only.index') }}" class="lec-action-btn lec-action-primary">Verifikasi Logbook</a>
                     </div>
                 </div>
@@ -503,9 +525,10 @@
                                     $schoolTotalForms = 0;
 
                                     foreach ($schoolMaps as $schoolMap) {
-                                        $mapBadges = collect($lectureMapBadges[$schoolMap->id] ?? []);
-                                        $schoolCompletedForms += $mapBadges->where('done', true)->count();
-                                        $schoolTotalForms += $mapBadges->count();
+                                        foreach ($lectureMapBadges[$schoolMap->id] ?? [] as $plpBadges) {
+                                            $schoolCompletedForms += collect($plpBadges)->where('done', true)->count();
+                                            $schoolTotalForms    += count($plpBadges);
+                                        }
                                     }
 
                                     $schoolIsComplete = $schoolTotalForms > 0 && $schoolCompletedForms === $schoolTotalForms;
@@ -525,10 +548,12 @@
                                     <div class="lec-student-list">
                                         @foreach ($schoolMaps as $map)
                                             @php
-                                                $studentBadges = collect($lectureMapBadges[$map->id] ?? []);
-                                                $studentCompletedForms = $studentBadges->where('done', true)->count();
-                                                $studentTotalForms = $studentBadges->count();
+                                                $studentBadgesByPlp = $lectureMapBadges[$map->id] ?? [];
+                                                $allStudentBadges = collect($studentBadgesByPlp)->flatten(1);
+                                                $studentCompletedForms = $allStudentBadges->where('done', true)->count();
+                                                $studentTotalForms = $allStudentBadges->count();
                                                 $studentIsComplete = $studentTotalForms > 0 && $studentCompletedForms === $studentTotalForms;
+                                                $multiplePlp = count($studentBadgesByPlp) > 1;
                                             @endphp
                                             <div class="lec-student-row">
                                                 <div class="lec-student-info">
@@ -544,10 +569,15 @@
                                                     </div>
                                                 </div>
                                                 <div class="lec-form-badges">
-                                                    @foreach ($studentBadges as $badge)
-                                                        <span class="lec-form-badge lec-form-badge-{{ $badge['done'] ? 'done' : 'pending' }}">
-                                                            <i class="fa lec-form-icon {{ $badge['done'] ? 'fa-check' : 'fa-times' }}"></i>{{ $badge['code'] }}
-                                                        </span>
+                                                    @foreach ($studentBadgesByPlp as $plpOrder => $plpBadges)
+                                                        @if ($multiplePlp)
+                                                            <span class="lec-plp-label">{{ $plpOrder === 0 ? 'PLP' : 'PLP '.$plpOrder }}</span>
+                                                        @endif
+                                                        @foreach ($plpBadges as $badge)
+                                                            <span class="lec-form-badge lec-form-badge-{{ $badge['done'] ? 'done' : 'pending' }}">
+                                                                <i class="fa lec-form-icon {{ $badge['done'] ? 'fa-check' : 'fa-times' }}"></i>{{ $badge['code'] }}
+                                                            </span>
+                                                        @endforeach
                                                     @endforeach
                                                 </div>
                                             </div>

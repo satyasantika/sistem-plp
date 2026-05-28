@@ -6,10 +6,11 @@ use App\Models\Assessment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Services\MapFinalGradeCalculator;
 
 class CleaningAssessmentController extends Controller
 {
-    function __construct()
+    public function __construct(private MapFinalGradeCalculator $gradeCalculator)
     {
         $this->middleware('permission:data/cleaningassessments-read', ['only' => ['index']]);
         $this->middleware('permission:data/cleaningassessments-delete', ['only' => ['destroy']]);
@@ -30,8 +31,13 @@ class CleaningAssessmentController extends Controller
     public function destroy(Assessment $cleaningassessment)
     {
         $name = $cleaningassessment->maps->students->name;
+        $mapId = (int) $cleaningassessment->map_id;
+        $plpOrder = (int) $cleaningassessment->plp_order;
 
         $cleaningassessment->delete();
+        $this->gradeCalculator->recalculateMapForPlp($mapId, $plpOrder);
+        $this->gradeCalculator->recalculateCombinedDisplay($mapId);
+
         return response()->json([
             'status' => 'success',
             'message' => 'Duplikasi penilaian terhadap <strong>'.$name.'</strong> telah dihapus'

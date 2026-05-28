@@ -46,6 +46,12 @@ return [
             'icon' => 'ti-layout-list-thumb'
         ],
         [
+            'name' => 'Sebaran Form',
+            'url' => 'konfigurasi/plpfinalgraderules',
+            'permission' => 'konfigurasi/plpfinalgraderules-read',
+            'icon' => 'ti-vector'
+        ],
+        [
             'name' => 'Assessments',
             'url' => 'konfigurasi/assessments',
             'permission' => 'assessments-read',

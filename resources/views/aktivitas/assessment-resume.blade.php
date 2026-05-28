@@ -44,10 +44,6 @@
                                             @foreach ($forms as $form)
                                             {{-- PERULANGAN FORM YANG DINILAI --}}
                                             @php
-                                                $assessor = 'guru';
-                                                if(auth()->user()->hasrole('dosen')){
-                                                    $assessor = 'dosen';
-                                                }
                                                 $assessments = App\Models\Assessment::where('form_id',$form)
                                                                                     ->where('plp_order',$plp_order)
                                                                                     ->where('map_id',$map->id)
@@ -82,19 +78,6 @@
                                             </td>
                                             @endforeach
                                             @php
-                                                $plp_order = substr(request()->segment(3),-1);
-                                                if (auth()->user()->hasrole('dosen'))
-                                                {
-                                                    $plp1_dosen_menus = ['2022N2','2022N8'];
-                                                    $plp2_dosen_menus = ['2022N2','2022N6','2022N7'];
-                                                    $forms = ($plp_order == 1) ? $plp1_dosen_menus : $plp2_dosen_menus ;
-                                                } else {
-                                                    $forms = ['2022N1','2022N3','2022N4','2022N5','2022N6','2022N7'];
-                                                }
-                                                $assessor = 'guru';
-                                                if(auth()->user()->hasrole('dosen')){
-                                                    $assessor = 'dosen';
-                                                }
                                                 $assessments = App\Models\Assessment::where('assessor',$assessor)
                                                                                     ->where('plp_order',$plp_order)
                                                                                     ->where('map_id',$map->id)

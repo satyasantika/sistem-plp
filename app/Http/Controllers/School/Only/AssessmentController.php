@@ -6,42 +6,144 @@ use App\Models\Map;
 use App\Models\Form;
 use App\Models\FormItem;
 use App\Models\Assessment;
+use App\Models\PlpFinalGradeFormRule;
 use Illuminate\Http\Request;
 // use Illuminate\Auth\Access\Gate;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Concerns\GuardsAssessmentDuplicates;
+use App\Services\MapFinalGradeCalculator;
 
 class AssessmentController extends Controller
 {
     use GuardsAssessmentDuplicates;
 
-    function __construct()
+    public function __construct(private MapFinalGradeCalculator $gradeCalculator)
     {
-        $this->middleware('permission:aktivitas/schoolassessments/plp-read', ['only' => ['index','show']]);
-        $this->middleware('permission:aktivitas/schoolassessments/plp-create', ['only' => ['create','store']]);
-        $this->middleware('permission:aktivitas/schoolassessments/plp-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:aktivitas/schoolassessments/plp-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:aktivitas/schoolassessments/plp-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:aktivitas/schoolassessments/plp-update', ['only' => ['edit', 'update', 'recalculateGrades']]);
         $this->middleware('permission:aktivitas/schoolassessments/plp-delete', ['only' => ['destroy']]);
     }
 
+    public function recalculateGrades(Request $request)
+    {
+        $user = auth()->user();
+        $activeYear = (int) Map::activeYear($user);
+        $maps = $this->_myMap($activeYear);
+
+        $processed = 0;
+        $errors = 0;
+
+        foreach ($maps as $map) {
+            try {
+                $this->gradeCalculator->recalculateMapFully($map);
+                $processed++;
+            } catch (\Throwable) {
+                $errors++;
+            }
+        }
+
+        $roleLabel = $this->_assessorForUser($user) === 'guru' ? 'guru pamong' : 'dosen pembimbing';
+
+        return response()->json([
+            'success' => $errors === 0,
+            'processed' => $processed,
+            'errors' => $errors,
+            'message' => $processed > 0
+                ? "Nilai akhir {$processed} mahasiswa ({$roleLabel}, tahun {$activeYear}) telah dihitung ulang."
+                    .($errors > 0 ? " {$errors} map gagal diproses." : '')
+                : 'Tidak ada mahasiswa bimbingan untuk dihitung ulang pada tahun aktif ini.',
+        ]);
+    }
+
     // Rekap Penilaian
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
         $activeYear = Map::activeYear($user);
-        $maps = $this->_myMap($activeYear);
+        $allMaps = $this->_myMap($activeYear);
+        $assessor = $this->_assessorForUser($user);
+        $allSections = $this->_buildSections($allMaps, $assessor, $activeYear);
 
-        $forms = $this->_allowedFormsForUser($user);
+        $plpTabs = [];
+        foreach ($allSections as $order => $section) {
+            $plpTabs[] = [
+                'order' => $order,
+                'label' => Map::plpBucketLabel($order),
+                'url' => route('schoolassessments.only.index', ['plp' => $order]),
+                'formCount' => count($section['forms']),
+            ];
+        }
 
-        return view('aktivitas.only.assessment-resume', compact('maps', 'forms', 'user', 'activeYear'));
+        $focusPlp = null;
+        if ($request->has('plp') && in_array($request->integer('plp'), [0, 1, 2], true)) {
+            $focusPlp = $request->integer('plp');
+        }
+
+        $sections = $allSections;
+        if ($focusPlp !== null) {
+            $sections = array_key_exists($focusPlp, $allSections)
+                ? [$focusPlp => $allSections[$focusPlp]]
+                : [];
+        }
+
+        return view('aktivitas.only.assessment-resume', [
+            'sections'      => $sections,
+            'allSections'   => $allSections,
+            'plpTabs'         => $plpTabs,
+            'totalMaps'       => $allMaps->count(),
+            'user'            => $user,
+            'activeYear'      => $activeYear,
+            'focusPlp'        => $focusPlp,
+            'focusPlpLabel'   => $focusPlp !== null ? Map::plpBucketLabel($focusPlp) : null,
+        ]);
     }
 
-    public function create($form_id, $form_order, $map_id)
+    private function _buildSections(\Illuminate\Support\Collection $allMaps, string $assessor, int $activeYear): array
+    {
+        $sections = [];
+        foreach ([0, 1, 2] as $plpOrder) {
+            $maps = $allMaps->filter(fn ($m) => $m->participatesInPlpOrder($plpOrder))->values();
+            if ($maps->isEmpty()) {
+                continue;
+            }
+            $rules = PlpFinalGradeFormRule::query()
+                ->where('year', $activeYear)
+                ->where('assessor', $assessor)
+                ->where('plp_order', $plpOrder)
+                ->orderBy('form_id')
+                ->get(['form_id', 'times']);
+            if ($rules->isEmpty()) {
+                continue;
+            }
+            $formIds = $rules->pluck('form_id')->all();
+            $formRuleTimes = $rules->pluck('times', 'form_id')
+                ->map(fn ($t) => max(1, (int) ($t ?? 1)))
+                ->all();
+            $formModels = Form::whereIn('id', $formIds)->get()->keyBy('id');
+            $sections[$plpOrder] = [
+                'plpOrder'      => $plpOrder,
+                'maps'          => $maps,
+                'forms'         => $formIds,
+                'formModels'    => $formModels,
+                'formRuleTimes' => $formRuleTimes,
+                'assessor'      => $assessor,
+            ];
+        }
+
+        ksort($sections);
+
+        return $sections;
+    }
+
+    public function create($form_id, $form_order, $map_id, Request $request)
     {
         $schoolassessment = new Assessment();
+
         return view('aktivitas.only.assessment-action', array_merge(
-            ['schoolassessment'=> $schoolassessment],
-            $this->_dataSelection($form_id, $form_order, $map_id)
-            ));
+            ['schoolassessment' => $schoolassessment],
+            $this->_dataSelection($form_id, $form_order, $map_id, $this->bucketPlpFromRequest($request))
+        ));
     }
 
     public function store($form_id, $form_order, $map_id, Request $request)
@@ -66,10 +168,13 @@ class AssessmentController extends Controller
         if ($response = $this->assertAssessmentSlotAvailable($request)) {
             return $response;
         }
+        if ($response = $this->assertFormOrderWithinRule($request)) {
+            return $response;
+        }
 
         Assessment::create($request->all());
 
-        $this->_yudicium($map_id);
+        $this->refreshMapGrades((int) $map_id, (int) $request->input('plp_order', $this->_resolvePlpOrder($map_id)));
 
         return response()->json([
             'success' => true,
@@ -82,37 +187,162 @@ class AssessmentController extends Controller
     {
         $user = auth()->user();
         $activeYear = Map::activeYear($user);
-        $allowedForms = $this->_allowedFormsForUser($user);
+        $assessor = $this->_assessorForUser($user);
+        $allowedForms = $this->_allowedFormsForUser($user, $activeYear, $assessor);
         $maps = in_array($form_id, $allowedForms, true)
             ? $this->_myMap($activeYear)
             : collect();
 
         $focusMapId = $request->integer('map_id');
         $isFocusedAssessment = false;
+        $focusPlp = $this->bucketPlpFromRequest($request);
+        $focusMap = $focusMapId ? $maps->firstWhere('id', $focusMapId) : null;
 
         if ($focusMapId) {
             $maps = $maps->where('id', $focusMapId)->values();
             $isFocusedAssessment = $maps->count() === 1;
+            $focusMap = $maps->first();
         }
 
-        return view('aktivitas.only.assessment', compact('maps', 'form_id', 'user', 'activeYear', 'focusMapId', 'isFocusedAssessment'));
-    }
-
-    private function _allowedFormsForUser($user)
-    {
-        if ($user->hasRole('dosen')) {
-            return ['2024N2', '2024N6', '2024N7'];
+        if ($focusPlp === null && $focusMap instanceof Map) {
+            $focusPlp = $this->_inferBucketForMapAndForm($focusMap, $form_id, $assessor, $activeYear);
         }
 
-        return ['2024N1', '2024N3', '2024N4', '2024N5', '2024N6', '2024N7'];
+        if ($focusPlp === null) {
+            $focusPlp = 0;
+        }
+
+        $form_times = $this->_formRuleTimes($form_id, $assessor, $activeYear, $focusPlp) ?? 1;
+        $focusPlpLabel = Map::plpBucketLabel($focusPlp);
+
+        return view('aktivitas.only.assessment', compact(
+            'maps',
+            'form_id',
+            'user',
+            'activeYear',
+            'focusMapId',
+            'isFocusedAssessment',
+            'focusPlp',
+            'focusPlpLabel',
+            'form_times',
+            'assessor'
+        ));
     }
 
-    public function edit($form_id, $form_order, $map_id, Assessment $schoolassessment)
+    private function _allowedFormsForUser($user, int $activeYear = 0, ?string $assessor = null): array
     {
+        if ($activeYear === 0) {
+            $activeYear = (int) Map::activeYear($user);
+        }
+        $assessor ??= $this->_assessorForUser($user);
+
+        return PlpFinalGradeFormRule::query()
+            ->where('year', $activeYear)
+            ->where('assessor', $assessor)
+            ->pluck('form_id')
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    private function _assessorForUser($user): string
+    {
+        if ($user->hasRole('guru') && ! $user->hasRole('dosen')) {
+            return 'guru';
+        }
+
+        return 'dosen';
+    }
+
+    private function _formRuleTimes(string $formId, string $assessor, int $year, int $bucketPlp): ?int
+    {
+        $rule = PlpFinalGradeFormRule::query()
+            ->where('year', $year)
+            ->where('assessor', $assessor)
+            ->where('form_id', $formId)
+            ->where('plp_order', $bucketPlp)
+            ->first(['times']);
+
+        return $rule ? max(1, (int) $rule->times) : null;
+    }
+
+    /**
+     * Bucket PLP (0/1/2) dari URL ?plp= atau tebak dari map + form di sebaran.
+     */
+    private function _inferBucketForMapAndForm(Map $map, string $formId, string $assessor, int $year): int
+    {
+        foreach ([0, 1, 2] as $bucket) {
+            if (! $map->participatesInPlpOrder($bucket)) {
+                continue;
+            }
+            if ($this->_formRuleTimes($formId, $assessor, $year, $bucket) !== null) {
+                return $bucket;
+            }
+        }
+
+        return 0;
+    }
+
+    private function _resolveBucketFromRequest(Request $request, string $formId, string $assessor, int $year): ?int
+    {
+        $bucket = $this->bucketPlpFromRequest($request);
+        if ($bucket !== null) {
+            return $bucket;
+        }
+
+        if ($request->has('plp_bucket') && in_array($request->integer('plp_bucket'), [0, 1, 2], true)) {
+            return $request->integer('plp_bucket');
+        }
+
+        $map = Map::find($request->input('map_id'));
+        if ($map instanceof Map) {
+            return $this->_inferBucketForMapAndForm($map, $formId, $assessor, $year);
+        }
+
+        return null;
+    }
+
+    protected function assertFormOrderWithinRule(Request $request): ?\Illuminate\Http\JsonResponse
+    {
+        $activeYear = (int) Map::activeYear();
+        $formId = (string) $request->input('form_id');
+        $assessor = $this->normalizedAssessor($request);
+        $formOrder = (int) $request->input('form_order');
+        $bucket = $this->_resolveBucketFromRequest($request, $formId, $assessor, $activeYear);
+
+        if ($bucket === null) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sesi PLP tidak dikenali. Buka penilaian dari rekap dengan parameter ?plp=.',
+            ], 422);
+        }
+
+        $times = $this->_formRuleTimes($formId, $assessor, $activeYear, $bucket);
+        if ($times === null) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Form ini tidak terdaftar di Sebaran Form untuk kombinasi PLP dan peran penilai.',
+            ], 422);
+        }
+
+        if ($formOrder < 1 || $formOrder > $times) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Urutan pengisian harus antara 1 dan '.$times.' (sesuai Sebaran Form).',
+            ], 422);
+        }
+
+        return null;
+    }
+
+    public function edit($form_id, $form_order, $map_id, Assessment $schoolassessment, Request $request)
+    {
+        $bucket = $this->bucketPlpFromRequest($request) ?? (int) $schoolassessment->plp_order;
+
         return view('aktivitas.only.assessment-action', array_merge(
-            ['schoolassessment'=>$schoolassessment],
-            $this->_dataSelection($form_id, $form_order, $map_id)
-            ));
+            ['schoolassessment' => $schoolassessment],
+            $this->_dataSelection($form_id, $form_order, $map_id, $bucket)
+        ));
     }
 
     public function update($form_id, $form_order, $map_id, Request $request, Assessment $schoolassessment)
@@ -140,10 +370,13 @@ class AssessmentController extends Controller
         if ($response = $this->assertAssessmentSlotAvailable($request, $schoolassessment)) {
             return $response;
         }
+        if ($response = $this->assertFormOrderWithinRule($request)) {
+            return $response;
+        }
 
         $schoolassessment->fill($data)->save();
 
-        $this->_yudicium($map_id) ;
+        $this->refreshMapGrades((int) $map_id, (int) $schoolassessment->plp_order);
 
         return response()->json([
             'status' => 'success',
@@ -151,48 +384,80 @@ class AssessmentController extends Controller
         ]);
     }
 
-    private function _dataSelection($form_id, $form_order, $map_id)
+    private function bucketPlpFromRequest(Request $request): ?int
     {
-        $plpOrder = $this->_resolvePlpOrder($map_id);
-        $activeYear = Map::activeYear(auth()->user());
+        if (! $request->has('plp')) {
+            return null;
+        }
+
+        $plp = $request->integer('plp');
+
+        return in_array($plp, [0, 1, 2], true) ? $plp : null;
+    }
+
+    /**
+     * plp_order yang disimpan di assessment: bucket 1/2 eksplisit; bucket 0 (PLP ringkas) = sesi efektif per map.
+     */
+    private function storagePlpOrderForMap(Map $map, ?int $bucketPlpOrder): int
+    {
+        if ($bucketPlpOrder === null) {
+            return $map->resolvedAssessmentPlpOrder();
+        }
+
+        return $map->assessmentPlpOrderForBucket($bucketPlpOrder);
+    }
+
+    private function _dataSelection($form_id, $form_order, $map_id, ?int $bucketPlpOrder = null)
+    {
+        $map = Map::with(['students', 'schools', 'subjects', 'lectures', 'teachers'])->find($map_id);
+        $plpOrder = $map
+            ? $this->storagePlpOrderForMap($map, $bucketPlpOrder)
+            : 2;
+        $user = auth()->user();
+        $activeYear = Map::activeYear($user);
+        $assessorRole = $this->_assessorForUser($user);
+        $bucket = $bucketPlpOrder;
+        if ($bucket === null && $map instanceof Map) {
+            $bucket = $this->_inferBucketForMapAndForm($map, $form_id, $assessorRole, $activeYear);
+        }
+        $bucket ??= 0;
+        $ruleTimes = $this->_formRuleTimes($form_id, $assessorRole, $activeYear, $bucket) ?? 1;
+        if ($bucketPlpOrder === null) {
+            $bucketPlpOrder = $bucket;
+        }
 
         return [
             'form' => Form::find($form_id),
-            'map' => Map::with(['students', 'schools', 'subjects', 'lectures', 'teachers'])->find($map_id),
-            'form_guides' => $this->_formByComponent($form_id,'petunjuk'),
-            'form_items' => $this->_formByComponent($form_id,'item'),
-            'form_extras' => $this->_formByComponent($form_id,'tambahan'),
-            'kebaikan' => ['sangat kurang','kurang','baik', 'sangat baik'],
-            'keterpenuhan' => ['tidak terpenuhi semua aspek','hanya 1 aspek ada','2 aspek ada', '3 aspek ada'],
+            'map' => $map,
+            'form_guides' => $this->_formByComponent($form_id, 'petunjuk'),
+            'form_items' => $this->_formByComponent($form_id, 'item'),
+            'form_extras' => $this->_formByComponent($form_id, 'tambahan'),
+            'kebaikan' => ['sangat kurang', 'kurang', 'baik', 'sangat baik'],
+            'keterpenuhan' => ['tidak terpenuhi semua aspek', 'hanya 1 aspek ada', '2 aspek ada', '3 aspek ada'],
             'activeYear' => $activeYear,
             'assessmentLockedByYear' => (int) $activeYear !== (int) config('plp.default_year'),
+            'bucketPlpOrder' => $bucketPlpOrder,
+            'bucketPlpLabel' => $bucketPlpOrder !== null ? Map::plpBucketLabel($bucketPlpOrder) : null,
+            'ruleTimes' => $ruleTimes,
+            'assessorRole' => $assessorRole,
             'parameters' => [
-                'form_id'=>$form_id,
+                'form_id' => $form_id,
                 'form_order' => $form_order,
                 'map_id' => $map_id,
                 'plp_order' => $plpOrder,
-                ]
+            ],
         ];
     }
 
     private function _resolvePlpOrder($map_id)
     {
-        $map = Map::select('id', 'plp1', 'plp2')->find($map_id);
+        $map = Map::select('id', 'plp', 'plp1', 'plp2')->find($map_id);
 
-        if (!$map) {
+        if (! $map) {
             return 2;
         }
 
-        if ((int) $map->plp2 === 1) {
-            return 2;
-        }
-
-        if ((int) $map->plp1 === 1) {
-            return 1;
-        }
-
-        // Fallback default for current academic cycle.
-        return 2;
+        return $map->resolvedAssessmentPlpOrder();
     }
 
     private function _formByComponent($form_id, $component)
@@ -237,73 +502,9 @@ class AssessmentController extends Controller
         return $query->orderBy('student_id')->get();
     }
 
-    private function _yudicium($map_id)
+    private function refreshMapGrades(int $mapId, int $plpOrder): void
     {
-        $map = Map::find($map_id);
-        $lecture_forms = ['2024N2','2024N6','2024N7'];
-        $teacher_forms = ['2024N1','2024N3','2024N4','2024N5','2024N6','2024N7'];
-        // penilaian dari dosen
-        $assessment_by_lecture = Assessment::where([
-                                            'assessor'=>'dosen',
-                                            'map_id'=>$map_id,
-                                        ])
-                                        ->whereIn('form_id',$lecture_forms)
-                                        ->sum('grade');
-        $lecture_form_times = Form::whereIn('id',$lecture_forms)->sum('times');
-        $lecture_total = round($assessment_by_lecture/$lecture_form_times,0);
-        // penilaian dari guru
-        $assessment_by_teacher = Assessment::where([
-                                            'assessor'=>'guru',
-                                            'map_id'=>$map_id,
-                                        ])
-                                        ->whereIn('form_id',$teacher_forms)
-                                        ->sum('grade');
-        $teacher_form_times = Form::whereIn('id',$teacher_forms)->sum('times');
-        $teacher_total = $assessment_by_teacher/$teacher_form_times;
-
-        $grade = 0.4 * $lecture_total + 0.6 * $teacher_total;
-
-        $map->grade = round($grade,2);
-        $map->letter = $this->_convertToLetter($grade);
-        $map->save();
-    }
-
-    private function _convertToLetter($grade)
-    {
-        if ($grade >= 85)
-        { return 'A'; }
-        elseif ($grade >= 77)
-        { return 'A-'; }
-        elseif ($grade >= 69)
-        { return 'B+'; }
-        elseif ($grade >= 61)
-        { return 'B'; }
-        elseif ($grade >= 53)
-        { return 'B-'; }
-        elseif ($grade >= 45)
-        { return 'C+'; }
-        elseif ($grade >= 37)
-        { return 'C'; }
-        elseif ($grade >= 29)
-        { return 'C-'; }
-        elseif ($grade >= 21)
-        { return 'D'; }
-        else
-        { return 'E'; }
-    }
-
-    private function _convertToLetter5($grade)
-    {
-        if ($grade < 56)
-        { return 'E'; }
-        elseif ($grade < 66)
-        { return 'D'; }
-        elseif ($grade < 76)
-        { return 'C'; }
-        elseif ($grade < 86)
-        { return 'B'; }
-        else
-        { return 'A'; }
-
+        $this->gradeCalculator->recalculateMapForPlp($mapId, $plpOrder);
+        $this->gradeCalculator->recalculateCombinedDisplay($mapId);
     }
 }

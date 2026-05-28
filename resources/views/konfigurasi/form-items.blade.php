@@ -31,10 +31,11 @@
 
         <div class="content-wrapper">
             @foreach ($sectionLabels as $componentKey => $sectionTitle)
+                @php $hasScore = $componentKey === 'item'; @endphp
                 <div class="card mb-3 form-items-section" id="section-{{ $componentKey }}">
                     <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-2 py-2">
                         <span class="fw-semibold">{{ $sectionTitle }}</span>
-                        @can('formitems-create')
+                        @can('forms.items-create')
                             <button type="button"
                                 class="btn btn-primary btn-sm btn-add-form-item"
                                 data-create-url="{{ $sectionCreateUrls[$componentKey] ?? '#' }}">
@@ -47,8 +48,10 @@
                             <thead class="table-light">
                                 <tr>
                                     <th style="width: 5rem">Urutan</th>
-                                    <th>Rincian item</th>
-                                    <th style="width: 6rem" class="text-end">Skor</th>
+                                    <th>Rincian {{ strtolower($sectionTitle) }}</th>
+                                    @if ($hasScore)
+                                        <th style="width: 6rem" class="text-end">Skor</th>
+                                    @endif
                                     <th style="width: 6rem" class="text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -57,13 +60,15 @@
                                     <tr data-item-id="{{ $fi->id }}" @if(!empty($enableFormItemsReorder)) draggable="true" @endif>
                                         <td class="text-end">{{ $fi->component_order }}</td>
                                         <td>{!! nl2br(e($fi->name)) !!}</td>
-                                        <td class="text-end">{{ $fi->max_score }}</td>
+                                        @if ($hasScore)
+                                            <td class="text-end">{{ $fi->max_score }}</td>
+                                        @endif
                                         <td class="text-center text-nowrap">
-                                            @can('formitems-update')
+                                            @can('forms.items-update')
                                                 <button type="button" data-id="{{ $fi->id }}" data-jenis="edit"
                                                     class="btn btn-primary btn-sm py-0 px-1 action"><i class="ti-pencil"></i></button>
                                             @endcan
-                                            @can('formitems-delete')
+                                            @can('forms.items-delete')
                                                 <button type="button" data-id="{{ $fi->id }}" data-jenis="delete"
                                                     class="btn btn-danger btn-sm py-0 px-1 action"><i class="ti-trash"></i></button>
                                             @endcan
@@ -71,7 +76,7 @@
                                     </tr>
                                 @empty
                                     <tr class="form-items-empty-placeholder">
-                                        <td colspan="4" class="text-muted small ps-3 py-2">Belum ada item pada bagian ini.</td>
+                                        <td colspan="{{ $hasScore ? 4 : 3 }}" class="text-muted small ps-3 py-2">Belum ada item pada bagian ini.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -104,11 +109,11 @@
                                         <td>{!! nl2br(e($fi->name)) !!}</td>
                                         <td class="text-end">{{ $fi->max_score }}</td>
                                         <td class="text-center text-nowrap">
-                                            @can('formitems-update')
+                                            @can('forms.items-update')
                                                 <button type="button" data-id="{{ $fi->id }}" data-jenis="edit"
                                                     class="btn btn-primary btn-sm py-0 px-1 action"><i class="ti-pencil"></i></button>
                                             @endcan
-                                            @can('formitems-delete')
+                                            @can('forms.items-delete')
                                                 <button type="button" data-id="{{ $fi->id }}" data-jenis="delete"
                                                     class="btn btn-danger btn-sm py-0 px-1 action"><i class="ti-trash"></i></button>
                                             @endcan
@@ -216,10 +221,11 @@
             const loadModal = async (url, fallbackMessage) => {
                 try {
                     const response = await fetch(url, {
+                        credentials: 'same-origin',
                         headers: { 'X-Requested-With': 'XMLHttpRequest' }
                     });
                     if (!response.ok) {
-                        throw new Error(fallbackMessage);
+                        throw new Error(`${fallbackMessage} (HTTP ${response.status}: ${url})`);
                     }
                     const html = await response.text();
                     const dialog = document.querySelector(dialogSelector);
@@ -379,16 +385,18 @@
                             return;
                         }
                         fetch(`${resourceBase}/${id}`, {
-                                method: 'DELETE',
+                                method: 'POST',
+                                credentials: 'same-origin',
                                 headers: {
                                     'X-CSRF-TOKEN': getCsrf(),
                                     'X-Requested-With': 'XMLHttpRequest'
-                                }
+                                },
+                                body: new URLSearchParams({ _method: 'DELETE' })
                             })
                             .then((response) => response.json().catch(() => ({})).then((data) => ({ response, data })))
                             .then(({ response, data }) => {
                                 if (!response.ok) {
-                                    throw new Error(data.message || 'Data gagal dihapus.');
+                                    throw new Error((data.message || 'Data gagal dihapus.') + ` (HTTP ${response.status})`);
                                 }
                                 window.location.reload();
                             })

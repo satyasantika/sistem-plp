@@ -364,7 +364,11 @@
 @section('content')
 <div class="main-content">
     <div class="title">
-        Penilaian PLP
+        @if ($focusPlpLabel ?? null)
+            Penilaian {{ $focusPlpLabel }}
+        @else
+            Penilaian PLP
+        @endif
     </div>
     <div class="content-wrapper">
         <div class="row same-height">
@@ -372,7 +376,11 @@
                 <div class="card">
                     <div class="card-header">
                         Penilaian {{ substr($form_id,-2) }}
-                        <a href="{{ route('schoolassessments.only.index') }}" class="btn btn-modern btn-modern-outline float-end">Lihat Rekap Penilaian</a>
+                        @if ($focusPlpLabel ?? null)
+                            <span class="badge bg-primary ms-1">{{ $focusPlpLabel }}</span>
+                        @endif
+                        <span class="badge bg-secondary ms-1">{{ $form_times ?? 1 }}× pengisian</span>
+                        <a href="{{ route('schoolassessments.only.index', array_filter(['plp' => $focusPlp ?? null])) }}" class="btn btn-modern btn-modern-outline float-end">Lihat Rekap Penilaian</a>
                     </div>
                     <div class="card-body">
                         <div class="identity-card">
@@ -403,14 +411,24 @@
                                 <p class="single-student-title">Mode Fokus Penilaian Form</p>
                                 <p class="single-student-name">{{ $singleMap->students->name ?? '-' }}</p>
                                 <p class="single-student-meta">{{ $singleMap->schools->name ?? '-' }} • {{ $singleMap->subjects->name ?? '-' }}</p>
-                                <p class="single-student-note">Silakan klik pada tombol angka untuk menilai, belum diisi (merah), sudah diisi (hijau)</p>
+                                <p class="single-student-note">
+                                    Form ini wajib diisi <strong>{{ $form_times }}×</strong> (sesuai Sebaran Form).
+                                    Klik tombol angka per sesi — belum diisi (merah), sudah diisi (hijau).
+                                </p>
                             </div>
                         @endif
 
                         <div id="assessment-table">
                             @php
-                                $form_times = App\Models\Form::find($form_id)->times;
-                                $assessorType = auth()->user()->hasrole('guru') ? 'guru' : 'dosen';
+                                $form_times = max(1, (int) ($form_times ?? 1));
+                                $assessorType = $assessor ?? (auth()->user()->hasRole('guru') && ! auth()->user()->hasRole('dosen') ? 'guru' : 'dosen');
+                                $assessmentPlpForMap = function ($map) use ($focusPlp) {
+                                    if ($focusPlp === null) {
+                                        return null;
+                                    }
+
+                                    return $map->assessmentPlpOrderForBucket((int) $focusPlp);
+                                };
                             @endphp
 
                             @if (!empty($isFocusedAssessment) && $maps->count() === 1)
@@ -424,12 +442,17 @@
                                             $attemptLabel = substr($form_id, -2) == 'N3'
                                                 ? 'Perangkat ke-' . $attemptOrder
                                                 : (substr($form_id, -2) == 'N5' ? 'Tampil ke-' . $attemptOrder : 'Nilai ' . substr($form_id, -2));
-                                            $assessmentRecord = App\Models\Assessment::where([
+                                            $assessmentQuery = App\Models\Assessment::where([
                                                 'assessor' => $assessorType,
                                                 'map_id' => $singleMap->id,
                                                 'form_id' => $form_id,
                                                 'form_order' => $attemptOrder,
-                                            ])->first();
+                                            ]);
+                                            $singleMapPlp = $assessmentPlpForMap($singleMap);
+                                            if ($singleMapPlp !== null) {
+                                                $assessmentQuery->where('plp_order', $singleMapPlp);
+                                            }
+                                            $assessmentRecord = $assessmentQuery->first();
                                         @endphp
                                         <div class="focus-assessment-card">
                                             <p class="focus-assessment-order">{{ $attemptLabel }}</p>
@@ -447,6 +470,7 @@
                                                             data-formid="{{ $form_id }}"
                                                             data-form_order="{{ $attemptOrder }}"
                                                             data-map_id="{{ $singleMap->id }}"
+                                                            @if ($focusPlp !== null) data-plp-bucket="{{ $focusPlp }}" @endif
                                                             data-jenis="edit"
                                                             class="btn btn-modern btn-modern-success btn-sm action"
                                                         >{{ $assessmentRecord->grade }}</button>
@@ -457,6 +481,7 @@
                                                         data-formid="{{ $form_id }}"
                                                         data-form_order="{{ $attemptOrder }}"
                                                         data-map_id="{{ $singleMap->id }}"
+                                                        @if ($focusPlp !== null) data-plp-bucket="{{ $focusPlp }}" @endif
                                                         data-jenis="add"
                                                         class="btn btn-modern btn-modern-outline-danger btn-sm action"
                                                     >0</button>
@@ -496,8 +521,12 @@
                                                             'assessor' => $assessorType,
                                                             'map_id' => $map->id,
                                                             'form_id' => $form_id,
-                                                            'form_order' => $i+1
+                                                            'form_order' => $i+1,
                                                         ]);
+                                                        $mapPlp = $assessmentPlpForMap($map);
+                                                        if ($mapPlp !== null) {
+                                                            $assessment->where('plp_order', $mapPlp);
+                                                        }
                                                         @endphp
                                                         @if ($assessment->exists())
                                                         @php
@@ -509,6 +538,7 @@
                                                             data-formid="{{ $form_id }}"
                                                             data-form_order="{{ $i+1 }}"
                                                             data-map_id="{{ $map->id }}"
+                                                            @if ($focusPlp !== null) data-plp-bucket="{{ $focusPlp }}" @endif
                                                             data-jenis="edit"
                                                             class="btn btn-modern btn-modern-success btn-sm mb-2 action"
                                                         >{{ $assessmentRecord->grade }}</button>
@@ -519,6 +549,7 @@
                                                             data-formid="{{ $form_id }}"
                                                             data-form_order="{{ $i+1 }}"
                                                             data-map_id="{{ $map->id }}"
+                                                            @if ($focusPlp !== null) data-plp-bucket="{{ $focusPlp }}" @endif
                                                             data-jenis="add"
                                                             class="btn btn-modern btn-modern-outline-danger btn-sm mb-2 action"
                                                         >0</button>

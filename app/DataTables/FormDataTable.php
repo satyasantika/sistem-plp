@@ -23,7 +23,7 @@ class FormDataTable extends DataTable
             ->addColumn('action', function ($row) {
                 $action = '';
 
-                if (auth()->user()?->can('formitems-read')) {
+                if (auth()->user()?->can('forms.items-read')) {
                     $action .= ' <a href="'.e(route('forms.items.index', $row->getKey())).'" class="btn btn-info btn-sm my-1" title="Kelola item"><i class="ti-list"></i></a>';
                 }
 

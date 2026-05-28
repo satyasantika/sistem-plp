@@ -339,6 +339,18 @@
             color: #dc3545;
         }
 
+        .teach-plp-label {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: #7a92b2;
+            padding: 0 0.2rem;
+            margin-right: 2px;
+        }
+
         .teach-form-icon {
             font-size: 0.64rem;
         }
@@ -462,6 +474,10 @@
             color: #ff8091;
         }
 
+        body.dark .teach-plp-label {
+            color: #7a9fc0;
+        }
+
         body.dark .teach-empty {
             background: rgba(76, 194, 211, 0.16);
             color: #bdebf2;
@@ -487,7 +503,13 @@
                     <p class="teach-identity-meta">{{ auth()->user()->username ?? '-' }}</p>
                     <span class="teach-identity-badge">{{ auth()->user()->subjects->name ?? 'Prodi belum diatur' }}</span>
                     <div class="teach-action-list">
-                        <a href="{{ route('schoolassessments.only.index') }}" class="teach-action-btn teach-action-primary">Mulai Menilai</a>
+                        @forelse ($teacherActivePlps ?? [] as $activePlp)
+                            <a href="{{ route('schoolassessments.only.index', ['plp' => $activePlp]) }}" class="teach-action-btn teach-action-primary">
+                                Mulai menilai {{ $activePlp === 0 ? 'PLP' : 'PLP '.$activePlp }}
+                            </a>
+                        @empty
+                            <span class="small text-muted">Belum ada setelan PLP pada mahasiswa pamongan tahun ini.</span>
+                        @endforelse
                     </div>
                 </div>
             </div>
@@ -508,9 +530,10 @@
                                     $schoolTotalForms = 0;
 
                                     foreach ($schoolMaps as $schoolMap) {
-                                        $mapBadges = collect($teacherMapBadges[$schoolMap->id] ?? []);
-                                        $schoolCompletedForms += $mapBadges->where('done', true)->count();
-                                        $schoolTotalForms += $mapBadges->count();
+                                        foreach ($teacherMapBadges[$schoolMap->id] ?? [] as $plpBadges) {
+                                            $schoolCompletedForms += collect($plpBadges)->where('done', true)->count();
+                                            $schoolTotalForms += count($plpBadges);
+                                        }
                                     }
 
                                     $schoolIsComplete = $schoolTotalForms > 0 && $schoolCompletedForms === $schoolTotalForms;
@@ -530,10 +553,12 @@
                                     <div class="teach-student-list">
                                         @foreach ($schoolMaps as $map)
                                             @php
-                                                $studentBadges = collect($teacherMapBadges[$map->id] ?? []);
-                                                $studentCompletedForms = $studentBadges->where('done', true)->count();
-                                                $studentTotalForms = $studentBadges->count();
+                                                $studentBadgesByPlp = $teacherMapBadges[$map->id] ?? [];
+                                                $allStudentBadges = collect($studentBadgesByPlp)->flatten(1);
+                                                $studentCompletedForms = $allStudentBadges->where('done', true)->count();
+                                                $studentTotalForms = $allStudentBadges->count();
                                                 $studentIsComplete = $studentTotalForms > 0 && $studentCompletedForms === $studentTotalForms;
+                                                $multiplePlp = count($studentBadgesByPlp) > 1;
                                             @endphp
                                             <div class="teach-student-row">
                                                 <div class="teach-student-info">
@@ -549,10 +574,15 @@
                                                     </div>
                                                 </div>
                                                 <div class="teach-form-badges">
-                                                    @foreach ($studentBadges as $badge)
-                                                        <span class="teach-form-badge teach-form-badge-{{ $badge['done'] ? 'done' : 'pending' }}">
-                                                            <i class="fa teach-form-icon {{ $badge['done'] ? 'fa-check' : 'fa-times' }}"></i>{{ $badge['code'] }}
-                                                        </span>
+                                                    @foreach ($studentBadgesByPlp as $plpOrder => $plpBadges)
+                                                        @if ($multiplePlp)
+                                                            <span class="teach-plp-label">{{ $plpOrder === 0 ? 'PLP' : 'PLP '.$plpOrder }}</span>
+                                                        @endif
+                                                        @foreach ($plpBadges as $badge)
+                                                            <span class="teach-form-badge teach-form-badge-{{ $badge['done'] ? 'done' : 'pending' }}">
+                                                                <i class="fa teach-form-icon {{ $badge['done'] ? 'fa-check' : 'fa-times' }}"></i>{{ $badge['code'] }}
+                                                            </span>
+                                                        @endforeach
                                                     @endforeach
                                                 </div>
                                             </div>

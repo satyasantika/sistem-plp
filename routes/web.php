@@ -73,6 +73,10 @@ Route::middleware('auth')->group(function () {
         Route::delete('items/{formItem}', 'destroy')->name('destroy');
     });
     Route::resource('konfigurasi/forms', App\Http\Controllers\Configuration\FormController::class)->except('show');
+    Route::post('konfigurasi/plpfinalgraderules/weights', [App\Http\Controllers\Configuration\PlpFinalGradeRuleController::class, 'updateWeights'])->name('plpfinalgraderules.weights');
+    Route::delete('konfigurasi/plpfinalgraderules/weights/{plp_order}', [App\Http\Controllers\Configuration\PlpFinalGradeRuleController::class, 'destroyWeight'])->name('plpfinalgraderules.weights.destroy')->whereIn('plp_order', ['0', '1', '2']);
+    Route::patch('konfigurasi/plpfinalgraderules/{plpfinalgraderule}/times', [App\Http\Controllers\Configuration\PlpFinalGradeRuleController::class, 'updateTimes'])->name('plpfinalgraderules.times.update');
+    Route::resource('konfigurasi/plpfinalgraderules', App\Http\Controllers\Configuration\PlpFinalGradeRuleController::class)->only(['index', 'create', 'store', 'destroy']);
     Route::resource('konfigurasi/assessments', App\Http\Controllers\Configuration\AssessmentController::class)->except('show');
     Route::resource('konfigurasi/observations', App\Http\Controllers\Configuration\ObservationController::class)->except('show');
     Route::resource('data/cleaningassessments', App\Http\Controllers\School\CleaningAssessmentController::class)->only(['index', 'destroy']);
@@ -136,6 +140,7 @@ Route::middleware('auth')->group(function () {
             Route::put('aktivitas/studentobservations/plp/{form_id}/{studentobservation}', 'update')->name('studentobservations.only.update');
         });
         Route::controller(App\Http\Controllers\School\Only\AssessmentController::class)->group(function () {
+            Route::post('aktivitas/schoolassessments/plp/recalculate-grades', 'recalculateGrades')->name('schoolassessments.only.recalculate-grades');
             Route::get('aktivitas/schoolassessments/plp', 'index')->name('schoolassessments.only.index');
             Route::get('aktivitas/schoolassessments/plp/{form_id}/', 'show')->name('schoolassessments.only.show');
             Route::get('aktivitas/schoolassessments/plp/{form_id}/{form_order}/{map_id}/create', 'create')->name('schoolassessments.only.create');

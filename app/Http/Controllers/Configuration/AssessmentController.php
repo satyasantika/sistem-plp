@@ -9,13 +9,13 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Concerns\GuardsAssessmentDuplicates;
 use App\DataTables\AssessmentDataTable;
-use App\Http\Controllers\Controller\Map\YudisiumController;
+use App\Services\MapFinalGradeCalculator;
 
 class AssessmentController extends Controller
 {
     use GuardsAssessmentDuplicates;
 
-    function __construct()
+    public function __construct(private MapFinalGradeCalculator $gradeCalculator)
     {
         $this->middleware('permission:assessments-read', ['only' => ['index', 'show']]);
         $this->middleware('permission:assessments-create', ['only' => ['create', 'store']]);
@@ -57,8 +57,8 @@ class AssessmentController extends Controller
             ,
         ]);
         Assessment::create($data->all());
-        $map_id = $request->map_id;
-        $request->plp_order == 1 ? $this->_yudicium1($map_id) : $this->_yudicium2($map_id);
+        $map_id = (int) $request->map_id;
+        $this->refreshMapGrades($map_id, (int) $request->plp_order);
 
         return response()->json([
             'success' => true,
@@ -94,8 +94,8 @@ class AssessmentController extends Controller
         ;
 
         $assessment->fill($data)->save();
-        $map_id = $assessment->map_id;
-        $assessment->plp_order == 1 ? $this->_yudicium1($map_id) : $this->_yudicium2($map_id);
+        $map_id = (int) $assessment->map_id;
+        $this->refreshMapGrades($map_id, (int) $assessment->plp_order);
 
         return response()->json([
             'status' => 'success',
@@ -105,11 +105,21 @@ class AssessmentController extends Controller
 
     public function destroy(Assessment $assessment)
     {
+        $mapId = (int) $assessment->map_id;
+        $plpOrder = (int) $assessment->plp_order;
         $assessment->delete();
+        $this->refreshMapGrades($mapId, $plpOrder);
+
         return response()->json([
             'status' => 'success',
             'message' => 'Data Penilaian telah dihapus'
         ]);
+    }
+
+    private function refreshMapGrades(int $mapId, int $plpOrder): void
+    {
+        $this->gradeCalculator->recalculateMapForPlp($mapId, $plpOrder);
+        $this->gradeCalculator->recalculateCombinedDisplay($mapId);
     }
 
     private function _dataSelection()
@@ -120,100 +130,6 @@ class AssessmentController extends Controller
             'form_order' => [1, 2, 3, 4, 5, 6],
             'items' => ['score1', 'score2', 'score3', 'score4', 'score5', 'score6', 'score7', 'score8', 'score9'],
         ];
-    }
-
-    private function _yudicium1($map_id)
-    {
-        $map = Map::find($map_id);
-        $lecture_forms = ['2022N2', '2022N8'];
-
-        $total_grade = Assessment::where([
-            'assessor' => 'dosen',
-            'plp_order' => 1,
-            'map_id' => $map_id,
-        ])
-            ->sum('grade');
-        // dd($map);
-        $grade = $total_grade / count($lecture_forms);
-
-        $map->grade1 = round($grade, 2);
-        $map->letter1 = $this->_convertToLetter($grade);
-        $map->save();
-
-    }
-
-    private function _yudicium2($map_id)
-    {
-        $map = Map::find($map_id);
-        $lecture_forms = ['2022N2', '2022N6', '2022N7'];
-        $teacher_forms = ['2022N1', '2022N3', '2022N4', '2022N5', '2022N6', '2022N7'];
-        // penilaian dari dosen
-        $assessment_by_lecture = Assessment::where([
-            'assessor' => 'dosen',
-            'plp_order' => 2,
-            'map_id' => $map_id,
-        ])
-            ->whereIn('form_id', $lecture_forms)
-            ->sum('grade');
-        $lecture_form_times = Form::whereIn('id', $lecture_forms)->sum('times');
-        $lecture_total = round($assessment_by_lecture / $lecture_form_times, 0);
-        // penilaian dari guru
-        $assessment_by_teacher = Assessment::where([
-            'assessor' => 'guru',
-            'plp_order' => 2,
-            'map_id' => $map_id,
-        ])
-            ->whereIn('form_id', $teacher_forms)
-            ->sum('grade');
-        $teacher_form_times = Form::whereIn('id', $teacher_forms)->sum('times');
-        $teacher_total = $assessment_by_teacher / $teacher_form_times;
-
-        $grade = 0.4 * $lecture_total + 0.6 * $teacher_total;
-
-        $map->grade2 = round($grade, 2);
-        $map->letter2 = $this->_convertToLetter($grade);
-        $map->save();
-    }
-
-    private function _convertToLetter($grade)
-    {
-        if ($grade >= 85) {
-            return 'A';
-        } elseif ($grade >= 77) {
-            return 'A-';
-        } elseif ($grade >= 69) {
-            return 'B+';
-        } elseif ($grade >= 61) {
-            return 'B';
-        } elseif ($grade >= 53) {
-            return 'B-';
-        } elseif ($grade >= 45) {
-            return 'C+';
-        } elseif ($grade >= 37) {
-            return 'C';
-        } elseif ($grade >= 29) {
-            return 'C-';
-        } elseif ($grade >= 21) {
-            return 'D';
-        } else {
-            return 'E';
-        }
-    }
-
-    private function _convertToLetter5($grade)
-    {
-        if ($grade < 56) {
-            return 'E';
-        } elseif ($grade < 66) {
-            return 'D';
-        } elseif ($grade < 76) {
-            return 'C';
-        } elseif ($grade < 86) {
-            return 'B';
-        } else {
-            return 'A';
-        }
-
     }
 
 }

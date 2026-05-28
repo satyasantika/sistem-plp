@@ -137,7 +137,19 @@
             background: #fff;
         }
 
-        #assessment-table thead th {
+        .assessment-section-heading {
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #526789;
+            margin: 1rem 0 0.5rem;
+            padding-bottom: 0.35rem;
+            border-bottom: 2px solid rgba(82, 112, 154, 0.18);
+        }
+
+        #assessment-table thead th,
+        [id^="assessment-table-"] thead th {
             background: linear-gradient(135deg, #edf4ff, #f6f9ff);
             border-bottom: 1px solid rgba(82, 112, 154, 0.22);
             color: #526789;
@@ -146,7 +158,8 @@
             font-size: 0.75rem;
         }
 
-        #assessment-table tbody td {
+        #assessment-table tbody td,
+        [id^="assessment-table-"] tbody td {
             vertical-align: top;
             padding-top: 12px;
             padding-bottom: 12px;
@@ -211,7 +224,7 @@
             background: rgba(15, 26, 42, 0.8);
         }
 
-        body.dark #assessment-table thead th {
+        body.dark [id^="assessment-table-"] thead th {
             background: linear-gradient(135deg, rgba(34, 49, 73, 0.92), rgba(25, 39, 61, 0.92));
             color: #b8cbea;
             border-bottom-color: rgba(157, 185, 224, 0.24);
@@ -275,17 +288,51 @@
 @section('content')
 <div class="main-content">
     <div class="title">
-        Penilaian Kegiatan PLP
+        @if ($focusPlpLabel ?? null)
+            Penilaian {{ $focusPlpLabel }}
+        @else
+            Penilaian Kegiatan PLP
+        @endif
     </div>
     <div class="content-wrapper">
         <div class="row same-height">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">
-                        Rekap Penilaian Mahasiswa
-                        <a href="{{ route('dashboard') }}" class="btn btn-modern btn-modern-outline float-end">Dashboard</a>
+                    <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
+                        <span>
+                            Rekap Penilaian Mahasiswa
+                            @if ($focusPlpLabel ?? null)
+                                <span class="badge bg-primary ms-1">{{ $focusPlpLabel }}</span>
+                            @endif
+                        </span>
+                        <div class="d-flex flex-wrap gap-2">
+                            @can('aktivitas/schoolassessments/plp-update')
+                                <button type="button"
+                                        id="btn-recalculate-grades"
+                                        class="btn btn-modern btn-modern-outline btn-sm"
+                                        data-url="{{ route('schoolassessments.only.recalculate-grades') }}"
+                                        title="Hitung ulang nilai akhir semua mahasiswa bimbingan tahun {{ $activeYear }}">
+                                    Hitung ulang nilai
+                                </button>
+                            @endcan
+                            <a href="{{ route('dashboard') }}" class="btn btn-modern btn-modern-outline btn-sm">Dashboard</a>
+                        </div>
                     </div>
                     <div class="card-body">
+                        <div id="assessment-resume-main">
+                        @if (count($plpTabs ?? []) > 1)
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                @foreach ($plpTabs as $tab)
+                                    <a href="{{ $tab['url'] }}"
+                                       class="btn btn-sm {{ ($focusPlp ?? null) === $tab['order'] ? 'btn-primary' : 'btn-outline-secondary' }}">
+                                        {{ $tab['label'] }} ({{ $tab['formCount'] }} form)
+                                    </a>
+                                @endforeach
+                                @if ($focusPlp !== null)
+                                    <a href="{{ route('schoolassessments.only.index') }}" class="btn btn-sm btn-outline-secondary">Semua PLP</a>
+                                @endif
+                            </div>
+                        @endif
                         <div class="identity-card">
                             <div class="identity-head">
                                 <div>
@@ -295,8 +342,10 @@
                                 </div>
                                 <div class="summary-badges">
                                     <span class="badge-modern badge-modern-year">Tahun Aktif {{ $activeYear }}</span>
-                                    <span class="badge-modern badge-modern-success">Mahasiswa {{ $maps->count() }}</span>
-                                    <span class="badge-modern badge-modern-neutral">Form {{ count($forms) }}</span>
+                                    <span class="badge-modern badge-modern-success">Mahasiswa {{ $totalMaps }}</span>
+                                    @foreach ($sections as $plpOrder => $section)
+                                        <span class="badge-modern badge-modern-neutral">{{ $plpOrder === 0 ? 'PLP' : 'PLP '.$plpOrder }}: {{ count($section['forms']) }} form</span>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -306,182 +355,196 @@
                             <span class="submit-status-badge" id="submit-status-resume-badge">BERHASIL</span>
                         </div>
 
-                        <div class="note-list">
-                            Rekap penilaian ini menyajikan informasi penilaian dari setiap mahasiswa dengan catatan sebagai berikut:
-                            <ol>
-                                <li>nilai 0 (tulisan merah) menandakan input nilai belum dilakukan</li>
-                                <li>nilai sudah masuk ke sistem jika keterangan nilai (walaupun nilai 0) berada pada tombol hijau</li>
-                                @role('dosen')
-                                    <li>klik pada tombol setiap skor untuk mulai menilai (N2/N6/N7)</li>
-                                    <li>nilai DPL = (N2 + N6 + N7) / 3</li>
-                                @endrole
-                                @role('guru')
-                                    <li>klik pada tombol setiap skor untuk mulai menilai (N1/N3/N4/N5/N6/N7)</li>
-                                    <li>nilai GP = (N1 + N3 + N4 + N5 + N6 + N7) / 6</li>
-                                @endrole
-                                <li>nilai gabungan DPL & GP = 60% nilai GP + 40% nilai DPL</li>
-                                <li>
-                                    ketarangan huruf sebagai berikut:<br>
-                                    A (minimal 85) A- (minimal 77) B+ (minimal 69) B (minimal 61) B- (minimal 53) <br>C+ (minimal 45) C (minimal 37) C- (minimal 29) D (minimal 21) E (di bawah 21)
-                                </li>
-                            </ol>
-
-                            <div class="legend-badges">
-                                <span class="badge-modern badge-modern-success">Nilai terisi</span>
-                                <span class="badge-modern badge-modern-danger">Nilai belum diisi</span>
-                            </div>
-
-                        </div>
-                        <div class="table-responsive">
-                            <div id="role-table_wrapper" class="dataTables_wrapper no-footer assessment-wrap">
-                                <table class="display dataTable no-footer" id="assessment-table" role="grid">
-                                    <thead>
-                                        <tr role="row">
-                                            <th>Mahasiswa</th>
-                                            {{-- PERULANGAN JENIS FORM --}}
-                                            @foreach ($forms as $form) <th>{{ substr($form,-2) }}</th> @endforeach
-                                            @role('dosen')
-                                                <th class="text-center">Nilai DPL</th>
-                                            @endrole
-                                            @role('guru')
-                                                <th class="text-center">Nilai GP</th>
-                                            @endrole
-                                            <th class="text-center">Nilai Gab <br>(DPL & GP)</th>
-                                            <th class="text-center">Huruf</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @forelse($maps as $map)
-                                        <tr>
-                                            <td>
-                                                {{ $map->students->name ?? '' }}
-                                            </td>
-                                            @php
-                                                $count_form = 0;
-                                                $total_grade = 0;
-                                            @endphp
-                                            @foreach ($forms as $form)
-                                            {{-- PERULANGAN FORM YANG DINILAI --}}
-                                            @php
-                                                $assessor = 'guru';
-                                                if(auth()->user()->hasrole('dosen')){
-                                                    $assessor = 'dosen';
-                                                }
-                                                $form_times = App\Models\Form::find($form)->times;
-                                                $assessments = App\Models\Assessment::where('form_id',$form)
-                                                                                    ->where('map_id',$map->id)
-                                                                                    ->where('assessor',$assessor)
-                                                                                    ;
-                                            @endphp
-                                            <td>
-                                                @if ($assessments->exists())
-                                                @php
-                                                    $assessmentRecord = $assessments->first();
-                                                    $grade = $assessments->sum('grade');
-                                                    $grade = round($grade/$form_times,0);
-                                                @endphp
-                                                @if ($form_times > 1)
-                                                    <a
-                                                        href="{{ route('schoolassessments.only.show',['form_id' => $form, 'map_id' => $map->id]) }}"
-                                                        class="btn btn-modern btn-modern-success btn-sm mb-2">
-                                                        {{ $grade }}
-                                                    </a>
-                                                @else
-                                                    <button
-                                                        type="button"
-                                                        data-id="{{ $assessmentRecord->id }}"
-                                                        data-formid="{{ $form }}"
-                                                        data-form_order="1"
-                                                        data-map_id="{{ $map->id }}"
-                                                        data-jenis="edit"
-                                                        class="btn btn-modern btn-modern-success btn-sm mb-2 action">
-                                                        {{ $grade }}
-                                                    </button>
-                                                @endif
-                                                @php
-                                                    // hitung banyaknya form
-                                                    $count_form += $assessments->count();
-                                                    //hitung nilai total form
-                                                    $total_grade += $grade;
-                                                @endphp
-                                                @else
-                                                @if ($form_times > 1)
-                                                    <a
-                                                        href="{{ route('schoolassessments.only.show',['form_id' => $form, 'map_id' => $map->id]) }}"
-                                                        class="btn btn-modern btn-modern-outline-danger btn-sm mb-2">
-                                                        {{ 0 }}
-                                                    </a>
-                                                @else
-                                                    <button
-                                                        type="button"
-                                                        data-formid="{{ $form }}"
-                                                        data-form_order="1"
-                                                        data-map_id="{{ $map->id }}"
-                                                        data-jenis="add"
-                                                        class="btn btn-modern btn-modern-outline-danger btn-sm mb-2 action">
-                                                        {{ 0 }}
-                                                    </button>
-                                                @endif
-                                                @endif
-                                            </td>
-                                            @endforeach
-                                            @php
-                                                if (auth()->user()->hasrole('dosen'))
-                                                {
-                                                    $forms = ['2024N2','2024N6','2024N7'];
-                                                } else {
-                                                    $forms = ['2024N1','2024N3','2024N4','2024N5','2024N6','2024N7'];
-                                                }
-                                                // penilaian dari guru
-                                                $assessment_by_teacher = App\Models\Assessment::where([
-                                                    'assessor'=>'guru',
-                                                    'map_id'=>$map->id,
-                                                    ])
-                                                    ->whereIn('form_id',$forms)
-                                                    ->sum('grade');
-                                                    $teacher_form_times = App\Models\Form::whereIn('id',$forms)->sum('times');
-                                                    $assessment = $assessment_by_teacher/$teacher_form_times;
-
-                                                    $assessor = 'guru';
-                                                    if(auth()->user()->hasrole('dosen')){
-                                                        $assessor = 'dosen';
-                                                        // penilaian dari dosen
-                                                        $assessment_by_lecture = App\Models\Assessment::where([
-                                                                                            'assessor'=>'dosen',
-                                                                                            'map_id'=>$map->id,
-                                                                                        ])
-                                                                                        ->whereIn('form_id',$forms)
-                                                                                        ->sum('grade');
-                                                        $lecture_form_times = App\Models\Form::whereIn('id',$forms)->sum('times');
-                                                        $assessment = round($assessment_by_lecture/$lecture_form_times,0);
-                                                }
-                                                $assessments = App\Models\Assessment::where('assessor',$assessor)
-                                                                                    ->where('map_id',$map->id)
-                                                                                    ;
-                                            @endphp
-                                                @if ($assessments->exists())
-                                                    <td class="text-center">{{ round($assessment,2) }}</td>
-                                                    <td class="text-center">{{ round($map->grade,2) }}</td>
-                                                    <td class="text-center">{{ $map->letter }}</td>
-                                                @else
-                                                <td></td>
-                                                <td></td>
-                                                @endif
-                                        </tr>
+                        <div class="mb-3">
+                            <button class="btn btn-link btn-sm text-secondary ps-0 text-decoration-none"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapsePetunjuk"
+                                    aria-expanded="false"
+                                    aria-controls="collapsePetunjuk"
+                                    style="font-size: 0.8rem; font-weight: 600; letter-spacing: 0.3px;">
+                                <i class="ti-info-alt me-1"></i> Petunjuk Penilaian
+                                <i class="ti-angle-down ms-1" style="font-size: 0.65rem;"></i>
+                            </button>
+                            <div class="collapse" id="collapsePetunjuk">
+                                <div class="note-list mt-2">
+                                    Rekap penilaian ini menyajikan informasi penilaian dari setiap mahasiswa dengan catatan sebagai berikut:
+                                    <ol>
+                                        <li>nilai 0 (tulisan merah) menandakan input nilai belum dilakukan</li>
+                                        <li>nilai sudah masuk ke sistem jika keterangan nilai (walaupun nilai 0) berada pada tombol hijau</li>
+                                        @foreach ($sections as $plpOrder => $section)
+                                            <li>
+                                                {{ count($sections) > 1 ? ($plpOrder === 0 ? 'PLP: ' : 'PLP '.$plpOrder.': ') : '' }}klik pada tombol skor untuk mulai menilai
+                                                ({{ implode(' / ', array_map(fn ($f) => substr($f, -2), $section['forms'])) }})
+                                            </li>
                                         @endforeach
-                                    </tbody>
-                                </table>
+                                        <li>nilai gabungan DPL &amp; GP = bobot GP × nilai GP + bobot DPL × nilai DPL (sesuai konfigurasi)</li>
+                                        <li>
+                                            keterangan huruf:<br>
+                                            A (min. 85) · A- (min. 77) · B+ (min. 69) · B (min. 61) · B- (min. 53)<br>
+                                            C+ (min. 45) · C (min. 37) · C- (min. 29) · D (min. 21) · E (di bawah 21)
+                                        </li>
+                                    </ol>
+                                    <div class="legend-badges">
+                                        <span class="badge-modern badge-modern-success">Nilai terisi</span>
+                                        <span class="badge-modern badge-modern-danger">Nilai belum diisi</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
+                        <div id="sections-wrapper">
+                            @forelse ($sections as $plpOrder => $section)
+                                @php
+                                    $sectionLabel = \App\Models\Map::plpBucketLabel((int) $plpOrder);
+                                    $showSectionHeading = ($focusPlp ?? null) === null && count($sections) > 1;
+                                @endphp
+                                @if ($showSectionHeading)
+                                    <p class="assessment-section-heading">{{ $sectionLabel }}</p>
+                                @endif
+                                <div class="table-responsive mb-4" id="plp-section-{{ $plpOrder }}">
+                                    <div class="dataTables_wrapper no-footer assessment-wrap">
+                                        <table class="display dataTable no-footer" id="assessment-table-{{ $plpOrder }}" role="grid">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th>Mahasiswa</th>
+                                                    @foreach ($section['forms'] as $formId)
+                                                        <th>{{ substr($formId, -2) }}</th>
+                                                    @endforeach
+                                                    @role('dosen')
+                                                        <th class="text-center">Nilai DPL</th>
+                                                    @endrole
+                                                    @role('guru')
+                                                        <th class="text-center">Nilai GP</th>
+                                                    @endrole
+                                                    <th class="text-center">
+                                                        @if ((int) $plpOrder === 0)
+                                                            Nilai PLP
+                                                        @elseif (count($sections) > 1 || ($focusPlp ?? null) !== null)
+                                                            Nilai {{ $sectionLabel }}
+                                                        @else
+                                                            Nilai Gab (DPL & GP)
+                                                        @endif
+                                                    </th>
+                                                    <th class="text-center">Huruf</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($section['maps'] as $map)
+                                                <tr>
+                                                    <td>{{ $map->students->name ?? '' }}</td>
+                                                    @php
+                                                        $totalSelfGradeNum = 0.0;
+                                                        $totalSelfGradeDen = 0;
+                                                    @endphp
+                                                    @foreach ($section['forms'] as $formId)
+                                                        @php
+                                                            $ruleTimes = $section['formRuleTimes'][$formId] ?? 1;
+                                                            $assessmentPlpOrder = $map->assessmentPlpOrderForBucket((int) $plpOrder);
+                                                            $totalSelfGradeDen += $ruleTimes;
+                                                            $occAssessments = App\Models\Assessment::where('form_id', $formId)
+                                                                ->where('map_id', $map->id)
+                                                                ->where('assessor', $section['assessor'])
+                                                                ->where('plp_order', $assessmentPlpOrder)
+                                                                ->get()
+                                                                ->keyBy('form_order');
+                                                            $occSum = 0.0;
+                                                            $occCount = 0;
+                                                            for ($fi = 1; $fi <= $ruleTimes; $fi++) {
+                                                                $a = $occAssessments->get($fi);
+                                                                if ($a) {
+                                                                    $occSum += (float) $a->grade;
+                                                                    $occCount++;
+                                                                    $totalSelfGradeNum += (float) $a->grade;
+                                                                }
+                                                            }
+                                                        @endphp
+                                                        <td>
+                                                            @if ($ruleTimes > 1)
+                                                                @php
+                                                                    $occAvg = $occCount > 0 ? round($occSum / $occCount, 0) : 0;
+                                                                    $showUrl = route('schoolassessments.only.show', ['form_id' => $formId]) . '?plp=' . $plpOrder . '&map_id=' . $map->id;
+                                                                @endphp
+                                                                <a href="{{ $showUrl }}"
+                                                                   class="btn btn-modern {{ $occCount > 0 ? 'btn-modern-success' : 'btn-modern-outline-danger' }} btn-sm mb-2">
+                                                                    <small class="d-block lh-1" style="font-size:0.6rem;opacity:0.8">{{ substr($formId, -2) }}</small>
+                                                                    {{ $occAvg }}
+                                                                </a>
+                                                            @else
+                                                                @php $occAss = $occAssessments->get(1); @endphp
+                                                                @if ($occAss)
+                                                                    <button type="button"
+                                                                        data-id="{{ $occAss->id }}"
+                                                                        data-formid="{{ $formId }}"
+                                                                        data-form_order="1"
+                                                                        data-map_id="{{ $map->id }}"
+                                                                        data-plp-bucket="{{ $plpOrder }}"
+                                                                        data-jenis="edit"
+                                                                        class="btn btn-modern btn-modern-success btn-sm mb-2 action">
+                                                                        {{ round((float) $occAss->grade, 0) }}
+                                                                    </button>
+                                                                @else
+                                                                    <button type="button"
+                                                                        data-formid="{{ $formId }}"
+                                                                        data-form_order="1"
+                                                                        data-map_id="{{ $map->id }}"
+                                                                        data-plp-bucket="{{ $plpOrder }}"
+                                                                        data-jenis="add"
+                                                                        class="btn btn-modern btn-modern-outline-danger btn-sm mb-2 action">
+                                                                        0
+                                                                    </button>
+                                                                @endif
+                                                            @endif
+                                                        </td>
+                                                    @endforeach
+                                                    @php
+                                                        $selfGrade = $totalSelfGradeDen > 0
+                                                            ? min(100, max(0, round($totalSelfGradeNum / $totalSelfGradeDen, 2)))
+                                                            : 0;
+                                                        $finalGrade = match ((int) $plpOrder) {
+                                                            0 => $map->grade,
+                                                            1 => $map->grade1,
+                                                            2 => $map->grade2,
+                                                            default => null,
+                                                        };
+                                                        $finalLetter = match ((int) $plpOrder) {
+                                                            0 => $map->letter,
+                                                            1 => $map->letter1,
+                                                            2 => $map->letter2,
+                                                            default => null,
+                                                        };
+                                                    @endphp
+                                                    <td class="text-center">{{ $selfGrade ?: '' }}</td>
+                                                    <td class="text-center">{{ $finalGrade !== null ? min(100, max(0, round((float) $finalGrade, 2))) : '—' }}</td>
+                                                    <td class="text-center">{{ $finalLetter ?? '—' }}</td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            @empty
+                                <p class="text-muted small py-3">
+                                    @if (($focusPlp ?? null) !== null)
+                                        Tidak ada data penilaian untuk <strong>{{ $focusPlpLabel ?? 'PLP' }}</strong> pada tahun {{ $activeYear }}.
+                                        Pastikan mahasiswa bimbingan ikut PLP yang sesuai dan form sudah diatur di
+                                        <a href="{{ route('plpfinalgraderules.index') }}">Sebaran Form</a>.
+                                    @else
+                                        Belum ada konfigurasi form penilaian untuk peran ini.
+                                        Atur di <a href="{{ route('plpfinalgraderules.index') }}">Sebaran Form</a>.
+                                    @endif
+                                </p>
+                            @endforelse
+                        </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="modal fade" id="modalAction" tabindex="-1" aria-labelledby="largeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-
-        </div>
+        <div class="modal-dialog modal-lg"></div>
     </div>
 </div>
 @endsection
@@ -493,8 +556,10 @@
     <script src="{{ asset('') }}vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('') }}vendor/izitoast/dist/js/iziToast.min.js"></script>
     <script>
-        var initOnlyAssessmentResumeCrud = function(table) {
+        var initOnlyAssessmentResumeCrud = function(wrapperId) {
             const baseUrl = "{{ route('schoolassessments.only.index') }}";
+            const focusPlp = @json($focusPlp);
+            const reloadBaseUrl = focusPlp !== null ? `${baseUrl}?plp=${focusPlp}` : baseUrl;
             const createUrlTemplate = "{{ route('schoolassessments.only.create', ['form_id' => '__FORM__', 'form_order' => '__ORDER__', 'map_id' => '__MAP__']) }}";
             const editUrlTemplate = "{{ route('schoolassessments.only.edit', ['form_id' => '__FORM__', 'form_order' => '__ORDER__', 'map_id' => '__MAP__', 'schoolassessment' => '__ID__']) }}";
 
@@ -516,18 +581,14 @@
                         window.bootstrap.Modal.getOrCreateInstance(modalElement).show();
                         return;
                     }
-                } catch (e) {
-                    // fallback below
-                }
+                } catch (e) {}
 
                 try {
                     if (typeof $modal.modal === 'function') {
                         $modal.modal('show');
                         return;
                     }
-                } catch (e) {
-                    // fallback below
-                }
+                } catch (e) {}
 
                 $modal.addClass('show').css('display', 'block').attr('aria-modal', 'true').removeAttr('aria-hidden');
                 if (!$('.modal-backdrop').length) {
@@ -542,18 +603,14 @@
                         window.bootstrap.Modal.getOrCreateInstance(modalElement).hide();
                         return;
                     }
-                } catch (e) {
-                    // fallback below
-                }
+                } catch (e) {}
 
                 try {
                     if (typeof $modal.modal === 'function') {
                         $modal.modal('hide');
                         return;
                     }
-                } catch (e) {
-                    // fallback below
-                }
+                } catch (e) {}
 
                 $modal.removeClass('show').css('display', 'none').attr('aria-hidden', 'true').removeAttr('aria-modal');
                 $('.modal-backdrop').remove();
@@ -562,16 +619,20 @@
 
             const restoreViewport = () => {
                 window.requestAnimationFrame(() => {
-                    window.scrollTo({
-                        top: lastViewportY,
-                        left: 0,
-                        behavior: 'auto',
-                    });
+                    window.scrollTo({ top: lastViewportY, left: 0, behavior: 'auto' });
                 });
             };
 
-            const reloadTable = (callback) => {
-                $(`#${table}`).load(`${baseUrl} #${table} > *`, function() {
+            const appendPlpQuery = (url, bucket) => {
+                if (bucket === undefined || bucket === null || bucket === '') {
+                    return url;
+                }
+                const sep = url.includes('?') ? '&' : '?';
+                return `${url}${sep}plp=${encodeURIComponent(bucket)}`;
+            };
+
+            const reloadSections = (callback) => {
+                $(`#${wrapperId}`).load(`${reloadBaseUrl} #${wrapperId}`, function() {
                     restoreViewport();
                     if (typeof callback === 'function') {
                         callback();
@@ -611,28 +672,24 @@
                         $.ajax({
                             method: 'POST',
                             url,
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                            },
+                            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                             data: formData,
                             processData: false,
                             contentType: false,
                             success: function(response) {
                                 hideModal();
-                                reloadTable(function() {
+                                reloadSections(function() {
                                     showResumeSubmitStatus(actionType, response.message);
                                 });
                             },
                             error: function(response) {
                                 const errors = response.responseJSON?.errors;
-
                                 if (errors) {
                                     for (const [key, value] of Object.entries(errors)) {
                                         $(`[name='${key}']`).parent().append(`<span class='text-danger text-small'>${value}</span>`);
                                     }
                                     return;
                                 }
-
                                 iziToast.error({
                                     title: 'Error',
                                     message: 'Form penilaian gagal disimpan.',
@@ -643,7 +700,7 @@
                     });
             };
 
-            $(`#${table}`)
+            $(`#${wrapperId}`)
                 .off('click.onlyAssessmentResumeAction', '.action')
                 .on('click.onlyAssessmentResumeAction', '.action', function() {
                     lastViewportY = window.scrollY || window.pageYOffset || 0;
@@ -653,19 +710,12 @@
                     const formid = data.formid;
                     const formOrder = data.form_order;
                     const mapId = data.map_id;
+                    const plpBucket = data.plpBucket;
 
-                    const actionUrl = jenis === 'add'
-                        ? buildUrl(createUrlTemplate, {
-                            '__FORM__': formid,
-                            '__ORDER__': formOrder,
-                            '__MAP__': mapId,
-                        })
-                        : buildUrl(editUrlTemplate, {
-                            '__FORM__': formid,
-                            '__ORDER__': formOrder,
-                            '__MAP__': mapId,
-                            '__ID__': id,
-                        });
+                    let actionUrl = jenis === 'add'
+                        ? buildUrl(createUrlTemplate, { '__FORM__': formid, '__ORDER__': formOrder, '__MAP__': mapId })
+                        : buildUrl(editUrlTemplate, { '__FORM__': formid, '__ORDER__': formOrder, '__MAP__': mapId, '__ID__': id });
+                    actionUrl = appendPlpQuery(actionUrl, plpBucket);
 
                     $.ajax({
                         method: 'GET',
@@ -686,6 +736,70 @@
                 });
         };
 
-        initOnlyAssessmentResumeCrud('assessment-table');
+        initOnlyAssessmentResumeCrud('assessment-resume-main');
+
+        (function () {
+            const btn = document.getElementById('btn-recalculate-grades');
+            if (!btn) {
+                return;
+            }
+
+            const focusPlp = @json($focusPlp);
+            const reloadBaseUrl = focusPlp !== null
+                ? "{{ route('schoolassessments.only.index') }}?plp=" + focusPlp
+                : "{{ route('schoolassessments.only.index') }}";
+
+            btn.addEventListener('click', function () {
+                if (!window.confirm('Hitung ulang nilai akhir (PLP / PLP 1 / PLP 2) untuk semua mahasiswa bimbingan Anda pada tahun {{ $activeYear }}?')) {
+                    return;
+                }
+
+                const originalText = btn.textContent;
+                btn.disabled = true;
+                btn.textContent = 'Menghitung…';
+
+                fetch(btn.getAttribute('data-url'), {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        Accept: 'application/json',
+                    },
+                })
+                    .then((r) => r.json().catch(() => ({})).then((data) => ({ r, data })))
+                    .then(({ r, data }) => {
+                        if (!r.ok) {
+                            throw new Error(data.message || 'Gagal menghitung ulang nilai.');
+                        }
+                        iziToast.success({
+                            title: 'Berhasil',
+                            message: data.message || 'Nilai akhir dihitung ulang.',
+                            position: 'topRight',
+                        });
+                        window.location.href = reloadBaseUrl;
+                    })
+                    .catch((err) => {
+                        iziToast.error({
+                            title: 'Gagal',
+                            message: err.message || 'Gagal menghitung ulang nilai.',
+                            position: 'topRight',
+                        });
+                    })
+                    .finally(() => {
+                        btn.disabled = false;
+                        btn.textContent = originalText;
+                    });
+            });
+        })();
+
+        @if (isset($focusPlp) && $focusPlp !== null)
+            document.addEventListener('DOMContentLoaded', function () {
+                const target = document.getElementById('plp-section-{{ $focusPlp }}');
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        @endif
     </script>
 @endpush
