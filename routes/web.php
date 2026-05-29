@@ -184,6 +184,10 @@ Route::middleware('auth')->group(function () {
         Route::get('yudisium/plp/export', [App\Http\Controllers\Report\YudisiumReportController::class, 'exportXlsx'])
             ->name('yudisium.plp.export')
             ->middleware('role:kajur');
+        Route::get('yudisium/plp/recap', [App\Http\Controllers\Report\YudisiumReportController::class, 'loadRecap'])
+            ->middleware('role:kajur');
+        Route::get('yudisium/plp/table', [App\Http\Controllers\Report\YudisiumReportController::class, 'loadTable'])
+            ->middleware('role:kajur');
         Route::get('yudisium/plp/tab', [App\Http\Controllers\Report\YudisiumReportController::class, 'loadTab'])
             ->middleware('permission:yudisium/plp-read|yudisium/plp1-read|yudisium/plp2-read');
         Route::get('yudisium/plp', [App\Http\Controllers\Report\YudisiumReportController::class, 'showOnly'])

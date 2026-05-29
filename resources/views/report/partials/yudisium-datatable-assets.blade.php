@@ -255,6 +255,88 @@
             border-color: #c8ece4;
         }
 
+        .yudisium-chip.is-form-complete-summary,
+        .yudisium-chip.is-form-all-done {
+            background: linear-gradient(135deg, #eef3ff 0%, #e8f6f4 100%);
+            color: #3d5573;
+            border-color: #c5d6eb;
+            font-size: 11px;
+        }
+
+        .yudisium-recap-skeleton {
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px dashed #d4e2f4;
+            background: rgba(248, 251, 255, 0.8);
+        }
+
+        .yudisium-chip.is-form-empty {
+            background: linear-gradient(135deg, #fff1f0 0%, #ffe8e6 100%);
+            color: #9b2c2c;
+            border-color: #f5b5b0;
+        }
+
+        .yudisium-chip.is-form-empty .chip-value--empty {
+            background: rgba(255, 255, 255, 0.65);
+            color: #b54747;
+            border-color: #efb8b3;
+            font-weight: 700;
+        }
+
+        .yudisium-chip.is-form-partial {
+            background: linear-gradient(135deg, #fff8e6 0%, #fff3cd 100%);
+            color: #8a6d1d;
+            border-color: #f0d78c;
+        }
+
+        .yudisium-chip.is-form-partial .chip-value {
+            background: rgba(255, 255, 255, 0.75);
+            color: #7a5c10;
+            border-color: #e8c96a;
+        }
+
+        .yudisium-form-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 14px;
+            margin-bottom: 10px;
+            font-size: 0.72rem;
+            color: #6a7f9e;
+        }
+
+        .yudisium-form-legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .yudisium-form-legend-swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            border: 1px solid transparent;
+        }
+
+        .yudisium-form-legend-swatch.is-empty {
+            background: #ffe8e6;
+            border-color: #f5b5b0;
+        }
+
+        .yudisium-form-legend-swatch.is-partial {
+            background: #fff3cd;
+            border-color: #f0d78c;
+        }
+
+        .yudisium-form-legend-swatch.is-filled-lecture {
+            background: #e9f6ff;
+            border-color: #cfe1f8;
+        }
+
+        .yudisium-form-legend-swatch.is-filled-teacher {
+            background: #e9fff7;
+            border-color: #c8ece4;
+        }
+
         .yudisium-jurusan-recap {
             padding: 14px 16px;
             border-radius: 12px;
@@ -466,6 +548,17 @@
 
         .yudisium-filter-result {
             white-space: nowrap;
+        }
+
+        .yudisium-table-panel.is-hidden {
+            display: none;
+        }
+
+        .yudisium-table-deferred-hint {
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px dashed #d4e2f4;
+            background: rgba(248, 251, 255, 0.8);
         }
 
         .yudisium-grade-cell {
@@ -730,6 +823,22 @@
             color: #c7f7ed;
             border-color: rgba(96, 214, 190, 0.34);
         }
+
+        body.dark .yudisium-chip.is-form-empty {
+            background: linear-gradient(135deg, rgba(180, 70, 70, 0.28) 0%, rgba(140, 45, 45, 0.22) 100%);
+            color: #ffc9c9;
+            border-color: rgba(220, 120, 120, 0.4);
+        }
+
+        body.dark .yudisium-chip.is-form-partial {
+            background: linear-gradient(135deg, rgba(180, 140, 40, 0.28) 0%, rgba(140, 105, 25, 0.22) 100%);
+            color: #ffe9a8;
+            border-color: rgba(220, 180, 80, 0.4);
+        }
+
+        body.dark .yudisium-form-legend {
+            color: #9eb3d2;
+        }
     </style>
 @endpush
 
@@ -863,42 +972,142 @@
                 }
             }
 
-            function applyRecapLetterFilter($recap, letter) {
+            function findTablePanelForRecap($recap) {
                 var tableId = $recap.data('yudisium-table-id');
+
+                if (!tableId) {
+                    return $();
+                }
+
                 var $table = $('#' + tableId);
+
+                if ($table.length) {
+                    return $table.closest('[data-yudisium-table-panel]');
+                }
+
+                return $('[data-yudisium-table-panel][data-yudisium-table-id="' + tableId + '"]');
+            }
+
+            function loadDeferredTable($, $panel) {
+                if (!$panel.length || $panel.data('yudisiumTableLoaded')) {
+                    return Promise.resolve();
+                }
+
+                var url = $panel.attr('data-yudisium-table-url');
+                if (!url) {
+                    return Promise.resolve();
+                }
+
+                if ($panel.data('yudisiumTableLoading')) {
+                    return $panel.data('yudisiumTableLoading');
+                }
+
+                var request = fetch(url, {
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        Accept: 'text/html',
+                    },
+                })
+                    .then(function (response) {
+                        if (!response.ok) {
+                            throw new Error('Gagal memuat daftar mahasiswa.');
+                        }
+                        return response.text();
+                    })
+                    .then(function (html) {
+                        $panel.html(html);
+                        $panel.data('yudisiumTableLoaded', true);
+                        delete $panel[0].dataset.yudisiumTableUrl;
+                    })
+                    .catch(function () {
+                        $panel.html('<div class="alert alert-warning mb-0 py-2 small">Daftar mahasiswa gagal dimuat.</div>');
+                    })
+                    .finally(function () {
+                        $panel.removeData('yudisiumTableLoading');
+                    });
+
+                $panel.data('yudisiumTableLoading', request);
+
+                return request;
+            }
+
+            function initTableInPanel($, $panel) {
+                var $table = $panel.find('.js-yudisium-jurusan-table').first();
 
                 if (!$table.length) {
                     return;
                 }
 
-                var $panel = $table.closest('[data-yudisium-table-panel]');
+                if (!$.fn.DataTable.isDataTable($table)) {
+                    initYudisiumTable($, $table);
+                }
 
-                setTableFilters(tableId, 'all', letter);
-                clearRecapStatFilter($panel);
+                window.setTimeout(function () {
+                    if ($.fn.DataTable.isDataTable($table)) {
+                        $table.DataTable().columns.adjust().draw(false);
+                    }
+                }, 50);
+            }
 
-                $recap.find('.js-yudisium-recap-letter-filter').each(function () {
-                    var isActive = $(this).data('letter') === letter;
-                    $(this).toggleClass('is-active', isActive).attr('aria-pressed', isActive ? 'true' : 'false');
+            function revealTablePanel($recap) {
+                var $panel = findTablePanelForRecap($recap);
+
+                if (!$panel.length) {
+                    return Promise.resolve();
+                }
+
+                var wasHidden = $panel.hasClass('is-hidden');
+
+                return loadDeferredTable($, $panel).then(function () {
+                    if (wasHidden) {
+                        $panel.removeClass('is-hidden');
+                    }
+
+                    initTableInPanel($, $panel);
                 });
+            }
 
-                $recap.find('.js-yudisium-recap-letter-clear').prop('hidden', false);
-                redrawYudisiumTable($table);
+            function applyRecapLetterFilter($recap, letter) {
+                var tableId = $recap.data('yudisium-table-id');
+                var $panel = findTablePanelForRecap($recap);
+
+                revealTablePanel($recap).then(function () {
+                    var $table = $('#' + tableId);
+
+                    if (!$table.length) {
+                        return;
+                    }
+
+                    setTableFilters(tableId, 'all', letter);
+                    clearRecapStatFilter($panel);
+
+                    $recap.find('.js-yudisium-recap-letter-filter').each(function () {
+                        var isActive = $(this).data('letter') === letter;
+                        $(this).toggleClass('is-active', isActive).attr('aria-pressed', isActive ? 'true' : 'false');
+                    });
+
+                    $recap.find('.js-yudisium-recap-letter-clear').prop('hidden', false);
+                    redrawYudisiumTable($table);
+                });
             }
 
             function applyRecapPassFilter($recap, pass) {
                 var tableId = $recap.data('yudisium-table-id');
-                var $table = $('#' + tableId);
+                var $panel = findTablePanelForRecap($recap);
 
-                if (!$table.length) {
-                    return;
-                }
+                revealTablePanel($recap).then(function () {
+                    var $table = $('#' + tableId);
 
-                var $panel = $table.closest('[data-yudisium-table-panel]');
+                    if (!$table.length) {
+                        return;
+                    }
 
-                setTableFilters(tableId, pass, 'all');
-                clearRecapLetterFilter($panel);
-                syncRecapStatFromSelect($panel, pass);
-                redrawYudisiumTable($table);
+                    setTableFilters(tableId, pass, 'all');
+                    clearRecapLetterFilter($panel);
+                    syncRecapStatFromSelect($panel, pass);
+                    redrawYudisiumTable($table);
+                });
             }
 
             function initRecapStatFilters($) {
@@ -911,9 +1120,11 @@
                     var tableId = $recap.data('yudisium-table-id');
 
                     if ($btn.hasClass('is-active')) {
-                        setTableFilters(tableId, 'all', 'all');
-                        clearRecapFilters($panel);
-                        redrawYudisiumTable($table);
+                        revealTablePanel($recap).then(function () {
+                            setTableFilters(tableId, 'all', 'all');
+                            clearRecapFilters($panel);
+                            redrawYudisiumTable($('#' + tableId));
+                        });
                         return;
                     }
 
@@ -929,10 +1140,12 @@
 
                     if ($btn.hasClass('is-active')) {
                         var tableId = $recap.data('yudisium-table-id');
-                        var $panel = $('#' + tableId).closest('[data-yudisium-table-panel]');
-                        setTableFilters(tableId, 'all', 'all');
-                        clearRecapLetterFilter($panel);
-                        redrawYudisiumTable($('#' + tableId));
+                        var $panel = findTablePanelForRecap($recap);
+                        revealTablePanel($recap).then(function () {
+                            setTableFilters(tableId, 'all', 'all');
+                            clearRecapLetterFilter($panel);
+                            redrawYudisiumTable($('#' + tableId));
+                        });
                         return;
                     }
 
@@ -960,9 +1173,70 @@
                 ensureFilterState(tableId);
             }
 
+            function scheduleYudisiumTableInit($, $table, callback) {
+                var run = function () {
+                    callback();
+                };
+
+                if (typeof window.requestIdleCallback === 'function') {
+                    window.requestIdleCallback(run, { timeout: 800 });
+                } else {
+                    window.setTimeout(run, 0);
+                }
+            }
+
+            function loadDeferredRecap($, $host) {
+                if (!$host.length || $host.data('yudisiumRecapLoaded')) {
+                    return Promise.resolve();
+                }
+
+                var url = $host.attr('data-yudisium-recap-url');
+                if (!url) {
+                    return Promise.resolve();
+                }
+
+                if ($host.data('yudisiumRecapLoading')) {
+                    return $host.data('yudisiumRecapLoading');
+                }
+
+                var request = fetch(url, {
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        Accept: 'text/html',
+                    },
+                })
+                    .then(function (response) {
+                        if (!response.ok) {
+                            throw new Error('Gagal memuat rekap.');
+                        }
+                        return response.text();
+                    })
+                    .then(function (html) {
+                        $host.html(html);
+                        $host.data('yudisiumRecapLoaded', true);
+                    })
+                    .catch(function () {
+                        $host.html('<div class="alert alert-warning mb-0 py-2 small">Rekap nilai gagal dimuat.</div>');
+                    })
+                    .finally(function () {
+                        $host.removeData('yudisiumRecapLoading');
+                    });
+
+                $host.data('yudisiumRecapLoading', request);
+
+                return request;
+            }
+
+            function initRecapHostsInScope($, $scope) {
+                $scope.find('[data-yudisium-recap-url]').each(function () {
+                    loadDeferredRecap($, $(this));
+                });
+            }
+
             function initYudisiumTable($, $table) {
                 if ($.fn.DataTable.isDataTable($table)) {
-                    $table.DataTable().destroy();
+                    $table.DataTable().destroy(false);
                 }
 
                 var isJurusan = $table.hasClass('js-yudisium-jurusan-table');
@@ -971,14 +1245,20 @@
                 var dt = $table.DataTable({
                     autoWidth: false,
                     responsive: false,
+                    deferRender: true,
+                    processing: true,
+                    orderClasses: false,
                     paging: true,
                     searching: true,
                     lengthChange: true,
                     info: true,
-                    pageLength: 10,
+                    pageLength: 25,
                     lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
                     dom: '<"yudisium-dt-header"lf>rt<"yudisium-dt-footer"ip>',
                     order: [[0, 'asc']],
+                    columnDefs: [
+                        { orderable: false, targets: [1, 2] },
+                    ],
                     language: {
                         search: 'Cari:',
                         searchPlaceholder: 'Nama mahasiswa…',
@@ -1011,8 +1291,24 @@
             }
 
             function initTablesInScope($, $scope) {
+                initRecapHostsInScope($, $scope);
+
                 $scope.find('.js-yudisium-table').each(function () {
-                    initYudisiumTable($, $(this));
+                    var $table = $(this);
+
+                    if (!isVisibleTabPane($table)) {
+                        return;
+                    }
+
+                    if ($table.closest('[data-yudisium-table-panel]').hasClass('is-hidden')) {
+                        return;
+                    }
+
+                    scheduleYudisiumTableInit($, $table, function () {
+                        if (!$.fn.DataTable.isDataTable($table)) {
+                            initYudisiumTable($, $table);
+                        }
+                    });
                 });
             }
 
@@ -1030,10 +1326,24 @@
                 $('.js-yudisium-table').each(function () {
                     var $table = $(this);
 
-                    if (isVisibleTabPane($table)) {
-                        initYudisiumTable($, $table);
+                    if (!isVisibleTabPane($table)) {
+                        return;
                     }
+
+                    if ($table.closest('[data-yudisium-table-panel]').hasClass('is-hidden')) {
+                        return;
+                    }
+
+                    scheduleYudisiumTableInit($, $table, function () {
+                        if (!$.fn.DataTable.isDataTable($table)) {
+                            initYudisiumTable($, $table);
+                        }
+                    });
                 });
+
+                window.setTimeout(function () {
+                    initRecapHostsInScope($, $('.tab-pane.active.show, .tab-pane.active'));
+                }, 120);
             };
 
             function boot() {
@@ -1083,6 +1393,7 @@
                         $pane.attr('data-yudisium-tab-loaded', '1');
                         $pane.data('yudisium-tab-loaded', 1);
                         delete $pane[0].dataset.yudisiumTabUrl;
+                        initRecapHostsInScope($, $pane);
                     })
                     .catch(function () {
                         $pane.html(
@@ -1116,8 +1427,9 @@
                         initTablesInScope($, $pane);
 
                         $pane.find('.js-yudisium-table').each(function () {
-                            if ($.fn.DataTable.isDataTable(this)) {
-                                $(this).DataTable().columns.adjust().draw(false);
+                            var $table = $(this);
+                            if ($.fn.DataTable.isDataTable($table)) {
+                                $table.DataTable().columns.adjust().draw(false);
                             }
                         });
                     });

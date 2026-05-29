@@ -31,17 +31,25 @@ class YudisiumReportService
     /** @var array<int, array<int, bool>> */
     private array $bucketActiveByYear = [];
 
+    /**
+     * @return array<int, bool>
+     */
+    public function getActiveBucketsForYear(int $year): array
+    {
+        if (! isset($this->bucketActiveByYear[$year])) {
+            $this->bucketActiveByYear[$year] = $this->resolveActiveBucketsForYear($year);
+        }
+
+        return $this->bucketActiveByYear[$year];
+    }
+
     public function bucketIsActive(int $year, int $bucket): bool
     {
         if (! in_array($bucket, [0, 1, 2], true)) {
             return false;
         }
 
-        if (! isset($this->bucketActiveByYear[$year])) {
-            $this->bucketActiveByYear[$year] = $this->resolveActiveBucketsForYear($year);
-        }
-
-        return $this->bucketActiveByYear[$year][$bucket] ?? false;
+        return $this->getActiveBucketsForYear($year)[$bucket] ?? false;
     }
 
     /**
@@ -110,7 +118,7 @@ class YudisiumReportService
             return $this->emptyJurusanPayload();
         }
 
-        $cacheKey = "yudisium:jurusan:v5:{$year}:{$subjectId}:{$plpOrder}";
+        $cacheKey = "yudisium:jurusan:v7:{$year}:{$subjectId}:{$plpOrder}";
 
         return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($year, $subjectId, $plpOrder) {
             $forms = $this->getFormListsForBucket($year, $plpOrder);
@@ -147,7 +155,7 @@ class YudisiumReportService
             return $this->emptyJurusanPayload();
         }
 
-        $cacheKey = "yudisium:bucket:jurusan:v5:{$year}:{$subjectId}:{$bucket}";
+        $cacheKey = "yudisium:bucket:jurusan:v7:{$year}:{$subjectId}:{$bucket}";
 
         return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($year, $subjectId, $bucket) {
             $forms = $this->getFormListsForBucket($year, $bucket);
@@ -289,7 +297,18 @@ class YudisiumReportService
             ->where('maps.subject_id', $subjectId)
             ->whereNotNull('maps.student_id')
             ->orderBy('students_order.name')
-            ->select('maps.*')
+            ->select([
+                'maps.id',
+                'maps.student_id',
+                'maps.lecture_id',
+                'maps.teacher_id',
+                'maps.grade',
+                'maps.letter',
+                'maps.grade1',
+                'maps.letter1',
+                'maps.grade2',
+                'maps.letter2',
+            ])
             ->with([
                 'students:id,name,username',
                 'lectures:id,name',
@@ -340,6 +359,16 @@ class YudisiumReportService
 
         [$gradeColumn, $letterColumn] = $this->gradeLetterColumns($bucket);
 
+        $dosenTimesByForm = [];
+        foreach ($lectureForms as $formId) {
+            $dosenTimesByForm[$formId] = $this->resolveFormTimes($formTimes, 'dosen', $formId);
+        }
+
+        $guruTimesByForm = [];
+        foreach ($teacherForms as $formId) {
+            $guruTimesByForm[$formId] = $this->resolveFormTimes($formTimes, 'guru', $formId);
+        }
+
         $rows = [];
         foreach ($maps as $map) {
             $grade = (float) ($map->{$gradeColumn} ?? 0);
@@ -348,15 +377,15 @@ class YudisiumReportService
             $lectureByForm = [];
             foreach ($lectureForms as $formId) {
                 $sum = (float) ($assessmentByMap[$map->id]['dosen'][$formId] ?? 0);
-                $times = $this->resolveFormTimes($formTimes, 'dosen', $formId);
-                $lectureByForm[$formId] = $sum > 0 ? round($sum / max($times, 1), 2) : 0;
+                $times = $dosenTimesByForm[$formId];
+                $lectureByForm[$formId] = $sum > 0 ? round($sum / $times, 2) : 0;
             }
 
             $teacherByForm = [];
             foreach ($teacherForms as $formId) {
                 $sum = (float) ($assessmentByMap[$map->id]['guru'][$formId] ?? 0);
-                $times = $this->resolveFormTimes($formTimes, 'guru', $formId);
-                $teacherByForm[$formId] = $sum > 0 ? round($sum / max($times, 1), 2) : 0;
+                $times = $guruTimesByForm[$formId];
+                $teacherByForm[$formId] = $sum > 0 ? round($sum / $times, 2) : 0;
             }
 
             $filledSlots = $this->countFilledAssessmentSlotsForMap(
@@ -389,10 +418,61 @@ class YudisiumReportService
                 'filter_letter' => $this->filterLetterKey($gradeMeta),
                 'lecture_forms' => $lectureByForm,
                 'teacher_forms' => $teacherByForm,
+                'lecture_form_status' => $this->buildFormSlotStatuses(
+                    $map->id,
+                    $lectureForms,
+                    $formTimes,
+                    'dosen',
+                    $dosenSlotCounts
+                ),
+                'teacher_form_status' => $this->buildFormSlotStatuses(
+                    $map->id,
+                    $teacherForms,
+                    $formTimes,
+                    'guru',
+                    $guruSlotCounts
+                ),
             ];
         }
 
         return $rows;
+    }
+
+    /**
+     * Status pengisian form per map: empty (belum dinilai), partial, filled.
+     *
+     * @param  array<int, string>  $forms
+     * @param  array<string, int>|array<string, array<string, int>>  $formTimes
+     * @param  array<int, array<string, array<int, int>>>  $slotCounts
+     * @return array<string, string>
+     */
+    private function buildFormSlotStatuses(
+        int $mapId,
+        array $forms,
+        array $formTimes,
+        string $assessor,
+        array $slotCounts
+    ): array {
+        $statuses = [];
+
+        foreach ($forms as $formId) {
+            $times = $this->resolveFormTimes($formTimes, $assessor, $formId);
+            $filled = 0;
+
+            for ($order = 1; $order <= $times; $order++) {
+                if (($slotCounts[$mapId][$formId][$order] ?? 0) > 0) {
+                    $filled++;
+                }
+            }
+
+            $statuses[$formId] = match (true) {
+                $filled === 0 => 'empty',
+                $filled < $times => 'partial',
+                default => 'filled',
+            };
+        }
+
+        return $statuses;
     }
 
     private function applyMapParticipationFilter(Builder $query, int $bucket, string $prefix = ''): void
@@ -801,6 +881,8 @@ class YudisiumReportService
                 Cache::forget("yudisium:bucket:jurusan:v3:{$year}:{$subjectId}:{$bucket}");
                 Cache::forget("yudisium:bucket:jurusan:v4:{$year}:{$subjectId}:{$bucket}");
                 Cache::forget("yudisium:bucket:jurusan:v5:{$year}:{$subjectId}:{$bucket}");
+                Cache::forget("yudisium:bucket:jurusan:v6:{$year}:{$subjectId}:{$bucket}");
+                Cache::forget("yudisium:bucket:jurusan:v7:{$year}:{$subjectId}:{$bucket}");
                 Cache::forget("yudisium:only:jurusan:{$year}:{$subjectId}");
             }
         }
@@ -814,6 +896,8 @@ class YudisiumReportService
                 Cache::forget("yudisium:jurusan:v3:{$year}:{$subjectId}:{$plpOrder}");
                 Cache::forget("yudisium:jurusan:v4:{$year}:{$subjectId}:{$plpOrder}");
                 Cache::forget("yudisium:jurusan:v5:{$year}:{$subjectId}:{$plpOrder}");
+                Cache::forget("yudisium:jurusan:v6:{$year}:{$subjectId}:{$plpOrder}");
+                Cache::forget("yudisium:jurusan:v7:{$year}:{$subjectId}:{$plpOrder}");
             }
         }
     }

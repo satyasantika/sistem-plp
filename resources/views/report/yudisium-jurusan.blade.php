@@ -6,66 +6,45 @@
                     <h5>Rekap Hasil Penilaian {{ $plp_label ?? ('PLP '.$plp_order) }} Jurusan {{ auth()->user()->subjects->departement }}</h5>
                 </div>
                 <div class="card-body">
-                    @include('report.partials.yudisium-jurusan-recap', [
-                        'gradeRecap' => $gradeRecap ?? null,
-                        'jurusanRows' => $jurusanRows,
-                        'tableId' => $tableId ?? 'yudisium-jurusan-table',
-                    ])
-
-                    <div class="yudisium-table-panel" data-yudisium-table-panel>
-                        <div class="yudisium-datatable-shell">
-                            <table id="{{ $tableId ?? 'yudisium-jurusan-table' }}" class="table small-font table-striped table-hover table-sm yudisium-table js-yudisium-table js-yudisium-jurusan-table w-100" role="grid">
-                                <thead>
-                                    <tr role="row">
-                                        <th>Mahasiswa</th>
-                                        <th class="text-center">Nilai</th>
-                                        <th>Keterangan</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($jurusanRows as $row)
-                                    @php
-                                        $filterPass = $row['filter_pass'] ?? match ($row['display_state'] ?? '') {
-                                            'complete' => (float) ($row['grade'] ?? 0) >= 61 ? 'lulus' : 'tidak-lulus',
-                                            'partial' => 'belum-lengkap',
-                                            default => 'belum-dinilai',
-                                        };
-                                        $filterLetter = $row['filter_letter'] ?? (string) ($row['letter_display'] ?? $row['letter'] ?? '');
-                                    @endphp
-                                    <tr
-                                        data-yudisium-pass="{{ $filterPass }}"
-                                        data-yudisium-letter="{{ $filterLetter }}"
-                                        data-yudisium-display-state="{{ $row['display_state'] ?? '' }}"
-                                    >
-                                        <td>
-                                            {{ $row['student_name'] }}
-                                        </td>
-                                        @include('report.partials.yudisium-grade-cell', ['row' => $row])
-                                        <td>
-                                            <div class="yudisium-notes">
-                                                @foreach ($lectureForms as $form)
-                                                <span class="yudisium-chip is-lecture">
-                                                    {{ substr($form,-2) }} <span class="chip-value">{{ $row['lecture_forms'][$form] ?? 0 }}</span>
-                                                </span>
-                                                @endforeach
-                                                <span class="yudisium-chip is-lecture is-actor">{{ $row['lecture_name'] }}</span>
-                                            </div>
-                                            @if (!empty($teacherForms))
-                                                <div class="yudisium-notes break-line">
-                                                    @foreach ($teacherForms as $form)
-                                                    <span class="yudisium-chip is-teacher">
-                                                        {{ substr($form,-2) }} <span class="chip-value">{{ $row['teacher_forms'][$form] ?? 0 }}</span>
-                                                    </span>
-                                                    @endforeach
-                                                    <span class="yudisium-chip is-teacher is-actor">{{ $row['teacher_name'] }}</span>
-                                                </div>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                    @if (!empty($deferRecap) && !empty($recapUrl))
+                        <div
+                            class="yudisium-recap-host mb-3"
+                            data-yudisium-recap-url="{{ $recapUrl }}"
+                            data-yudisium-table-id="{{ $tableId ?? 'yudisium-jurusan-table' }}"
+                        >
+                            <div class="yudisium-recap-skeleton text-muted small py-2">
+                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                Memuat rekap nilai…
+                            </div>
                         </div>
+                    @else
+                        @include('report.partials.yudisium-jurusan-recap', [
+                            'gradeRecap' => $gradeRecap ?? null,
+                            'jurusanRows' => $jurusanRows,
+                            'tableId' => $tableId ?? 'yudisium-jurusan-table',
+                        ])
+                    @endif
+
+                    <div
+                        class="yudisium-table-panel is-hidden"
+                        data-yudisium-table-panel
+                        @if (!empty($deferTable) && !empty($tableUrl))
+                            data-yudisium-table-url="{{ $tableUrl }}"
+                            data-yudisium-table-id="{{ $tableId ?? 'yudisium-jurusan-table' }}"
+                        @endif
+                    >
+                        @if (!empty($deferTable) && !empty($tableUrl))
+                            <p class="yudisium-table-deferred-hint text-muted small mb-0 py-2">
+                                Daftar mahasiswa dimuat setelah Anda memilih filter pada rekap di atas.
+                            </p>
+                        @else
+                            @include('report.partials.yudisium-jurusan-table-panel', [
+                                'jurusanRows' => $jurusanRows,
+                                'lectureForms' => $lectureForms,
+                                'teacherForms' => $teacherForms,
+                                'tableId' => $tableId ?? 'yudisium-jurusan-table',
+                            ])
+                        @endif
                     </div>
                 </div>
             </div>

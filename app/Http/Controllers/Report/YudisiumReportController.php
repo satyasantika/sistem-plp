@@ -166,16 +166,96 @@ class YudisiumReportController extends Controller
         return view('report.partials.yudisium-tab-pane', ['tab' => $tab]);
     }
 
+    public function loadRecap(Request $request)
+    {
+        $user = auth()->user();
+
+        if (! $user->hasRole('kajur')) {
+            abort(403);
+        }
+
+        $subjectId = (string) ($user->subject_id ?? '');
+        if ($subjectId === '') {
+            abort(422);
+        }
+
+        $activeYear = (int) Map::activeYear($user);
+        $useLegacyTabs = $this->usesLegacyTabs($activeYear, $user);
+        $tabStubs = $this->collectTabStubs($activeYear, $user, $useLegacyTabs);
+        $tabKey = (string) $request->query('tab', '');
+
+        if (collect($tabStubs)->firstWhere('key', $tabKey) === null) {
+            abort(404);
+        }
+
+        $bucket = $this->tabKeyToBucket($tabKey);
+        if ($bucket === null) {
+            abort(404);
+        }
+
+        $jurusanData = $useLegacyTabs
+            ? $this->service->getJurusanRows($activeYear, $subjectId, $bucket)
+            : $this->service->getBucketJurusanRows($activeYear, $subjectId, $bucket);
+
+        return view('report.partials.yudisium-jurusan-recap', [
+            'gradeRecap' => $jurusanData['gradeRecap'] ?? null,
+            'tableId' => 'yudisium-jurusan-table-'.$tabKey,
+        ]);
+    }
+
+    public function loadTable(Request $request)
+    {
+        $user = auth()->user();
+
+        if (! $user->hasRole('kajur')) {
+            abort(403);
+        }
+
+        $subjectId = (string) ($user->subject_id ?? '');
+        if ($subjectId === '') {
+            abort(422);
+        }
+
+        $activeYear = (int) Map::activeYear($user);
+        $useLegacyTabs = $this->usesLegacyTabs($activeYear, $user);
+        $tabStubs = $this->collectTabStubs($activeYear, $user, $useLegacyTabs);
+        $tabKey = (string) $request->query('tab', '');
+
+        if (collect($tabStubs)->firstWhere('key', $tabKey) === null) {
+            abort(404);
+        }
+
+        $bucket = $this->tabKeyToBucket($tabKey);
+        if ($bucket === null) {
+            abort(404);
+        }
+
+        $jurusanData = $useLegacyTabs
+            ? $this->service->getJurusanRows($activeYear, $subjectId, $bucket)
+            : $this->service->getBucketJurusanRows($activeYear, $subjectId, $bucket);
+
+        return view('report.partials.yudisium-jurusan-table-panel', [
+            'jurusanRows' => $jurusanData['rows'],
+            'lectureForms' => $jurusanData['lectureForms'],
+            'teacherForms' => $jurusanData['teacherForms'],
+            'tableId' => 'yudisium-jurusan-table-'.$tabKey,
+        ]);
+    }
+
     private function usesLegacyTabs(int $activeYear, $user): bool
     {
-        $baseMapQuery = Map::query()
+        if ($activeYear > 2023) {
+            return false;
+        }
+
+        $flags = Map::query()
             ->visibleToUser($user)
             ->where('year', $activeYear)
-            ->whereNotNull('student_id');
+            ->whereNotNull('student_id')
+            ->selectRaw('MAX(plp1) as has_plp1, MAX(plp2) as has_plp2')
+            ->first();
 
-        return $activeYear <= 2023
-            && ((clone $baseMapQuery)->where('plp1', 1)->exists()
-                || (clone $baseMapQuery)->where('plp2', 1)->exists());
+        return (bool) ($flags->has_plp1 ?? false) || (bool) ($flags->has_plp2 ?? false);
     }
 
     /**
@@ -186,15 +266,17 @@ class YudisiumReportController extends Controller
         $stubs = [];
 
         if ($useLegacyTabs) {
-            $baseMapQuery = Map::query()
+            $flags = Map::query()
                 ->visibleToUser($user)
                 ->where('year', $activeYear)
-                ->whereNotNull('student_id');
+                ->whereNotNull('student_id')
+                ->selectRaw('MAX(plp1) as has_plp1, MAX(plp2) as has_plp2')
+                ->first();
 
             foreach ([1, 2] as $plpOrder) {
                 $tabExists = $plpOrder === 1
-                    ? (clone $baseMapQuery)->where('plp1', 1)->exists()
-                    : (clone $baseMapQuery)->where('plp2', 1)->exists();
+                    ? (bool) ($flags->has_plp1 ?? false)
+                    : (bool) ($flags->has_plp2 ?? false);
 
                 if (! $tabExists || ! $this->userCanViewBucket($user, $plpOrder)) {
                     continue;
@@ -210,8 +292,10 @@ class YudisiumReportController extends Controller
             return $stubs;
         }
 
+        $activeBuckets = $this->service->getActiveBucketsForYear($activeYear);
+
         foreach ([0, 1, 2] as $bucket) {
-            if (! $this->service->bucketIsActive($activeYear, $bucket)) {
+            if (! ($activeBuckets[$bucket] ?? false)) {
                 continue;
             }
 
@@ -263,6 +347,10 @@ class YudisiumReportController extends Controller
             'lectureForms' => [],
             'teacherForms' => [],
             'gradeRecap' => null,
+            'deferRecap' => false,
+            'recapUrl' => null,
+            'deferTable' => false,
+            'tableUrl' => null,
         ];
     }
 
@@ -276,6 +364,23 @@ class YudisiumReportController extends Controller
             : $this->buildModernTab($activeYear, $user, $stub['plp_order']);
 
         $payload['loaded'] = $loaded;
+        $payload['key'] = $stub['key'];
+
+        if ($user->hasRole('kajur')) {
+            $payload['deferRecap'] = true;
+            $payload['recapUrl'] = url('yudisium/plp/recap').'?tab='.urlencode($stub['key']);
+            $payload['deferTable'] = true;
+            $payload['tableUrl'] = url('yudisium/plp/table').'?tab='.urlencode($stub['key']);
+            $payload['jurusanRows'] = [];
+            $payload['lectureForms'] = [];
+            $payload['teacherForms'] = [];
+            unset($payload['gradeRecap']);
+        } else {
+            $payload['deferRecap'] = false;
+            $payload['recapUrl'] = null;
+            $payload['deferTable'] = false;
+            $payload['tableUrl'] = null;
+        }
 
         return $payload;
     }
@@ -291,10 +396,6 @@ class YudisiumReportController extends Controller
 
         if ($user->hasAnyRole(['ketua', 'dekanat'])) {
             $dekanatSummary = $this->service->getDekanatSummary($activeYear, $plpOrder);
-        }
-
-        if ($user->hasRole('kajur')) {
-            $jurusanData = $this->service->getJurusanRows($activeYear, $user->subject_id, $plpOrder);
         }
 
         return [
@@ -321,10 +422,6 @@ class YudisiumReportController extends Controller
 
         if ($user->hasAnyRole(['ketua', 'dekanat'])) {
             $dekanatSummary = $this->service->getBucketDekanatSummary($activeYear, $bucket);
-        }
-
-        if ($user->hasRole('kajur')) {
-            $jurusanData = $this->service->getBucketJurusanRows($activeYear, $user->subject_id, $bucket);
         }
 
         return [

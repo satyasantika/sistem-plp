@@ -12,5 +12,9 @@
     'lectureForms' => $tab['lectureForms'],
     'teacherForms' => $tab['teacherForms'],
     'gradeRecap' => $tab['gradeRecap'] ?? null,
+    'deferRecap' => $tab['deferRecap'] ?? false,
+    'recapUrl' => $tab['recapUrl'] ?? null,
+    'deferTable' => $tab['deferTable'] ?? false,
+    'tableUrl' => $tab['tableUrl'] ?? null,
     'tableId' => 'yudisium-jurusan-table-' . $tab['key'],
 ])

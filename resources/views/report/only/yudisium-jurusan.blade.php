@@ -12,7 +12,7 @@
                         'tableId' => $tableId ?? 'yudisium-only-jurusan-table',
                     ])
 
-                    <div class="yudisium-table-panel" data-yudisium-table-panel>
+                    <div class="yudisium-table-panel is-hidden" data-yudisium-table-panel>
                         <div class="yudisium-datatable-shell">
                             <table id="{{ $tableId ?? 'yudisium-only-jurusan-table' }}" class="table small-font table-striped table-hover table-sm yudisium-table js-yudisium-table js-yudisium-jurusan-table w-100" role="grid">
                                 <thead>

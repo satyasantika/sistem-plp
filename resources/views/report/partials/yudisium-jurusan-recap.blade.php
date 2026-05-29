@@ -1,8 +1,5 @@
 @php
     $recap = $gradeRecap ?? null;
-    if ($recap === null && ! empty($jurusanRows)) {
-        $recap = app(\App\Services\YudisiumReportService::class)->buildJurusanGradeRecap($jurusanRows);
-    }
     $recapTableId = $tableId ?? 'yudisium-jurusan-table';
 @endphp
 @if (!empty($recap) && ($recap['participants'] ?? 0) > 0)
@@ -12,7 +9,7 @@
         data-yudisium-table-id="{{ $recapTableId }}"
     >
         <p class="yudisium-recap-heading mb-1">Rekap nilai tersedia</p>
-        <p class="yudisium-recap-hint text-muted small mb-2">Klik kartu rekap untuk memfilter tabel di bawah</p>
+        <p class="yudisium-recap-hint text-muted small mb-2">Klik salah satu kartu untuk menampilkan tabel mahasiswa (dengan filter yang sesuai)</p>
 
         <div class="yudisium-recap-stats">
             <button
