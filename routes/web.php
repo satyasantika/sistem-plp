@@ -174,9 +174,11 @@ Route::middleware('auth')->group(function () {
             ->where('plp_order', '[0-2]')
             ->middleware('permission:data/progress/plp-read|data/progress/plp1-read|data/progress/plp2-read');
         //NEW
-        Route::get('report/summary/plp', function () {
-            return view('report.only.summary');
-        })->middleware('permission:report/summary/plp-read');
+        Route::get('report/summary/plp', [App\Http\Controllers\Report\PlpSummaryReportController::class, 'show'])
+            ->middleware('permission:report/summary/plp-read');
+        Route::get('report/summary/plp/export', [App\Http\Controllers\Report\PlpSummaryReportController::class, 'exportXlsx'])
+            ->name('report.summary.plp.export')
+            ->middleware('role:data');
         Route::get('aktivitas/reportprint/plp', [App\Http\Controllers\School\Only\ReportPrintController::class, 'generateCover'])->name('only.generateCover');
         Route::post('yudisium/plp/recalculate-grades', [App\Http\Controllers\Report\YudisiumReportController::class, 'recalculateGrades'])
             ->name('yudisium.only.recalculate-grades')

@@ -277,8 +277,6 @@ return [
             'permissions_any' => ['data/progress/plp-read', 'data/progress/plp1-read', 'data/progress/plp2-read'],
             'icon' => 'ti-dashboard'
         ],
-
-        // MODE ONLY: endpoint tanpa suffix plp1/plp2
         [
             'name' => 'Summary PLP',
             'url' => 'report/summary/plp',

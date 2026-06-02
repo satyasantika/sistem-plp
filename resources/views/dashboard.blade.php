@@ -316,7 +316,13 @@
 <div class="main-content dashboard-modern">
     <div class="dashboard-hero">
         <h1>Dashboard</h1>
-        <p>Informasi Umum kegiatan PLP disajikan sebagai berikut</p>
+        <p>
+            @if (auth()->user()->can('dashboard/data-read'))
+                Ringkasan operasional PLP tahun {{ $activeYear }} untuk monitoring data, progress, dan laporan.
+            @else
+                Informasi Umum kegiatan PLP disajikan sebagai berikut
+            @endif
+        </p>
     </div>
     @php
         $hideOperationalRolePanels = auth()->user()->hasRole('admin');
@@ -325,6 +331,9 @@
         @includeWhen(
             auth()->user()->can('dashboard/ketua-read') || auth()->user()->hasRole('admin'),
             'dashboard.chairman')
+        @includeWhen(
+            ! $hideOperationalRolePanels && auth()->user()->can('dashboard/data-read'),
+            'dashboard.data')
         @includeWhen(
             ! $hideOperationalRolePanels && auth()->user()->can('dashboard/kajur-read'),
             'dashboard.departement')

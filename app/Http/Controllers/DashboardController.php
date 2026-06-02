@@ -7,12 +7,16 @@ use App\Models\Form;
 use App\Models\Map;
 use App\Models\PlpFinalGradeFormRule;
 use App\Models\School;
+use App\Services\PlpSummaryReportService;
+use App\Services\ProgressReportService;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function __construct()
-    {
+    public function __construct(
+        private PlpSummaryReportService $plpSummaryService,
+        private ProgressReportService $progressReportService
+    ) {
         $this->middleware('auth');
     }
 
@@ -39,6 +43,11 @@ class DashboardController extends Controller
         $adminOverview = [];
         $adminSubjectSummaries = collect();
         $adminSchoolSummaries = collect();
+        $dataOverview = [];
+        $dataSubjectRecap = [];
+        $dataTopSchools = [];
+        $dataActiveBuckets = [];
+        $dataFillRate = 0;
 
         if ($user->can('dashboard/mahasiswa-read')) {
             $studentMaps = Map::forYear($activeYear)
@@ -155,6 +164,38 @@ class DashboardController extends Controller
             })->values();
         }
 
+        if ($user->can('dashboard/data-read')) {
+            $yearMaps = Map::forYear($activeYear);
+            $totalMaps = (int) (clone $yearMaps)->count();
+            $filledStudents = (int) (clone $yearMaps)
+                ->where('plp', 1)
+                ->whereNotNull('student_id')
+                ->count();
+
+            $report = $this->plpSummaryService->build($activeYear, $user);
+
+            $dataOverview = [
+                'students' => $report['totals']['students'],
+                'dpl' => $report['totals']['dpl'],
+                'gp' => $report['totals']['gp'],
+                'subjects' => count($report['subjectRecap']),
+                'schools' => count($report['gpCards']),
+            ];
+            $dataSubjectRecap = $report['subjectRecap'];
+            $dataTopSchools = collect($report['gpCards'])->take(8)->values()->all();
+            $dataFillRate = $totalMaps > 0 ? round(($filledStudents / $totalMaps) * 100, 1) : 0;
+
+            foreach ([0, 1, 2] as $bucket) {
+                if ($this->progressReportService->bucketIsActive($activeYear, $bucket)) {
+                    $dataActiveBuckets[] = [
+                        'order' => $bucket,
+                        'label' => Map::plpBucketLabel($bucket),
+                        'url' => url('data/progress/plp').'?tab=plp'.$bucket,
+                    ];
+                }
+            }
+        }
+
         if ($user->can('dashboard/ketua-read') || $user->hasRole('admin')) {
             $adminYearMaps = Map::forYear($activeYear);
 
@@ -221,7 +262,12 @@ class DashboardController extends Controller
             'departementLectureSummaries',
             'adminOverview',
             'adminSubjectSummaries',
-            'adminSchoolSummaries'
+            'adminSchoolSummaries',
+            'dataOverview',
+            'dataSubjectRecap',
+            'dataTopSchools',
+            'dataActiveBuckets',
+            'dataFillRate',
         ));
     }
 

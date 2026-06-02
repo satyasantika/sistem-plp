@@ -241,6 +241,11 @@ class PermissionSeeder extends Seeder
             Permission::create(['name' => $permission])->assignRole('data');
         }
 
+        $summaryPlpPermission = Permission::firstOrCreate(['name' => 'report/summary/plp-read']);
+        foreach (['data', 'kajur', 'kepsek', 'korguru'] as $roleName) {
+            $summaryPlpPermission->assignRole($roleName);
+        }
+
         // Safety net: pastikan semua permission yang dipakai menu statis tersedia.
         $menuPermissions = collect(config('menu.items', []))
             ->pluck('permission')

@@ -140,7 +140,7 @@ class Map extends Model
             return $query;
         }
 
-        if ($user->hasRole('admin') || $user->can('dashboard/ketua-read')) {
+        if ($user->hasRole('admin') || $user->can('dashboard/ketua-read') || $user->can('dashboard/data-read')) {
             return $query;
         }
 
