@@ -10,7 +10,7 @@
                 </a>
             </div>
             <div class="sidebar-header">
-                <div class="text">PLP</div>
+                <div class="text">FKIP EDU</div>
                 <div class="close-sidebar action-toggle">
                     <i class="ti-close"></i>
                 </div>

@@ -100,7 +100,7 @@
                 <div class="col-xxl-4 col-xl-5 col-lg-6 col-md-7 col-sm-8">
                 @yield('content')
                     <div class="text-center mt-4 auth-footer-note">
-                        FKIP EDU &copy; {{ date('Y') }} - Sistem PLP FKIP Universitas Siliwangi
+                        FKIP EDU &copy; {{ date('Y') }} - FKIP Universitas Siliwangi
                     </div>
                 </div>
             </div>

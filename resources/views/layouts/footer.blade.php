@@ -1,7 +1,7 @@
 <footer class="app-footer-modern">
     <div class="footer-shell">
         <div class="footer-main">
-            <span class="footer-title">Sistem PLP - FKIP Universitas Siliwangi</span>
+            <span class="footer-title">FKIP EDU - FKIP Universitas Siliwangi</span>
         </div>
         <div class="footer-meta">
             <span>Copyright &copy; 2022-{{ date('Y') }} SaReDep (Satya-Redi-DepiArdian)</span>

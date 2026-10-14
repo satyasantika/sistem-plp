@@ -3,7 +3,7 @@
 @section('content')
     <div class="card shadow-lg">
         <div class="card-body p-4">
-            <h1 class="fs-4 text-center fw-bold mb-4">Register Akun PLP</h1>
+            <h1 class="fs-4 text-center fw-bold mb-4">Register Akun FKIP EDU</h1>
             @if (session('status'))
                 <div class="alert alert-success" role="alert">
                     {{ session('status') }}
