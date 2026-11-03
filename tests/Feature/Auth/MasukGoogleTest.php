@@ -183,6 +183,18 @@ class MasukGoogleTest extends TestCase
         $this->withSession(['google_asal' => 'https://evil.example/'])
             ->get(route('auth.google.callback', ['error' => 'access_denied']))
             ->assertRedirect(route('login'));
+
+        $this->withSession(['google_asal' => rtrim(url('/'), '/').'.evil.example/'])
+            ->get(route('auth.google.callback', ['error' => 'access_denied']))
+            ->assertRedirect(route('login'));
+    }
+
+    public function testAsalBerbentukArrayTidakMenyebabkanGalat()
+    {
+        $lokasi = $this->get(route('auth.google.redirect', ['asal' => ['x']]))
+            ->assertRedirect()->headers->get('Location');
+
+        $this->assertStringStartsWith('https://accounts.google.com/', $lokasi);
     }
 
     public function testPenggunaYangSudahMasukLangsungDiarahkan()
