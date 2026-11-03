@@ -200,6 +200,8 @@
                     <button type="submit" class="auth-btn">{{ __('Login') }}</button>
                 </form>
 
+                @include('auth.tombol-google')
+
                 <div class="to-home">
                     <a href="{{ route('welcome') }}">Kembali ke halaman utama</a>
                 </div>
