@@ -21,8 +21,35 @@ class ProfileController extends Controller
         return view('profile.index', compact('user'));
     }
 
+    /**
+     * Kolom yang boleh diubah lewat halaman profil. Kolom akun (username, email,
+     * password, is_active) sengaja dikecualikan; admin mengubahnya lewat
+     * manajemen pengguna (konfigurasi/users).
+     */
+    private const KOLOM_PROFIL = [
+        'name',
+        'gender',
+        'birth_place',
+        'birth_date',
+        'address',
+        'phone',
+        'provider',
+        'is_pns',
+        'golongan',
+        'npwp',
+        'nomor_rekening',
+        'bank',
+    ];
+
+    private function izinkanAkses(User $profile): void
+    {
+        $user = auth()->user();
+        abort_unless($profile->is($user) || $user->can('users-update'), 403);
+    }
+
     public function edit(User $profile)
     {
+        $this->izinkanAkses($profile);
         return view('profile.profile-action', [
             'user' => $profile,
             'providers' => ['Telkomsel','Indosat Oreedoo'],
@@ -34,8 +61,8 @@ class ProfileController extends Controller
 
     public function update(Request $request, User $profile)
     {
-        $data = $request->all();
-        $profile->fill($data)->save();
+        $this->izinkanAkses($profile);
+        $profile->fill($request->only(self::KOLOM_PROFIL))->save();
         return response()->json([
             'status' => 'success',
             'message' => 'User <strong>'.$request->name.'</strong> telah diperbarui'

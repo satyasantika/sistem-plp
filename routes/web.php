@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
     })->name('impersonate.leave');
     Route::get('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'showChangePasswordGet'])->name('change-password');
     Route::post('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'changePasswordPost'])->name('update-password');
-    Route::post('/password/reset/{id}', [App\Http\Controllers\Auth\PasswordChangeController::class, 'resetPasswordPost'])->name('reset-password');
+    Route::post('/password/reset/{id}', [App\Http\Controllers\Auth\PasswordChangeController::class, 'resetPasswordPost'])->middleware('permission:users-update')->name('reset-password');
     Route::resource('profiles', App\Http\Controllers\ProfileController::class)->only(['index', 'edit', 'update']);
     Route::resource('konfigurasi/roles', App\Http\Controllers\Configuration\RoleController::class)->except('show');
     Route::resource('konfigurasi/permissions', App\Http\Controllers\Configuration\PermissionController::class)->except('show');
