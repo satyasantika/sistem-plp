@@ -45,7 +45,19 @@ class MasukDenganGoogle
         }
 
         if ($user->google_id === null) {
-            $user->forceFill(['google_id' => $google->getId()])->save();
+            $tautan = ['google_id' => $google->getId()];
+
+            // Akun hasil registrasi mandiri tanpa verifikasi surel dan tanpa peran bisa saja
+            // didaftarkan lebih dulu oleh pihak lain: putar kredensialnya sebelum ditautkan.
+            if ($user->email_verified_at === null && $user->roles()->doesntExist()) {
+                $tautan += [
+                    'password' => Hash::make(Str::random(40)),
+                    'remember_token' => null,
+                    'email_verified_at' => now(),
+                ];
+            }
+
+            $user->forceFill($tautan)->save();
         }
 
         return $user;
@@ -57,7 +69,7 @@ class MasukDenganGoogle
         $username = $dasar;
 
         while (User::where('username', $username)->exists()) {
-            $username = $dasar.random_int(100, 99999);
+            $username = $dasar.'-'.random_int(1000, 9999);
         }
 
         return $username;
