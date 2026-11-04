@@ -156,4 +156,68 @@ class OtorisasiPenggunaTest extends TestCase
             ->assertOk();
         $this->assertTrue($target->fresh()->hasPermissionTo('active-read'));
     }
+
+    public function test_admin_memperbarui_pengguna_tidak_menyimpan_sandi_mentah_maupun_is_active()
+    {
+        $admin = $this->admin();
+        $target = User::factory()->create(['is_active' => false]);
+        $hashLama = $target->password;
+
+        $this->actingAs($admin)
+            ->put(route('users.update', $target->id), [
+                'name' => 'Nama Diperbarui',
+                'username' => $target->username,
+                'email' => $target->email,
+                'password' => 'sandi-mentah',
+                'is_active' => true,
+            ])
+            ->assertOk();
+
+        $target->refresh();
+        $this->assertSame('Nama Diperbarui', $target->name);
+        $this->assertSame($hashLama, $target->password);
+        $this->assertFalse((bool) $target->is_active);
+    }
+
+    public function test_profil_dengan_tanggal_lahir_tidak_valid_ditolak_dengan_galat_validasi()
+    {
+        $pengguna = User::factory()->create(['name' => 'Nama Lama']);
+
+        $this->actingAs($pengguna)
+            ->putJson(route('profiles.update', $pengguna->id), [
+                'name' => 'Nama Baru',
+                'birth_date' => 'bukan-tanggal',
+            ])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('birth_date');
+
+        $this->actingAs($pengguna)
+            ->put(route('profiles.update', $pengguna->id), [
+                'name' => 'Nama Baru',
+                'birth_date' => 'bukan-tanggal',
+            ])
+            ->assertRedirect()
+            ->assertSessionHasErrors('birth_date');
+
+        $this->assertSame('Nama Lama', $pengguna->fresh()->name);
+    }
+
+    public function test_pesan_pembaruan_profil_meloloskan_html_pada_nama()
+    {
+        $pengguna = User::factory()->create();
+
+        $response = $this->actingAs($pengguna)
+            ->put(route('profiles.update', $pengguna->id), ['name' => '<script>x</script>'])
+            ->assertOk();
+
+        $this->assertStringNotContainsString('<script>', $response->json('message'));
+        $this->assertStringContainsString('&lt;script&gt;', $response->json('message'));
+    }
+
+    public function test_admin_mereset_sandi_pengguna_yang_tidak_ada_mendapat_404()
+    {
+        $this->actingAs($this->admin())
+            ->post(route('reset-password', 999999))
+            ->assertNotFound();
+    }
 }

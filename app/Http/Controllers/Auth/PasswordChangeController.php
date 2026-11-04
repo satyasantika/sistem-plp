@@ -43,7 +43,7 @@ class PasswordChangeController extends Controller
     public function resetPasswordPost($id)
     {
         //Change Password
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         if ($user->hasRole('kepsek')) {
             $user->password = bcrypt('kepala');
         } elseif ($user->hasRole('korguru')) {

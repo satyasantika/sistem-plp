@@ -68,8 +68,8 @@ class UserController extends Controller
 
     public function update(UserRequest $request, User $user)
     {
-        $data = $request->all();
-        $user->fill($data)->save();
+        // Hanya kolom tervalidasi; sandi diubah lewat rute reset, bukan di sini.
+        $user->fill($request->safe()->except('password'))->save();
 
         return response()->json([
             'status' => 'success',

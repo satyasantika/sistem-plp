@@ -64,11 +64,25 @@ class ProfileController extends Controller
     public function update(Request $request, User $profile)
     {
         $this->izinkanAkses($profile);
-        $profile->fill($request->only(self::KOLOM_PROFIL))->save();
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'gender' => ['nullable', 'in:L,P'],
+            'birth_place' => ['nullable', 'string', 'max:255'],
+            'birth_date' => ['nullable', 'date'],
+            'address' => ['nullable', 'string', 'max:1000'],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'provider' => ['nullable', 'string', 'max:255'],
+            'is_pns' => ['nullable', 'in:0,1,2'],
+            'golongan' => ['nullable', 'string', 'max:255'],
+            'npwp' => ['nullable', 'string', 'max:255'],
+            'nomor_rekening' => ['nullable', 'string', 'max:255'],
+            'bank' => ['nullable', 'string', 'max:255'],
+        ]);
+        $profile->fill(array_intersect_key($data, array_flip(self::KOLOM_PROFIL)))->save();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'User <strong>'.$request->name.'</strong> telah diperbarui',
+            'message' => 'User <strong>'.e($profile->name).'</strong> telah diperbarui',
         ]);
     }
 }
