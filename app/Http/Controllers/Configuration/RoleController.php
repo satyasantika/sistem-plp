@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers\Configuration;
 
-use App\Models\Role;
-use Illuminate\Http\Request;
 use App\DataTables\RoleDataTable;
-use App\Http\Requests\RoleRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RoleRequest;
+use App\Models\Role;
 
 class RoleController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
-        $this->middleware('permission:roles-read', ['only' => ['index','show']]);
-        $this->middleware('permission:roles-create', ['only' => ['create','store']]);
-        $this->middleware('permission:roles-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:roles-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:roles-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:roles-update', ['only' => ['edit', 'update']]);
         $this->middleware('permission:roles-delete', ['only' => ['destroy']]);
     }
 
@@ -25,15 +24,16 @@ class RoleController extends Controller
 
     public function create()
     {
-        return view('konfigurasi.role-action',['role'=>new Role()]);
+        return view('konfigurasi.role-action', ['role' => new Role()]);
     }
 
     public function store(RoleRequest $request)
     {
         Role::create($request->all());
+
         return response()->json([
             'success' => true,
-            'message' => 'Role <strong>'.$request->name.'</strong> telah ditambahkan'
+            'message' => 'Role <strong>'.$request->name.'</strong> telah ditambahkan',
         ]);
     }
 
@@ -49,7 +49,7 @@ class RoleController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Role <strong>'.$request->name.'</strong> telah diperbarui'
+            'message' => 'Role <strong>'.$request->name.'</strong> telah diperbarui',
         ]);
     }
 
@@ -58,9 +58,10 @@ class RoleController extends Controller
         $name = $role->name;
 
         $role->delete();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Role <strong>'.$name.'</strong> telah dihapus'
+            'message' => 'Role <strong>'.$name.'</strong> telah dihapus',
         ]);
     }
 }

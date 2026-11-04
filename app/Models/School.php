@@ -15,12 +15,12 @@ class School extends Model
 
     public function headmasters()
     {
-        return $this->belongsTo(User::class,'headmaster_id');
+        return $this->belongsTo(User::class, 'headmaster_id');
     }
 
     public function coordinators()
     {
-        return $this->belongsTo(User::class,'coordinator_id');
+        return $this->belongsTo(User::class, 'coordinator_id');
     }
 
     public function maps()
@@ -37,5 +37,4 @@ class School extends Model
     // {
     //     return $this->hasMany(CoordinatorProposal::class);
     // }
-
 }

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Services\DataTable;
 
 class SchoolDataTable extends DataTable
@@ -15,31 +14,32 @@ class SchoolDataTable extends DataTable
     /**
      * Build DataTable class.
      *
-     * @param QueryBuilder $query Results from query() method.
+     * @param  QueryBuilder  $query Results from query() method.
      * @return \Yajra\DataTables\EloquentDataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', function($row){
+            ->addColumn('action', function ($row) {
                 $action = '';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="edit" class="btn btn-primary btn-sm action"><i class="ti-pencil"></i></button>';
                 $isUsedInOtherTables =
                     (int) ($row->maps_count ?? 0) > 0;
-                    // (int) ($row->teacher_proposals_count ?? 0) > 0 ||
-                    // (int) ($row->coordinator_proposals_count ?? 0) > 0;
+                // (int) ($row->teacher_proposals_count ?? 0) > 0 ||
+                // (int) ($row->coordinator_proposals_count ?? 0) > 0;
 
-                if (!$isUsedInOtherTables) {
+                if (! $isUsedInOtherTables) {
                     $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
                 }
+
                 return $action;
             })
-            ->addColumn('headmaster', function($row){
+            ->addColumn('headmaster', function ($row) {
                 if (isset($row->headmaster_id)) {
                     return $row->headmasters->name;
                 }
             })
-            ->addColumn('coordinator', function($row){
+            ->addColumn('coordinator', function ($row) {
                 if (isset($row->coordinator_id)) {
                     return $row->coordinators->name;
                 }
@@ -50,7 +50,7 @@ class SchoolDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\School $model
+     * @param  \App\Models\School  $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query(School $model): QueryBuilder
@@ -104,6 +104,6 @@ class SchoolDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'School_' . date('YmdHis');
+        return 'School_'.date('YmdHis');
     }
 }

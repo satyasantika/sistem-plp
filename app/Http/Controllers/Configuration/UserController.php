@@ -2,32 +2,31 @@
 
 namespace App\Http\Controllers\Configuration;
 
-use App\Models\User;
+use App\DataTables\UserDataTable;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRequest;
 use App\Models\Subject;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\DataTables\UserDataTable;
-use App\Http\Requests\UserRequest;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
-use Spatie\Permission\Models\Role;
-use App\Http\Controllers\Controller;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\NamedRange;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
-        $this->middleware('permission:users-read', ['only' => ['index','show']]);
-        $this->middleware('permission:users-create', ['only' => ['create','store','importPage','importPreview','importCommit','importCreate','importTemplate','importExcel']]);
-        $this->middleware('permission:users-update', ['only' => ['edit','update','activation']]);
+        $this->middleware('permission:users-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:users-create', ['only' => ['create', 'store', 'importPage', 'importPreview', 'importCommit', 'importCreate', 'importTemplate', 'importExcel']]);
+        $this->middleware('permission:users-update', ['only' => ['edit', 'update', 'activation']]);
         $this->middleware('permission:users-delete', ['only' => ['destroy']]);
     }
 
@@ -41,7 +40,7 @@ class UserController extends Controller
         $user = new User();
 
         return view('konfigurasi.user-action', array_merge(
-            [ 'user' => $user ],
+            ['user' => $user],
             $this->_dataSelection(),
         ));
     }
@@ -49,20 +48,20 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $data = $request->safe()->merge([
-            'password'=> bcrypt($request->password),
+            'password' => bcrypt($request->password),
         ]);
         User::create($data->all())->assignRole($request->role);
+
         return response()->json([
             'success' => true,
-            'message' => 'User <strong>'.$request->name.'</strong> telah ditambahkan'
+            'message' => 'User <strong>'.$request->name.'</strong> telah ditambahkan',
         ]);
-
     }
 
     public function edit(User $user)
     {
         return view('konfigurasi.user-action', array_merge(
-            [ 'user' => $user ],
+            ['user' => $user],
             $this->_dataSelection(),
         ));
     }
@@ -71,9 +70,10 @@ class UserController extends Controller
     {
         $data = $request->all();
         $user->fill($data)->save();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'User <strong>'.$request->name.'</strong> telah diperbarui'
+            'message' => 'User <strong>'.$request->name.'</strong> telah diperbarui',
         ]);
     }
 
@@ -81,9 +81,10 @@ class UserController extends Controller
     {
         $name = $user->name;
         $user->delete();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'User <strong>'.$name.'</strong> telah dihapus'
+            'message' => 'User <strong>'.$name.'</strong> telah dihapus',
         ]);
     }
 
@@ -93,22 +94,23 @@ class UserController extends Controller
         // $user->is_active = $user->is_active ? 0 : 1;
         // $user->save();
         $user->can('active-read') ? $user->revokePermissionTo('active-read') : $user->givePermissionTo('active-read');
-        $status = $user->can('active-read') ? 'aktiv':'non-aktiv';
+        $status = $user->can('active-read') ? 'aktiv' : 'non-aktiv';
+
         return response()->json([
             'status' => 'success',
-            'message' => 'User <strong>'.$name.'</strong> telah di'.$status.'kan'
+            'message' => 'User <strong>'.$name.'</strong> telah di'.$status.'kan',
         ]);
     }
 
     private function _dataSelection()
     {
         return [
-            'roles' =>  Role::all()->pluck('name')->sort(),
-            'subjects' =>  Subject::select('id', 'name')->orderBy('name')->get(),
-            'providers' => ['Telkomsel','Indosat Oreedoo'],
-            'is_pns' => ['nonPNS','PNS','PPPK'],
-            'golongans' => ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII'],
-            'banks' => ['Mandiri','BRI','BJB','BTN','BCA','BNI'],
+            'roles' => Role::all()->pluck('name')->sort(),
+            'subjects' => Subject::select('id', 'name')->orderBy('name')->get(),
+            'providers' => ['Telkomsel', 'Indosat Oreedoo'],
+            'is_pns' => ['nonPNS', 'PNS', 'PPPK'],
+            'golongans' => ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII'],
+            'banks' => ['Mandiri', 'BRI', 'BJB', 'BTN', 'BCA', 'BNI'],
         ];
     }
 
@@ -129,7 +131,7 @@ class UserController extends Controller
         $previewRows = [];
 
         if ($draft !== null) {
-            if (!Storage::exists($draft['temp_path'])) {
+            if (! Storage::exists($draft['temp_path'])) {
                 $this->forgetImportDraft($request, $role);
                 $draft = null;
             } else {
@@ -188,7 +190,7 @@ class UserController extends Controller
         $role = $this->validateImportRole($role);
         $draft = $this->getImportDraft($request, $role);
 
-        if ($draft === null || !Storage::exists($draft['temp_path'])) {
+        if ($draft === null || ! Storage::exists($draft['temp_path'])) {
             throw LaravelValidationException::withMessages([
                 'file' => ['Preview import tidak ditemukan. Upload file terlebih dahulu.'],
             ]);
@@ -216,7 +218,7 @@ class UserController extends Controller
             return $previewRowsByNumber->get($rowNumber);
         });
 
-        if ($rowsToCommit->contains(fn ($row) => $row === null || !$row['is_selectable'])) {
+        if ($rowsToCommit->contains(fn ($row) => $row === null || ! $row['is_selectable'])) {
             throw LaravelValidationException::withMessages([
                 'selected_rows' => ['Sebagian data yang dipilih sudah tidak valid untuk dicommit. Muat ulang preview lalu pilih ulang data baru.'],
             ]);
@@ -308,7 +310,6 @@ class UserController extends Controller
 
             $writer = new Xlsx($spreadsheet);
             $writer->save('php://output');
-
         }, $fileName, [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
@@ -565,7 +566,7 @@ class UserController extends Controller
         return [
             'total' => count($rows),
             'selectable' => count(array_filter($rows, fn ($row) => $row['is_selectable'])),
-            'blocked' => count(array_filter($rows, fn ($row) => !$row['is_selectable'])),
+            'blocked' => count(array_filter($rows, fn ($row) => ! $row['is_selectable'])),
         ];
     }
 
@@ -587,5 +588,4 @@ class UserController extends Controller
     {
         return 'users.import.preview.'.$role;
     }
-
 }

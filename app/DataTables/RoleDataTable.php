@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Services\DataTable;
 
 class RoleDataTable extends DataTable
@@ -15,16 +14,16 @@ class RoleDataTable extends DataTable
     /**
      * Build DataTable class.
      *
-     * @param QueryBuilder $query Results from query() method.
+     * @param  QueryBuilder  $query Results from query() method.
      * @return \Yajra\DataTables\EloquentDataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->editColumn('updated_at', function($row) {
+            ->editColumn('updated_at', function ($row) {
                 return $row->updated_at->format('d/m/Y H:i:s');
             })
-            ->addColumn('action', function($row){
+            ->addColumn('action', function ($row) {
                 $action = '';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="rolepermission" class="btn btn-secondary btn-sm my-1 rolepermission-action">P</button>';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="edit" class="btn btn-primary btn-sm action"><i class="ti-pencil"></i></button>';
@@ -33,19 +32,19 @@ class RoleDataTable extends DataTable
                     (int) ($row->users_count ?? 0) > 0 ||
                     (int) ($row->permissions_count ?? 0) > 0;
 
-                if (!$isUsedInOtherTables) {
+                if (! $isUsedInOtherTables) {
                     $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
                 }
+
                 return $action;
             })
-            ->setRowId('id')
-            ;
+            ->setRowId('id');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Role $model
+     * @param  \App\Models\Role  $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query(Role $model): QueryBuilder
@@ -96,6 +95,6 @@ class RoleDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Role_' . date('YmdHis');
+        return 'Role_'.date('YmdHis');
     }
 }

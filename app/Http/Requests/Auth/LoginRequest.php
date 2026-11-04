@@ -102,7 +102,7 @@ class LoginRequest extends FormRequest
         if ($this->isEmail($username)) {
             return [
                 'email' => $username,
-                'password' => $this->get('password')
+                'password' => $this->get('password'),
             ];
         }
 
@@ -114,6 +114,7 @@ class LoginRequest extends FormRequest
      *
      * @param $param
      * @return bool
+     *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     private function isEmail($param)
@@ -125,5 +126,4 @@ class LoginRequest extends FormRequest
             ['username' => 'email']
         )->fails();
     }
-
 }

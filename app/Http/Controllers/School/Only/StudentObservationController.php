@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers\School\Only;
 
-use App\Models\Map;
+use App\Http\Controllers\Controller;
 use App\Models\Form;
 use App\Models\FormItem;
+use App\Models\Map;
 use App\Models\Observation;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class StudentObservationController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
-        $this->middleware('permission:aktivitas/studentobservations/plp-read', ['only' => ['index','show']]);
-        $this->middleware('permission:aktivitas/studentobservations/plp-create', ['only' => ['create','store']]);
-        $this->middleware('permission:aktivitas/studentobservations/plp-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:aktivitas/studentobservations/plp-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:aktivitas/studentobservations/plp-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:aktivitas/studentobservations/plp-update', ['only' => ['edit', 'update']]);
         $this->middleware('permission:aktivitas/studentobservations/plp-delete', ['only' => ['destroy']]);
     }
 
     public function index()
     {
-        $forms = Form::whereIn('id',['2024L1','2024L2','2024L3'])->get();
+        $forms = Form::whereIn('id', ['2024L1', '2024L2', '2024L3'])->get();
         $map = Map::forActiveYear()
             ->with(['students', 'schools', 'subjects', 'lectures', 'teachers'])
             ->firstWhere('student_id', auth()->user()->id);
@@ -34,27 +34,29 @@ class StudentObservationController extends Controller
     public function create($form_id)
     {
         $studentobservation = new Observation();
+
         return view('aktivitas.only.observation-action', array_merge(
-            ['studentobservation'=> $studentobservation],
+            ['studentobservation' => $studentobservation],
             $this->_dataSelection($form_id)
-            ));
+        ));
     }
 
     public function store($form_id, Request $request)
     {
         Observation::create($request->all());
+
         return response()->json([
             'success' => true,
-            'message' => 'Observation <strong>'.$request->id.'</strong> telah ditambahkan'
+            'message' => 'Observation <strong>'.$request->id.'</strong> telah ditambahkan',
         ]);
     }
 
     public function edit($form_id, Observation $studentobservation)
     {
         return view('aktivitas.only.observation-action', array_merge(
-            ['studentobservation'=>$studentobservation],
+            ['studentobservation' => $studentobservation],
             $this->_dataSelection($form_id)
-            ));
+        ));
     }
 
     public function update($form_id, Request $request, Observation $studentobservation)
@@ -64,7 +66,7 @@ class StudentObservationController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Observation <strong>'.$request->id.'</strong> telah diperbarui'
+            'message' => 'Observation <strong>'.$request->id.'</strong> telah diperbarui',
         ]);
     }
 
@@ -73,9 +75,10 @@ class StudentObservationController extends Controller
         $name = $studentobservation->id;
 
         $studentobservation->delete();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Observation <strong>'.$name.'</strong> telah dihapus'
+            'message' => 'Observation <strong>'.$name.'</strong> telah dihapus',
         ]);
     }
 
@@ -84,15 +87,14 @@ class StudentObservationController extends Controller
         return [
             'map_id' => Map::forActiveYear()->firstWhere('student_id', auth()->user()->id)->id,
             'form' => Form::find($form_id),
-            'form_guides' => $this->_formByComponent($form_id,'petunjuk'),
-            'form_items' => $this->_formByComponent($form_id,'item'),
-            'form_extras' => $this->_formByComponent($form_id,'tambahan'),
+            'form_guides' => $this->_formByComponent($form_id, 'petunjuk'),
+            'form_items' => $this->_formByComponent($form_id, 'item'),
+            'form_extras' => $this->_formByComponent($form_id, 'tambahan'),
         ];
     }
 
     private function _formByComponent($form_id, $component)
     {
-        return FormItem::where('form_id',$form_id)->where('component',$component)->orderBy('component_order')->get();
+        return FormItem::where('form_id', $form_id)->where('component', $component)->orderBy('component_order')->get();
     }
-
 }

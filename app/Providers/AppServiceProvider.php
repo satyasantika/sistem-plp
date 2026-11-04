@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use App\Models\Map;
 use App\DataTables\FormDataTable;
 use App\Http\Controllers\Configuration\FormController;
+use App\Models\Map;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {

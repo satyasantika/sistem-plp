@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Configuration;
 
-use App\Models\Map;
-use App\Models\Form;
-use App\Models\Assessment;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Concerns\GuardsAssessmentDuplicates;
 use App\DataTables\AssessmentDataTable;
+use App\Http\Controllers\Concerns\GuardsAssessmentDuplicates;
+use App\Http\Controllers\Controller;
+use App\Models\Assessment;
+use App\Models\Form;
+use App\Models\Map;
 use App\Services\MapFinalGradeCalculator;
+use Illuminate\Http\Request;
 
 class AssessmentController extends Controller
 {
@@ -31,6 +31,7 @@ class AssessmentController extends Controller
     public function create()
     {
         $assessment = new Assessment();
+
         return view('konfigurasi.assessment-action', array_merge(
             ['assessment' => $assessment],
             $this->_dataSelection()
@@ -53,8 +54,7 @@ class AssessmentController extends Controller
                 + $request->score6
                 + $request->score7
                 + $request->score8
-                + $request->score9
-            ,
+                + $request->score9,
         ]);
         Assessment::create($data->all());
         $map_id = (int) $request->map_id;
@@ -62,7 +62,7 @@ class AssessmentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Data Penilaian telah ditambahkan'
+            'message' => 'Data Penilaian telah ditambahkan',
         ]);
     }
 
@@ -90,8 +90,7 @@ class AssessmentController extends Controller
             + $request->score6
             + $request->score7
             + $request->score8
-            + $request->score9
-        ;
+            + $request->score9;
 
         $assessment->fill($data)->save();
         $map_id = (int) $assessment->map_id;
@@ -99,7 +98,7 @@ class AssessmentController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Data Penilaian telah diperbarui'
+            'message' => 'Data Penilaian telah diperbarui',
         ]);
     }
 
@@ -112,7 +111,7 @@ class AssessmentController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Data Penilaian telah dihapus'
+            'message' => 'Data Penilaian telah dihapus',
         ]);
     }
 
@@ -131,5 +130,4 @@ class AssessmentController extends Controller
             'items' => ['score1', 'score2', 'score3', 'score4', 'score5', 'score6', 'score7', 'score8', 'score9'],
         ];
     }
-
 }

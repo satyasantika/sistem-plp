@@ -10,7 +10,7 @@ use Spatie\Permission\Models\Permission;
 
 class UserPermissionController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
         $this->middleware('permission:roles-update|users-update', ['only' => ['edit', 'update']]);
     }

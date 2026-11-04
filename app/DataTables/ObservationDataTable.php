@@ -4,12 +4,12 @@ namespace App\DataTables;
 
 use App\Models\Map;
 use App\Models\Observation;
-use Illuminate\Support\Facades\DB;
-use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\EloquentDataTable;
-use Yajra\DataTables\Services\DataTable;
-use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\EloquentDataTable;
+use Yajra\DataTables\Html\Builder as HtmlBuilder;
+use Yajra\DataTables\Html\Column;
+use Yajra\DataTables\Services\DataTable;
 
 class ObservationDataTable extends DataTable
 {
@@ -24,7 +24,7 @@ class ObservationDataTable extends DataTable
     }
 
     /**
-     * @param QueryBuilder $query Results from query() method.
+     * @param  QueryBuilder  $query Results from query() method.
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {

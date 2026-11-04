@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class CreateAdminUserSeeder extends Seeder
 {
@@ -29,7 +29,7 @@ class CreateAdminUserSeeder extends Seeder
 
         // Required to unlock sidebar rendering block in nav view.
         $activePermission = Permission::firstOrCreate(['name' => 'active-read']);
-        if (!$role->hasPermissionTo($activePermission)) {
+        if (! $role->hasPermissionTo($activePermission)) {
             $role->givePermissionTo($activePermission);
         }
 
@@ -42,12 +42,12 @@ class CreateAdminUserSeeder extends Seeder
 
         foreach ($menuPermissions as $permissionName) {
             $permission = Permission::firstOrCreate(['name' => $permissionName]);
-            if (!$role->hasPermissionTo($permission)) {
+            if (! $role->hasPermissionTo($permission)) {
                 $role->givePermissionTo($permission);
             }
         }
 
-        if (!$user->hasRole($role->name)) {
+        if (! $user->hasRole($role->name)) {
             $user->assignRole($role);
         }
     }

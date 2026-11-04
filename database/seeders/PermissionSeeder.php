@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class PermissionSeeder extends Seeder
 {
@@ -52,7 +52,7 @@ class PermissionSeeder extends Seeder
         $permissions = [];
         foreach ($alone_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions, $value1 . '-' . $value2);
+                array_push($permissions, $value1.'-'.$value2);
             }
         }
 
@@ -82,7 +82,7 @@ class PermissionSeeder extends Seeder
         $permissions = [];
         foreach ($admin_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions, $value1[1] . '-' . $value2);
+                array_push($permissions, $value1[1].'-'.$value2);
             }
         }
         foreach ($permissions as $permission) {
@@ -97,7 +97,7 @@ class PermissionSeeder extends Seeder
         $permissions = [];
         foreach ($kepsek_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions, $value1[1] . '-' . $value2);
+                array_push($permissions, $value1[1].'-'.$value2);
             }
         }
 
@@ -113,7 +113,7 @@ class PermissionSeeder extends Seeder
         $permissions = [];
         foreach ($kajur_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions, $value1[1] . '-' . $value2);
+                array_push($permissions, $value1[1].'-'.$value2);
             }
         }
 
@@ -129,7 +129,7 @@ class PermissionSeeder extends Seeder
         $permissions = [];
         foreach ($kajur_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions, $value1[1] . '-' . $value2);
+                array_push($permissions, $value1[1].'-'.$value2);
             }
         }
 
@@ -147,7 +147,7 @@ class PermissionSeeder extends Seeder
         $permissions = [];
         foreach ($nilai_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions, $value1[1] . '-' . $value2);
+                array_push($permissions, $value1[1].'-'.$value2);
             }
         }
         foreach ($permissions as $permission) {
@@ -164,7 +164,7 @@ class PermissionSeeder extends Seeder
         $permissions = [];
         foreach ($nilai_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions, $value1[1] . '-' . $value2);
+                array_push($permissions, $value1[1].'-'.$value2);
             }
         }
         foreach ($permissions as $permission) {
@@ -183,7 +183,7 @@ class PermissionSeeder extends Seeder
         $permissions = [];
         foreach ($dosen_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions, $value1[1] . '-' . $value2);
+                array_push($permissions, $value1[1].'-'.$value2);
             }
         }
 
@@ -200,7 +200,7 @@ class PermissionSeeder extends Seeder
         $permissions = [];
         foreach ($mahasiswa_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions, $value1[1] . '-' . $value2);
+                array_push($permissions, $value1[1].'-'.$value2);
             }
         }
 
@@ -214,7 +214,7 @@ class PermissionSeeder extends Seeder
         $permissions = [];
         foreach ($sekolah_access as $value1) {
             foreach ($action as $value2) {
-                array_push($permissions, $value1[1] . '-' . $value2);
+                array_push($permissions, $value1[1].'-'.$value2);
             }
         }
 
@@ -254,10 +254,9 @@ class PermissionSeeder extends Seeder
             ->values();
 
         foreach ($menuPermissions as $permission) {
-            if (!Permission::where('name', $permission)->exists()) {
+            if (! Permission::where('name', $permission)->exists()) {
                 Permission::create(['name' => $permission])->assignRole('admin');
             }
         }
-
     }
 }

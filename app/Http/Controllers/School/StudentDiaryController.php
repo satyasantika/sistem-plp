@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\School;
 
-use App\Models\Map;
-use App\Models\Diary;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Concerns\GuardsDiaryDuplicates;
+use App\Http\Controllers\Controller;
+use App\Models\Diary;
+use App\Models\Map;
+use Illuminate\Http\Request;
 
 class StudentDiaryController extends Controller
 {
     use GuardsDiaryDuplicates;
 
-    function __construct()
+    public function __construct()
     {
-        $this->middleware('permission:aktivitas/studentdiaries/plp1-read|aktivitas/studentdiaries/plp2-read', ['only' => ['index','show']]);
-        $this->middleware('permission:aktivitas/studentdiaries/plp1-create|aktivitas/studentdiaries/plp2-create', ['only' => ['create','store']]);
-        $this->middleware('permission:aktivitas/studentdiaries/plp1-update|aktivitas/studentdiaries/plp2-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:aktivitas/studentdiaries/plp1-read|aktivitas/studentdiaries/plp2-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:aktivitas/studentdiaries/plp1-create|aktivitas/studentdiaries/plp2-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:aktivitas/studentdiaries/plp1-update|aktivitas/studentdiaries/plp2-update', ['only' => ['edit', 'update']]);
         $this->middleware('permission:aktivitas/studentdiaries/plp1-delete|aktivitas/studentdiaries/plp2-delete', ['only' => ['destroy']]);
         $this->middleware('permission:'.request()->segment(3).'-read');
     }
@@ -24,22 +24,23 @@ class StudentDiaryController extends Controller
     public function index($plp)
     {
         $id = auth()->user()->id;
-        $myMapId = Map::where('year',2023)->firstWhere('student_id',$id)->id;
-        $diaries = Diary::where('map_id',$myMapId)->where('plp_order',$plp)->orderBy('day_order')->get();
+        $myMapId = Map::where('year', 2023)->firstWhere('student_id', $id)->id;
+        $diaries = Diary::where('map_id', $myMapId)->where('plp_order', $plp)->orderBy('day_order')->get();
 
-        return view('aktivitas.logbook',compact('diaries'));
+        return view('aktivitas.logbook', compact('diaries'));
     }
 
     public function create($plp)
     {
         $studentdiary = new Diary();
+
         return view('aktivitas.logbook-action', array_merge(
             [
-                'studentdiary'=> $studentdiary,
-                'plp'=> $plp,
+                'studentdiary' => $studentdiary,
+                'plp' => $plp,
             ],
             $this->_dataSelection()
-            ));
+        ));
     }
 
     public function store(Request $request, $plp)
@@ -62,9 +63,10 @@ class StudentDiaryController extends Controller
         }
 
         Diary::create($request->all());
+
         return response()->json([
             'success' => true,
-            'message' => 'Catatan hari ke-<strong>'.$request->day_order.'</strong> telah ditambahkan'
+            'message' => 'Catatan hari ke-<strong>'.$request->day_order.'</strong> telah ditambahkan',
         ]);
     }
 
@@ -72,11 +74,11 @@ class StudentDiaryController extends Controller
     {
         return view('aktivitas.logbook-action', array_merge(
             [
-                'studentdiary'=> $studentdiary,
-                'plp'=> $plp,
+                'studentdiary' => $studentdiary,
+                'plp' => $plp,
             ],
             $this->_dataSelection()
-            ));
+        ));
     }
 
     public function update($plp, Request $request, Diary $studentdiary)
@@ -95,7 +97,7 @@ class StudentDiaryController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Catatan hari ke-<strong>'.$request->day_order.'</strong> telah diperbarui'
+            'message' => 'Catatan hari ke-<strong>'.$request->day_order.'</strong> telah diperbarui',
         ]);
     }
 
@@ -104,23 +106,23 @@ class StudentDiaryController extends Controller
         $name = $studentdiary->day_order;
 
         $studentdiary->delete();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Catatan hari ke-<strong>'.$name.'</strong> telah dihapus'
+            'message' => 'Catatan hari ke-<strong>'.$name.'</strong> telah dihapus',
         ]);
     }
 
     private function _dataSelection()
     {
         $days = [];
-        for ($i=1; $i <=30; $i++) {
-            array_push($days,$i);
+        for ($i = 1; $i <= 30; $i++) {
+            array_push($days, $i);
         }
 
         return [
             'days' => $days,
-            'myMapId' => Map::where('year',2023)->firstWhere('student_id', auth()->user()->id)->id,
+            'myMapId' => Map::where('year', 2023)->firstWhere('student_id', auth()->user()->id)->id,
         ];
     }
-
 }

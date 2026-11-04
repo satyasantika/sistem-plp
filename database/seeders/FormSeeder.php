@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Form;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class FormSeeder extends Seeder
 {
@@ -18,7 +17,7 @@ class FormSeeder extends Seeder
         $csvData = fopen(base_path('/database/seeders/csvs/forms.csv'), 'r');
         $transRow = true;
         while (($data = fgetcsv($csvData, 555, ',')) !== false) {
-            if (!$transRow) {
+            if (! $transRow) {
                 Form::create([
                     'id' => $data['0'],
                     'name' => $data['1'],

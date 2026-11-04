@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Services\DataTable;
 
 class UserDataTable extends DataTable
@@ -15,16 +14,16 @@ class UserDataTable extends DataTable
     /**
      * Build DataTable class.
      *
-     * @param QueryBuilder $query Results from query() method.
+     * @param  QueryBuilder  $query Results from query() method.
      * @return \Yajra\DataTables\EloquentDataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->editColumn('updated_at', function($row) {
+            ->editColumn('updated_at', function ($row) {
                 return $row->updated_at->format('d/m/Y H:i:s');
             })
-            ->addColumn('action', function($row){
+            ->addColumn('action', function ($row) {
                 $action = '';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="userrole" class="btn btn-secondary btn-sm rolepermission-action">R</button>';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="userpermission" class="btn btn-secondary btn-sm rolepermission-action">P</button>';
@@ -38,21 +37,21 @@ class UserDataTable extends DataTable
                     (int) ($row->lectures_count ?? 0) > 0 ||
                     (int) ($row->teachers_count ?? 0) > 0;
 
-                if (!$isUsedInOtherTables) {
+                if (! $isUsedInOtherTables) {
                     $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
                 }
 
                 return $action;
             })
-            ->addColumn('active', function($row){
-                $active =  $row->can('active-read') ? 'yes' : 'no';
+            ->addColumn('active', function ($row) {
+                $active = $row->can('active-read') ? 'yes' : 'no';
 
                 return $active;
             })
-            ->addColumn('role', function($row){
+            ->addColumn('role', function ($row) {
                 return $row->getRoleNames()->implode(', ');
             })
-            ->addColumn('mapel', function($row){
+            ->addColumn('mapel', function ($row) {
                 if (isset($row->subject_id)) {
                     return $row->subjects->name;
                 }
@@ -63,7 +62,7 @@ class UserDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\User $model
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query(User $model): QueryBuilder
@@ -104,7 +103,7 @@ class UserDataTable extends DataTable
                     ->exportable(false)
                     ->printable(false)
                     ->width(120),
-                    // ->addClass('text-center'),
+            // ->addClass('text-center'),
             Column::computed('active')->title('Aktif'),
             Column::make('name'),
             Column::make('username'),
@@ -122,6 +121,6 @@ class UserDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'User_' . date('YmdHis');
+        return 'User_'.date('YmdHis');
     }
 }

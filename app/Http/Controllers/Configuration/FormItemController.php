@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Configuration;
 
+use App\Http\Controllers\Controller;
 use App\Models\Form;
 use App\Models\FormItem;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -172,7 +172,7 @@ class FormItemController extends Controller
                 ->keyBy('id');
 
             foreach ($ids as $id) {
-                if (!$items->has($id)) {
+                if (! $items->has($id)) {
                     throw ValidationException::withMessages([
                         'order' => ['Ada item tidak valid atau bukan milik form ini.'],
                     ]);

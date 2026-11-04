@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\School;
 
-use App\Models\Assessment;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Assessment;
 use App\Services\MapFinalGradeCalculator;
+use Illuminate\Support\Facades\DB;
 
 class CleaningAssessmentController extends Controller
 {
@@ -19,13 +18,13 @@ class CleaningAssessmentController extends Controller
     public function index()
     {
         $code = Assessment::selectRaw("CONCAT_WS('-',`map_id`,`plp_order`,`form_id`,`form_order`,`assessor`) AS code")
-                            ->selectRaw("COUNT(*) AS Total")
+                            ->selectRaw('COUNT(*) AS Total')
                             ->groupBy('code')
-                            ->havingRaw('Total > ?',[1])
+                            ->havingRaw('Total > ?', [1])
                             ->pluck('code');
-        $assessments = Assessment::whereIn(DB::raw("CONCAT_WS('-',`map_id`,`plp_order`,`form_id`,`form_order`,`assessor`)"),$code)->get();
+        $assessments = Assessment::whereIn(DB::raw("CONCAT_WS('-',`map_id`,`plp_order`,`form_id`,`form_order`,`assessor`)"), $code)->get();
 
-        return view('cleaning.assessment',compact('assessments'));
+        return view('cleaning.assessment', compact('assessments'));
     }
 
     public function destroy(Assessment $cleaningassessment)
@@ -40,9 +39,7 @@ class CleaningAssessmentController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Duplikasi penilaian terhadap <strong>'.$name.'</strong> telah dihapus'
+            'message' => 'Duplikasi penilaian terhadap <strong>'.$name.'</strong> telah dihapus',
         ]);
     }
-
-
 }

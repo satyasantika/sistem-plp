@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers\Configuration;
 
+use App\DataTables\SchoolUserProposalDataTable;
+use App\Http\Controllers\Controller;
 use App\Models\School;
+use App\Models\SchoolUserProposal;
 use App\Models\Subject;
 use Illuminate\Http\Request;
-use App\Models\SchoolUserProposal;
-use App\Http\Controllers\Controller;
-use App\DataTables\SchoolUserProposalDataTable;
 
 class SchoolUserProposalController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
-        $this->middleware('permission:schooluserproposals-read', ['only' => ['index','show']]);
-        $this->middleware('permission:schooluserproposals-create', ['only' => ['create','store']]);
-        $this->middleware('permission:schooluserproposals-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:schooluserproposals-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:schooluserproposals-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:schooluserproposals-update', ['only' => ['edit', 'update']]);
         $this->middleware('permission:schooluserproposals-delete', ['only' => ['destroy']]);
     }
 
@@ -27,27 +27,29 @@ class SchoolUserProposalController extends Controller
     public function create()
     {
         $schooluserproposal = new SchoolUserProposal();
+
         return view('konfigurasi.schooluserproposal-action', array_merge(
-            ['schooluserproposal'=> $schooluserproposal],
+            ['schooluserproposal' => $schooluserproposal],
             $this->_dataSelection()
-            ));
+        ));
     }
 
     public function store(Request $request)
     {
         SchoolUserProposal::create($request->all());
+
         return response()->json([
             'success' => true,
-            'message' => 'Data <strong>'.$request->name.'</strong> telah ditambahkan'
+            'message' => 'Data <strong>'.$request->name.'</strong> telah ditambahkan',
         ]);
     }
 
     public function edit(SchoolUserProposal $schooluserproposal)
     {
         return view('konfigurasi.schooluserproposal-action', array_merge(
-            ['schooluserproposal'=> $schooluserproposal],
+            ['schooluserproposal' => $schooluserproposal],
             $this->_dataSelection()
-            ));
+        ));
     }
 
     public function update(Request $request, SchoolUserProposal $schooluserproposal)
@@ -57,7 +59,7 @@ class SchoolUserProposalController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Data <strong>'.$request->name.'</strong> telah diperbarui'
+            'message' => 'Data <strong>'.$request->name.'</strong> telah diperbarui',
         ]);
     }
 
@@ -65,18 +67,18 @@ class SchoolUserProposalController extends Controller
     {
         $name = $schooluserproposal->candidate_name;
         $schooluserproposal->delete();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Data <strong>'.$name.'</strong> telah dihapus'
+            'message' => 'Data <strong>'.$name.'</strong> telah dihapus',
         ]);
     }
 
     private function _dataSelection()
     {
         return [
-            'schools' =>  School::select('id','name')->orderBy('id')->get(),
-            'subjects' =>  Subject::select('id','name')->orderBy('name')->get(),
+            'schools' => School::select('id', 'name')->orderBy('id')->get(),
+            'subjects' => Subject::select('id', 'name')->orderBy('name')->get(),
         ];
     }
-
 }

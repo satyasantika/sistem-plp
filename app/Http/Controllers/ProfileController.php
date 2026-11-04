@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
         // $this->middleware('permission:profiles-read', ['only' => ['index','show']]);
         // $this->middleware('permission:profiles-create', ['only' => ['create','store']]);
@@ -18,6 +18,7 @@ class ProfileController extends Controller
     public function index()
     {
         $user = auth()->user();
+
         return view('profile.index', compact('user'));
     }
 
@@ -50,12 +51,13 @@ class ProfileController extends Controller
     public function edit(User $profile)
     {
         $this->izinkanAkses($profile);
+
         return view('profile.profile-action', [
             'user' => $profile,
-            'providers' => ['Telkomsel','Indosat Oreedoo'],
-            'is_pns' => ['nonPNS','PNS','PPPK'],
-            'golongans' => ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII'],
-            'banks' => ['Mandiri','BRI','BJB','BTN','BCA','BNI'],
+            'providers' => ['Telkomsel', 'Indosat Oreedoo'],
+            'is_pns' => ['nonPNS', 'PNS', 'PPPK'],
+            'golongans' => ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII'],
+            'banks' => ['Mandiri', 'BRI', 'BJB', 'BTN', 'BCA', 'BNI'],
         ]);
     }
 
@@ -63,10 +65,10 @@ class ProfileController extends Controller
     {
         $this->izinkanAkses($profile);
         $profile->fill($request->only(self::KOLOM_PROFIL))->save();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'User <strong>'.$request->name.'</strong> telah diperbarui'
+            'message' => 'User <strong>'.$request->name.'</strong> telah diperbarui',
         ]);
     }
-
 }

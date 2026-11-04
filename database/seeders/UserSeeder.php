@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
@@ -22,13 +21,13 @@ class UserSeeder extends Seeder
         $csvData = fopen(base_path('/database/seeders/csvs/lectures.csv'), 'r');
         $transRow = true;
         while (($data = fgetcsv($csvData, 555, ',')) !== false) {
-            if (!$transRow) {
+            if (! $transRow) {
                 User::create([
-                    'username'  => $data[0],
-                    'name'      => $data[1],
-                    'phone'     => $data[2],
-                    'email'     => $data[3],
-                    'password'  => Hash::make($data[5]),
+                    'username' => $data[0],
+                    'name' => $data[1],
+                    'phone' => $data[2],
+                    'email' => $data[3],
+                    'password' => Hash::make($data[5]),
                     'subject_id' => $data[4],
                     // 'address'   => $data[6],
                 ])->assignRole('dosen');
@@ -41,15 +40,15 @@ class UserSeeder extends Seeder
         $csvData = fopen(base_path('/database/seeders/csvs/students.csv'), 'r');
         $transRow = true;
         while (($data = fgetcsv($csvData, 555, ',')) !== false) {
-            if (!$transRow) {
+            if (! $transRow) {
                 User::create([
-                    'username'  => $data[0],
-                    'name'      => $data[1],
-                    'email'     => $data[2],
-                    'password'  => Hash::make($data[3]),
+                    'username' => $data[0],
+                    'name' => $data[1],
+                    'email' => $data[2],
+                    'password' => Hash::make($data[3]),
                     'subject_id' => $data[4],
-                    'phone'     => $data[5],
-                    'address'   => $data[6],
+                    'phone' => $data[5],
+                    'address' => $data[6],
                 ])->assignRole('mahasiswa');
             }
             $transRow = false;
@@ -60,13 +59,13 @@ class UserSeeder extends Seeder
         $csvData = fopen(base_path('/database/seeders/csvs/teachers.csv'), 'r');
         $transRow = true;
         while (($data = fgetcsv($csvData, 555, ',')) !== false) {
-            if (!$transRow) {
+            if (! $transRow) {
                 User::create([
-                    'username'  => $data[0],
-                    'name'      => $data[1],
-                    'email'     => $data[2],
+                    'username' => $data[0],
+                    'name' => $data[1],
+                    'email' => $data[2],
                     'subject_id' => $data[3],
-                    'password'  => Hash::make($data[4]),
+                    'password' => Hash::make($data[4]),
                 ])->assignRole('guru');
             }
             $transRow = false;
@@ -77,12 +76,12 @@ class UserSeeder extends Seeder
         $csvData = fopen(base_path('/database/seeders/csvs/headmasters.csv'), 'r');
         $transRow = true;
         while (($data = fgetcsv($csvData, 555, ',')) !== false) {
-            if (!$transRow) {
+            if (! $transRow) {
                 User::create([
-                    'username'  => $data[0],
-                    'name'      => $data[1],
-                    'email'     => $data[2],
-                    'password'  => Hash::make($data[3]),
+                    'username' => $data[0],
+                    'name' => $data[1],
+                    'email' => $data[2],
+                    'password' => Hash::make($data[3]),
                 ])->assignRole('kepsek');
             }
             $transRow = false;
@@ -93,12 +92,12 @@ class UserSeeder extends Seeder
         $csvData = fopen(base_path('/database/seeders/csvs/coordinators.csv'), 'r');
         $transRow = true;
         while (($data = fgetcsv($csvData, 555, ',')) !== false) {
-            if (!$transRow) {
+            if (! $transRow) {
                 User::create([
-                    'username'  => $data[0],
-                    'name'      => $data[1],
-                    'email'     => $data[2],
-                    'password'  => Hash::make($data[3]),
+                    'username' => $data[0],
+                    'name' => $data[1],
+                    'email' => $data[2],
+                    'password' => Hash::make($data[3]),
                 ])->assignRole('korguru');
             }
             $transRow = false;

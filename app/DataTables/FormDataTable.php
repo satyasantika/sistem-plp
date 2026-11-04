@@ -14,7 +14,7 @@ class FormDataTable extends DataTable
     /**
      * Build DataTable class.
      *
-     * @param QueryBuilder $query Results from query() method.
+     * @param  QueryBuilder  $query Results from query() method.
      * @return \Yajra\DataTables\EloquentDataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
@@ -34,7 +34,7 @@ class FormDataTable extends DataTable
                     (int) ($row->assessments_count ?? 0) > 0 ||
                     (int) ($row->observations_count ?? 0) > 0;
 
-                if (!$isUsedInOtherTables) {
+                if (! $isUsedInOtherTables) {
                     $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm my-1 action"><i class="ti-trash"></i></button>';
                 }
 

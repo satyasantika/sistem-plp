@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Configuration;
 
-use App\Models\Map;
-use App\Models\Diary;
-use Illuminate\Http\Request;
 use App\DataTables\DiaryDataTable;
 use App\Http\Controllers\Controller;
+use App\Models\Diary;
+use App\Models\Map;
+use Illuminate\Http\Request;
 
 class DiaryController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
         $this->middleware('permission:diaries-read', ['only' => ['index', 'show']]);
         $this->middleware('permission:diaries-create', ['only' => ['create', 'store']]);
@@ -26,6 +26,7 @@ class DiaryController extends Controller
     public function create()
     {
         $diary = new Diary();
+
         return view('konfigurasi.diary-action', array_merge(
             ['diary' => $diary],
             $this->_dataSelection()
@@ -35,9 +36,10 @@ class DiaryController extends Controller
     public function store(Request $request)
     {
         Diary::create($request->all());
+
         return response()->json([
             'success' => true,
-            'message' => 'Diary <strong>' . $request->id . '</strong> telah ditambahkan'
+            'message' => 'Diary <strong>'.$request->id.'</strong> telah ditambahkan',
         ]);
     }
 
@@ -56,7 +58,7 @@ class DiaryController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Diary <strong>' . $request->id . '</strong> telah diperbarui'
+            'message' => 'Diary <strong>'.$request->id.'</strong> telah diperbarui',
         ]);
     }
 
@@ -65,9 +67,10 @@ class DiaryController extends Controller
         $name = $diary->id;
 
         $diary->delete();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Diary <strong>' . $name . '</strong> telah dihapus'
+            'message' => 'Diary <strong>'.$name.'</strong> telah dihapus',
         ]);
     }
 
@@ -77,10 +80,10 @@ class DiaryController extends Controller
         for ($i = 1; $i <= 30; $i++) {
             array_push($day, $i);
         }
+
         return [
             'maps' => Map::where('year', 2023)->whereNotNull('student_id')->get(),
             'day' => $day,
         ];
     }
-
 }

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Configuration;
 
-use App\Models\Form;
-use Illuminate\Http\Request;
 use App\DataTables\FormDataTable;
 use App\Http\Controllers\Controller;
+use App\Models\Form;
+use Illuminate\Http\Request;
 
 class FormController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
         $this->middleware('permission:forms-read', ['only' => ['index', 'show']]);
         $this->middleware('permission:forms-create', ['only' => ['create', 'store']]);
@@ -25,6 +25,7 @@ class FormController extends Controller
     public function create()
     {
         $form = new Form();
+
         return view('konfigurasi.form-action', array_merge(
             ['form' => $form],
             $this->_dataSelection()
@@ -34,9 +35,10 @@ class FormController extends Controller
     public function store(Request $request)
     {
         Form::create($request->all());
+
         return response()->json([
             'success' => true,
-            'message' => 'Form <strong>' . $request->id . '</strong> telah ditambahkan'
+            'message' => 'Form <strong>'.$request->id.'</strong> telah ditambahkan',
         ]);
     }
 
@@ -55,7 +57,7 @@ class FormController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Form <strong>' . $request->id . '</strong> telah diperbarui'
+            'message' => 'Form <strong>'.$request->id.'</strong> telah diperbarui',
         ]);
     }
 
@@ -64,9 +66,10 @@ class FormController extends Controller
         $name = $form->id;
 
         $form->delete();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Form <strong>' . $name . '</strong> telah dihapus'
+            'message' => 'Form <strong>'.$name.'</strong> telah dihapus',
         ]);
     }
 
@@ -76,5 +79,4 @@ class FormController extends Controller
             'formtypes' => ['yes_no', 'skor_4', 'skor_40', 'skor_max'],
         ];
     }
-
 }

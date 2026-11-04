@@ -2,29 +2,28 @@
 
 namespace App\Http\Controllers\School;
 
-use App\Models\Map;
-use App\Models\Diary;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Diary;
 
 class DiaryVerificationController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
-        $this->middleware('permission:aktivitas/diaryverifications/plp1-read|aktivitas/diaryverifications/plp2-read', ['only' => ['index','show']]);
-        $this->middleware('permission:aktivitas/diaryverifications/plp1-update|aktivitas/diaryverifications/plp2-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:aktivitas/diaryverifications/plp1-read|aktivitas/diaryverifications/plp2-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:aktivitas/diaryverifications/plp1-update|aktivitas/diaryverifications/plp2-update', ['only' => ['edit', 'update']]);
         $this->middleware('permission:'.request()->segment(3).'-read');
     }
 
     public function index($plp_order)
     {
-        return view('aktivitas.studentlogbook-list',compact('plp_order'));
+        return view('aktivitas.studentlogbook-list', compact('plp_order'));
     }
 
     public function show($plp_order, $map_id)
     {
-        $diaries = Diary::where('plp_order',$plp_order)->where('map_id',$map_id)->get();
-        return view('aktivitas.studentlogbook',compact('diaries','plp_order'));
+        $diaries = Diary::where('plp_order', $plp_order)->where('map_id', $map_id)->get();
+
+        return view('aktivitas.studentlogbook', compact('diaries', 'plp_order'));
     }
 
     public function update($plp_order, $map_id, Diary $diaryverification)
@@ -34,8 +33,7 @@ class DiaryVerificationController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Logbook diverifikasi'
+            'message' => 'Logbook diverifikasi',
         ]);
     }
-
 }

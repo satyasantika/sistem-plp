@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers\School;
 
+use App\Http\Controllers\Controller;
 use App\Models\School;
+use App\Models\SchoolUserProposal;
 use App\Models\Subject;
 use Illuminate\Http\Request;
-use App\Models\SchoolUserProposal;
-use App\Http\Controllers\Controller;
 
 class TeacherProposalController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
-        $this->middleware('permission:usulan/schoolteachers-read', ['only' => ['index','show']]);
-        $this->middleware('permission:usulan/schoolteachers-create', ['only' => ['create','store']]);
-        $this->middleware('permission:usulan/schoolteachers-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:usulan/schoolteachers-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:usulan/schoolteachers-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:usulan/schoolteachers-update', ['only' => ['edit', 'update']]);
         $this->middleware('permission:usulan/schoolteachers-delete', ['only' => ['destroy']]);
     }
 
     public function index()
     {
         $id = auth()->id();
-        $myschool = School::where('headmaster_id',$id)->orWhere('coordinator_id',$id)->pluck('id');
-        $teachers = SchoolUserProposal::whereIn('school_id',$myschool)->where('role','guru')->get();
+        $myschool = School::where('headmaster_id', $id)->orWhere('coordinator_id', $id)->pluck('id');
+        $teachers = SchoolUserProposal::whereIn('school_id', $myschool)->where('role', 'guru')->get();
 
         return view('usulan.guru', compact('teachers'));
     }
@@ -30,9 +30,10 @@ class TeacherProposalController extends Controller
     public function create()
     {
         $schoolteacher = new SchoolUserProposal();
+
         return view('usulan.guru-action', array_merge(
             [
-                'schoolteacher'=> $schoolteacher,
+                'schoolteacher' => $schoolteacher,
             ], $this->_dataSelection()
         ));
     }
@@ -40,9 +41,10 @@ class TeacherProposalController extends Controller
     public function store(Request $request)
     {
         SchoolUserProposal::create($request->all());
+
         return response()->json([
             'success' => true,
-            'message' => 'Usulan <strong>'.$request->name.'</strong> telah ditambahkan'
+            'message' => 'Usulan <strong>'.$request->name.'</strong> telah ditambahkan',
         ]);
     }
 
@@ -50,7 +52,7 @@ class TeacherProposalController extends Controller
     {
         return view('usulan.guru-action', array_merge(
             [
-                'schoolteacher'=> $schoolteacher,
+                'schoolteacher' => $schoolteacher,
             ], $this->_dataSelection()
         ));
     }
@@ -62,26 +64,29 @@ class TeacherProposalController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Usulan <strong>'.$request->name.'</strong> telah diperbarui'
+            'message' => 'Usulan <strong>'.$request->name.'</strong> telah diperbarui',
         ]);
     }
+
     public function destroy(SchoolUserProposal $schoolteacher)
     {
         $name = $schoolteacher->name;
 
         $schoolteacher->delete();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Usulan <strong>'.$name.'</strong> telah dihapus'
+            'message' => 'Usulan <strong>'.$name.'</strong> telah dihapus',
         ]);
     }
 
     private function _dataSelection()
     {
         $id = auth()->id();
+
         return [
-            'myschool'=> School::where('headmaster_id',$id)->orWhere('coordinator_id',$id)->get(),
-            'subjects'=> Subject::orderBy('id')->get(),
+            'myschool' => School::where('headmaster_id', $id)->orWhere('coordinator_id', $id)->get(),
+            'subjects' => Subject::orderBy('id')->get(),
         ];
     }
 }

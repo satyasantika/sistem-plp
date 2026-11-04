@@ -17,7 +17,6 @@ class Form extends Model
         'id' => 'string',
     ];
 
-
     public function formItems()
     {
         return $this->hasMany(FormItem::class);
@@ -32,5 +31,4 @@ class Form extends Model
     {
         return $this->hasMany(Observation::class);
     }
-
 }
