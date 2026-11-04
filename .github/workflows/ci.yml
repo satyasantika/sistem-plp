@@ -15,7 +15,7 @@ jobs:
         image: mariadb:10.11
         env:
           MARIADB_ROOT_PASSWORD: root
-          MARIADB_DATABASE: db_plp_testing
+          MARIADB_DATABASE: db_sistem_plp_testing
         ports: ['3306:3306']
         options: >-
           --health-cmd="healthcheck.sh --connect --innodb_initialized"
@@ -47,6 +47,6 @@ jobs:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
-          DB_DATABASE: db_plp_testing
+          DB_DATABASE: db_sistem_plp_testing
           DB_USERNAME: root
           DB_PASSWORD: root

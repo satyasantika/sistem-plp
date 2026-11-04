@@ -21,7 +21,10 @@
         <env name="APP_ENV" value="testing"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_DRIVER" value="array"/>
-        <env name="DB_DATABASE" value="db_sistem_plp_testing"/>
+        <!-- force + server: Laravel membaca $_SERVER lebih dulu, jadi variabel env
+             kontainer/CI tidak bisa mengalihkan uji ke basis data pengembangan. -->
+        <env name="DB_DATABASE" value="db_sistem_plp_testing" force="true"/>
+        <server name="DB_DATABASE" value="db_sistem_plp_testing"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>

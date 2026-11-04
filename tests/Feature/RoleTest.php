@@ -36,8 +36,7 @@ class RoleTest extends TestCase
 
     public function test_non_admin_cannot_show_roles_page()
     {
-        $role = Role::whereNotIn('name', ['admin'])->get()->random()->name;
-        $user = User::factory()->create()->assignRole($role);
+        $user = User::factory()->create()->assignRole('mahasiswa');
         $this->assertFalse($user->can('roles-read'));
 
         $response = $this->actingAs($user)

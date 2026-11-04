@@ -28,7 +28,6 @@ Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'inde
 
 Route::post('/active-year', [App\Http\Controllers\ActiveYearController::class, 'set'])->middleware('auth')->name('active-year.set');
 
-// require __DIR__.'/auth.php';
 Route::middleware('auth')->group(function () {
     Route::get('/konfigurasi/users/import/create', [App\Http\Controllers\Configuration\UserController::class, 'importCreate'])->name('users.importcreate');
     Route::get('/konfigurasi/users/import/template', [App\Http\Controllers\Configuration\UserController::class, 'importTemplate'])->name('users.importtemplate');
