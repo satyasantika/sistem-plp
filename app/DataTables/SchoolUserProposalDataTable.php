@@ -6,10 +6,7 @@ use App\Models\SchoolUserProposal;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
-use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\Html\Editor\Editor;
-use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
 class SchoolUserProposalDataTable extends DataTable
@@ -17,27 +14,28 @@ class SchoolUserProposalDataTable extends DataTable
     /**
      * Build DataTable class.
      *
-     * @param QueryBuilder $query Results from query() method.
+     * @param  QueryBuilder  $query Results from query() method.
      * @return \Yajra\DataTables\EloquentDataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->editColumn('updated_at', function($row) {
+            ->editColumn('updated_at', function ($row) {
                 return $row->updated_at->format('d/m/Y H:i:s');
             })
-            ->addColumn('action', function($row){
+            ->addColumn('action', function ($row) {
                 $action = '';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="edit" class="btn btn-primary btn-sm my-1 action"><i class="ti-pencil"></i></button>';
                 $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm my-1 action"><i class="ti-trash"></i></button>';
+
                 return $action;
             })
-            ->addColumn('mapel', function($row){
+            ->addColumn('mapel', function ($row) {
                 if (isset($row->subject_id)) {
                     return $row->subjects->name;
                 }
             })
-            ->addColumn('sekolah', function($row){
+            ->addColumn('sekolah', function ($row) {
                 if (isset($row->school_id)) {
                     return $row->schools->name;
                 }
@@ -48,7 +46,7 @@ class SchoolUserProposalDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\SchoolUserProposal $model
+     * @param  \App\Models\SchoolUserProposal  $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query(SchoolUserProposal $model): QueryBuilder
@@ -103,6 +101,6 @@ class SchoolUserProposalDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'SchoolUserProposal_' . date('YmdHis');
+        return 'SchoolUserProposal_'.date('YmdHis');
     }
 }

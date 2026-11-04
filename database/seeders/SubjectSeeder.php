@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Subject;
 use Illuminate\Database\Seeder;
-use Maatwebsite\Excel\Facades\Excel;
 
 class SubjectSeeder extends Seeder
 {
@@ -18,7 +17,7 @@ class SubjectSeeder extends Seeder
         $csvData = fopen(base_path('/database/seeders/csvs/subjects.csv'), 'r');
         $transRow = true;
         while (($data = fgetcsv($csvData, 555, ',')) !== false) {
-            if (!$transRow) {
+            if (! $transRow) {
                 Subject::create([
                     'id' => $data['0'],
                     'name' => $data['1'],

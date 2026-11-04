@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Map;
 use App\Models\School;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class SchoolSeeder extends Seeder
 {
@@ -19,7 +18,7 @@ class SchoolSeeder extends Seeder
         $csvData = fopen(base_path('/database/seeders/csvs/schools.csv'), 'r');
         $transRow = true;
         while (($data = fgetcsv($csvData, 555, ',')) !== false) {
-            if (!$transRow) {
+            if (! $transRow) {
                 School::create([
                     'name' => $data['0'],
                 ]);
@@ -31,9 +30,9 @@ class SchoolSeeder extends Seeder
         $csvData = fopen(base_path('/database/seeders/csvs/maps.csv'), 'r');
         $transRow = true;
         while (($data = fgetcsv($csvData, 555, ',')) !== false) {
-            if (!$transRow) {
-                $school = School::where('name',$data['0'])->first();
-                for ($i=0; $i < $data['2']; $i++) {
+            if (! $transRow) {
+                $school = School::where('name', $data['0'])->first();
+                for ($i = 0; $i < $data['2']; $i++) {
                     Map::create([
                         'school_id' => $school->id,
                         'year' => 2022,

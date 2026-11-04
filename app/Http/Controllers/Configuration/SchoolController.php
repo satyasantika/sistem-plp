@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Configuration;
 
-use App\Models\User;
-use App\Models\School;
-use Illuminate\Http\Request;
 use App\DataTables\SchoolDataTable;
 use App\Http\Controllers\Controller;
+use App\Models\School;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class SchoolController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
         $this->middleware('permission:schools-read', ['only' => ['index', 'show']]);
         $this->middleware('permission:schools-create', ['only' => ['create', 'store']]);
@@ -26,6 +26,7 @@ class SchoolController extends Controller
     public function create()
     {
         $school = new School();
+
         return view('konfigurasi.school-action', array_merge(
             ['school' => $school],
             $this->_dataSelection()
@@ -35,9 +36,10 @@ class SchoolController extends Controller
     public function store(Request $request)
     {
         School::create($request->all());
+
         return response()->json([
             'success' => true,
-            'message' => 'School <strong>' . $request->name . '</strong> telah ditambahkan'
+            'message' => 'School <strong>'.$request->name.'</strong> telah ditambahkan',
         ]);
     }
 
@@ -56,7 +58,7 @@ class SchoolController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'School <strong>' . $request->name . '</strong> telah diperbarui'
+            'message' => 'School <strong>'.$request->name.'</strong> telah diperbarui',
         ]);
     }
 
@@ -65,9 +67,10 @@ class SchoolController extends Controller
         $name = $school->name;
 
         $school->delete();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'School <strong>' . $name . '</strong> telah dihapus'
+            'message' => 'School <strong>'.$name.'</strong> telah dihapus',
         ]);
     }
 
@@ -85,5 +88,4 @@ class SchoolController extends Controller
                 ->get(),
         ];
     }
-
 }

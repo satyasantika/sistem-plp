@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\FormItem;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class FormItemSeeder extends Seeder
 {
@@ -18,7 +17,7 @@ class FormItemSeeder extends Seeder
         $csvData = fopen(base_path('/database/seeders/csvs/formItems.csv'), 'r');
         $transRow = true;
         while (($data = fgetcsv($csvData, 555, ',')) !== false) {
-            if (!$transRow) {
+            if (! $transRow) {
                 FormItem::create([
                     'form_id' => $data['0'],
                     'component' => $data['1'],

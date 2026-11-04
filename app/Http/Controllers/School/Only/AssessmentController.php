@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\School\Only;
 
-use App\Models\Map;
+use App\Http\Controllers\Concerns\GuardsAssessmentDuplicates;
+use App\Http\Controllers\Controller;
+use App\Models\Assessment;
 use App\Models\Form;
 use App\Models\FormItem;
-use App\Models\Assessment;
-use App\Models\PlpFinalGradeFormRule;
-use Illuminate\Http\Request;
+use App\Models\Map;
 // use Illuminate\Auth\Access\Gate;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Concerns\GuardsAssessmentDuplicates;
+use App\Models\PlpFinalGradeFormRule;
 use App\Services\MapFinalGradeCalculator;
+use Illuminate\Http\Request;
 
 class AssessmentController extends Controller
 {
@@ -88,14 +88,14 @@ class AssessmentController extends Controller
         }
 
         return view('aktivitas.only.assessment-resume', [
-            'sections'      => $sections,
-            'allSections'   => $allSections,
-            'plpTabs'         => $plpTabs,
-            'totalMaps'       => $allMaps->count(),
-            'user'            => $user,
-            'activeYear'      => $activeYear,
-            'focusPlp'        => $focusPlp,
-            'focusPlpLabel'   => $focusPlp !== null ? Map::plpBucketLabel($focusPlp) : null,
+            'sections' => $sections,
+            'allSections' => $allSections,
+            'plpTabs' => $plpTabs,
+            'totalMaps' => $allMaps->count(),
+            'user' => $user,
+            'activeYear' => $activeYear,
+            'focusPlp' => $focusPlp,
+            'focusPlpLabel' => $focusPlp !== null ? Map::plpBucketLabel($focusPlp) : null,
         ]);
     }
 
@@ -122,12 +122,12 @@ class AssessmentController extends Controller
                 ->all();
             $formModels = Form::whereIn('id', $formIds)->get()->keyBy('id');
             $sections[$plpOrder] = [
-                'plpOrder'      => $plpOrder,
-                'maps'          => $maps,
-                'forms'         => $formIds,
-                'formModels'    => $formModels,
+                'plpOrder' => $plpOrder,
+                'maps' => $maps,
+                'forms' => $formIds,
+                'formModels' => $formModels,
                 'formRuleTimes' => $formRuleTimes,
-                'assessor'      => $assessor,
+                'assessor' => $assessor,
             ];
         }
 
@@ -150,11 +150,11 @@ class AssessmentController extends Controller
     {
         $form = Form::find($form_id);
         $grade = 0;
-        for ($i=0; $i < $form->count; $i++) {
-            $score = 'score' . ($i + 1);
+        for ($i = 0; $i < $form->count; $i++) {
+            $score = 'score'.($i + 1);
             $grade += $request->$score;
         }
-        $final_grade = ($form->type == 'skor_4') ? round(100 * $grade/(4*$form->count),2) : $grade;
+        $final_grade = ($form->type == 'skor_4') ? round(100 * $grade / (4 * $form->count), 2) : $grade;
 
         $plpOrder = $this->resolveStoragePlpOrder($request, $form_id, (int) $map_id);
         $request->merge([
@@ -178,7 +178,7 @@ class AssessmentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'assessment <strong>'.$request->id.'</strong> telah ditambahkan'
+            'message' => 'assessment <strong>'.$request->id.'</strong> telah ditambahkan',
         ]);
     }
 
@@ -351,12 +351,12 @@ class AssessmentController extends Controller
 
         $form = Form::find($form_id);
         $grade = 0;
-        for ($i=0; $i < $form->count; $i++) {
-            $score = 'score' . ($i + 1);
+        for ($i = 0; $i < $form->count; $i++) {
+            $score = 'score'.($i + 1);
             $grade += $request->$score;
         }
 
-        $final_grade = ($form->type == 'skor_4') ? round(100 * $grade/(4*$form->count),2) : $grade;
+        $final_grade = ($form->type == 'skor_4') ? round(100 * $grade / (4 * $form->count), 2) : $grade;
         $schoolassessment->grade = $final_grade;
         $schoolassessment->plp_order = $this->resolveStoragePlpOrder($request, $form_id, (int) $map_id, $schoolassessment);
 
@@ -380,7 +380,7 @@ class AssessmentController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'assessment <strong>'.$request->id.'</strong> telah diperbarui'
+            'message' => 'assessment <strong>'.$request->id.'</strong> telah diperbarui',
         ]);
     }
 
@@ -501,7 +501,7 @@ class AssessmentController extends Controller
 
     private function _formByComponent($form_id, $component)
     {
-        return FormItem::where('form_id',$form_id)->where('component',$component)->orderBy('component_order')->get();
+        return FormItem::where('form_id', $form_id)->where('component', $component)->orderBy('component_order')->get();
     }
 
     private function _myMap($year)
@@ -514,17 +514,17 @@ class AssessmentController extends Controller
             ->whereNotNull('student_id')
             ->with(['students', 'schools', 'subjects', 'lectures', 'teachers']);
 
-        if (!empty($user->subject_id)) {
+        if (! empty($user->subject_id)) {
             $query->where('subject_id', $user->subject_id);
         }
 
-        if ($user->hasRole('dosen') && !$user->hasRole('guru')) {
+        if ($user->hasRole('dosen') && ! $user->hasRole('guru')) {
             $query->where('lecture_id', $user->id);
-        } elseif ($user->hasRole('guru') && !$user->hasRole('dosen')) {
+        } elseif ($user->hasRole('guru') && ! $user->hasRole('dosen')) {
             $query->where('teacher_id', $user->id);
-        } elseif ($isLecture && !$isTeacher) {
+        } elseif ($isLecture && ! $isTeacher) {
             $query->where('lecture_id', $user->id);
-        } elseif ($isTeacher && !$isLecture) {
+        } elseif ($isTeacher && ! $isLecture) {
             $query->where('teacher_id', $user->id);
         } elseif ($user->hasRole('dosen') && $user->hasRole('guru')) {
             // Prefer dosen scope for users with double role so list remains consistent with dashboard card entry.

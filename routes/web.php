@@ -4,8 +4,9 @@ use App\Exports\ExportMap;
 use App\Exports\ExportProfile;
 use App\Exports\ExportYudisium;
 use Illuminate\Support\Facades\Auth;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
+
 // use App\Http\Controllers\RoleController;
 
 /*
@@ -23,13 +24,10 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-
-
 Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
 Route::post('/active-year', [App\Http\Controllers\ActiveYearController::class, 'set'])->middleware('auth')->name('active-year.set');
 
-// require __DIR__.'/auth.php';
 Route::middleware('auth')->group(function () {
     Route::get('/konfigurasi/users/import/create', [App\Http\Controllers\Configuration\UserController::class, 'importCreate'])->name('users.importcreate');
     Route::get('/konfigurasi/users/import/template', [App\Http\Controllers\Configuration\UserController::class, 'importTemplate'])->name('users.importtemplate');
@@ -47,11 +45,12 @@ Route::middleware('auth')->group(function () {
     Route::impersonate();
     Route::get('/impersonate/leave', function () {
         app('impersonate')->leave();
+
         return redirect()->route('users.index');
     })->name('impersonate.leave');
     Route::get('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'showChangePasswordGet'])->name('change-password');
     Route::post('/password/change', [App\Http\Controllers\Auth\PasswordChangeController::class, 'changePasswordPost'])->name('update-password');
-    Route::post('/password/reset/{id}', [App\Http\Controllers\Auth\PasswordChangeController::class, 'resetPasswordPost'])->name('reset-password');
+    Route::post('/password/reset/{id}', [App\Http\Controllers\Auth\PasswordChangeController::class, 'resetPasswordPost'])->middleware('permission:users-update')->name('reset-password');
     Route::resource('profiles', App\Http\Controllers\ProfileController::class)->only(['index', 'edit', 'update']);
     Route::resource('konfigurasi/roles', App\Http\Controllers\Configuration\RoleController::class)->except('show');
     Route::resource('konfigurasi/permissions', App\Http\Controllers\Configuration\PermissionController::class)->except('show');
@@ -82,7 +81,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('data/cleaningassessments', App\Http\Controllers\School\CleaningAssessmentController::class)->only(['index', 'destroy']);
 
     Route::group(['middleware' => ['permission:active-read']], function () {
-
         Route::resource('usulan/schoolcoordinators', App\Http\Controllers\School\CoordinatorProposalController::class)->except('show');
         Route::resource('usulan/schoolteachers', App\Http\Controllers\School\TeacherProposalController::class)->except('show');
         Route::resource('mapping/mastermaps', App\Http\Controllers\Map\MasterMapController::class)->except('show');
@@ -199,25 +197,24 @@ Route::middleware('auth')->group(function () {
         //TMP
         Route::get('data/schooluserapprovals', [App\Http\Controllers\School\SchoolUserController::class, 'index']);
     });
-
 });
-
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-
 Route::get('/export-maps', function () {
-    $file_name = 'mapping' . date('YmdHis') . '.xlsx';
+    $file_name = 'mapping'.date('YmdHis').'.xlsx';
+
     return Excel::download(new ExportMap, $file_name);
 });
 Route::get('/export-yudisium/{plp_order}', function ($plp_order) {
-    $file_name = 'yudisium-' . $plp_order . '-' . date('YmdHis') . '.xlsx';
+    $file_name = 'yudisium-'.$plp_order.'-'.date('YmdHis').'.xlsx';
+
     return Excel::download(new ExportYudisium, $file_name);
 });
 Route::get('/export-profil-gp', function () {
-    $file_name = 'profile-gp-' . date('YmdHis') . '.xlsx';
+    $file_name = 'profile-gp-'.date('YmdHis').'.xlsx';
+
     return Excel::download(new ExportProfile, $file_name);
 });
-

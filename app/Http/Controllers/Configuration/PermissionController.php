@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers\Configuration;
 
-use App\Models\Permission;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\DataTables\PermissionDataTable;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\PermissionRequest;
+use App\Models\Permission;
 
 class PermissionController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
-        $this->middleware('permission:roles-read', ['only' => ['index','show']]);
-        $this->middleware('permission:roles-create', ['only' => ['create','store']]);
-        $this->middleware('permission:roles-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:roles-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:roles-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:roles-update', ['only' => ['edit', 'update']]);
         $this->middleware('permission:roles-delete', ['only' => ['destroy']]);
     }
 
@@ -25,15 +24,16 @@ class PermissionController extends Controller
 
     public function create()
     {
-        return view('konfigurasi.permission-action',['permission'=>new Permission()]);
+        return view('konfigurasi.permission-action', ['permission' => new Permission()]);
     }
 
     public function store(PermissionRequest $request)
     {
         Permission::create($request->all());
+
         return response()->json([
             'success' => true,
-            'message' => 'Permission <strong>'.$request->name.'</strong> telah ditambahkan'
+            'message' => 'Permission <strong>'.$request->name.'</strong> telah ditambahkan',
         ]);
     }
 
@@ -44,13 +44,12 @@ class PermissionController extends Controller
 
     public function update(PermissionRequest $request, Permission $permission)
     {
-
         $data = $request->all();
         $permission->fill($data)->save();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Permission <strong>'.$request->name.'</strong> telah diperbarui'
+            'message' => 'Permission <strong>'.$request->name.'</strong> telah diperbarui',
         ]);
     }
 
@@ -58,9 +57,10 @@ class PermissionController extends Controller
     {
         $name = $permission->name;
         $permission->delete();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Permission <strong>'.$name.'</strong> telah dihapus'
+            'message' => 'Permission <strong>'.$name.'</strong> telah dihapus',
         ]);
     }
 }

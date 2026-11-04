@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Diary extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
+
     protected $casts = [
         'log_date' => 'date',
         'verified' => 'boolean',
     ];
-
 
     public function maps()
     {

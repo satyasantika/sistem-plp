@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers\Map;
 
+use App\Http\Controllers\Controller;
 use App\Models\Map;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class DepartementMapController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
-        $this->middleware('permission:mapping/departementmaps-read', ['only' => ['index','show']]);
-        $this->middleware('permission:mapping/departementmaps-create', ['only' => ['create','store']]);
-        $this->middleware('permission:mapping/departementmaps-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:mapping/departementmaps-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:mapping/departementmaps-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:mapping/departementmaps-update', ['only' => ['edit', 'update']]);
         $this->middleware('permission:mapping/departementmaps-delete', ['only' => ['destroy']]);
     }
 
     public function index()
     {
         $my_subject_maps = $this->_mySubjectMap();
-        return view('map.departementmap',compact('my_subject_maps'));
+
+        return view('map.departementmap', compact('my_subject_maps'));
     }
 
     public function edit(Map $departementmap)
@@ -28,10 +29,10 @@ class DepartementMapController extends Controller
         return view('map.departementmap-action', array_merge(
             $this->_dataSelection(),
             [
-                'departementmap'=> $departementmap,
-                'school'=> $departementmap->schools->name,
+                'departementmap' => $departementmap,
+                'school' => $departementmap->schools->name,
             ],
-            ));
+        ));
     }
 
     public function update(Request $request, Map $departementmap)
@@ -56,34 +57,33 @@ class DepartementMapController extends Controller
             ->where('subject_id', $this->_mySubjectId())
             ->orderBy('school_id')
             ->get();
-
     }
+
     private function _dataSelection()
     {
-        $my_student_id_in_maps = Map::where('subject_id',$this->_mySubjectId())
+        $my_student_id_in_maps = Map::where('subject_id', $this->_mySubjectId())
                                     ->forActiveYear()
                                     ->whereNotNull('student_id')
                                     ->pluck('student_id');
-        $my_lectures = User::role('dosen')->where('subject_id',$this->_mySubjectId())->get();
+        $my_lectures = User::role('dosen')->where('subject_id', $this->_mySubjectId())->get();
 
         return [
             'students' => User::role('mahasiswa')->can('active-read')
-                                ->select('id','name')
+                                ->select('id', 'name')
                                 ->where([
-                                    'subject_id'=>$this->_mySubjectId(),
+                                    'subject_id' => $this->_mySubjectId(),
                                     // 'is_active'=>1
                                 ])
-                                ->whereNotIn('id',$my_student_id_in_maps)
+                                ->whereNotIn('id', $my_student_id_in_maps)
                                 ->orderBy('name')
                                 ->get(),
             'lectures' => User::role('dosen')->can('active-read')
                                 ->where([
-                                    'subject_id'=>$this->_mySubjectId(),
+                                    'subject_id' => $this->_mySubjectId(),
                                     // 'is_active'=>1
                                 ])
                                 ->orderBy('name')
                                 ->get(),
         ];
     }
-
 }

@@ -4,12 +4,12 @@ namespace App\DataTables;
 
 use App\Models\Assessment;
 use App\Models\Map;
-use Illuminate\Support\Facades\DB;
-use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\EloquentDataTable;
-use Yajra\DataTables\Services\DataTable;
-use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\EloquentDataTable;
+use Yajra\DataTables\Html\Builder as HtmlBuilder;
+use Yajra\DataTables\Html\Column;
+use Yajra\DataTables\Services\DataTable;
 
 class AssessmentDataTable extends DataTable
 {
@@ -47,7 +47,7 @@ class AssessmentDataTable extends DataTable
     /**
      * Build DataTable class.
      *
-     * @param QueryBuilder $query Results from query() method.
+     * @param  QueryBuilder  $query Results from query() method.
      * @return \Yajra\DataTables\EloquentDataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable

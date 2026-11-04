@@ -10,6 +10,7 @@ class Assessment extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
     protected $casts = [
         'exam_date' => 'date',
     ];

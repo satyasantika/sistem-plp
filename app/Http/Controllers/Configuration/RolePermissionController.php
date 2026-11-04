@@ -4,16 +4,16 @@ namespace App\Http\Controllers\Configuration;
 
 use App\Http\Controllers\Controller;
 use App\Support\RolePermissionUi;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RolePermissionController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
-        $this->middleware('permission:roles-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:roles-update', ['only' => ['edit', 'update']]);
     }
 
     public function edit($id)
@@ -38,8 +38,7 @@ class RolePermissionController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Permission untuk <strong>'.$request->name.'</strong> telah diperbarui'
+            'message' => 'Permission untuk <strong>'.$request->name.'</strong> telah diperbarui',
         ]);
     }
-
 }

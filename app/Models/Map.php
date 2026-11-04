@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Map extends Model
@@ -35,7 +35,7 @@ class Map extends Model
     {
         $user = $user ?: auth()->user();
 
-        if (!$user) {
+        if (! $user) {
             return static::availableYears();
         }
 
@@ -136,7 +136,7 @@ class Map extends Model
     {
         $user = $user ?: auth()->user();
 
-        if (!$user) {
+        if (! $user) {
             return $query;
         }
 
@@ -188,7 +188,7 @@ class Map extends Model
                 $hasConstraint = true;
             }
 
-            if (!$hasConstraint) {
+            if (! $hasConstraint) {
                 $builder->whereRaw('1 = 0');
             }
         });

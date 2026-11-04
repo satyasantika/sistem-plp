@@ -3,12 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Spatie\Permission\Models\Role;
 
 class UserRolePermissionSeeder extends Seeder
 {
@@ -29,79 +28,79 @@ class UserRolePermissionSeeder extends Seeder
             $admin = User::create(array_merge([
                 'name' => 'admin',
                 'username' => 'admin',
-                'email' => 'admin@gmail.com'
+                'email' => 'admin@gmail.com',
             ], $default_user_value));
 
             $ketua = User::create(array_merge([
                 'name' => 'ketua',
                 'username' => 'ketua',
-                'email' => 'ketua@gmail.com'
+                'email' => 'ketua@gmail.com',
             ], $default_user_value));
 
             $dekanat = User::create(array_merge([
                 'name' => 'dekanat',
                 'username' => 'dekanat',
-                'email' => 'dekanat@gmail.com'
+                'email' => 'dekanat@gmail.com',
             ], $default_user_value));
 
             $sekretariat = User::create(array_merge([
                 'name' => 'sekretariat',
                 'username' => 'sekretariat',
-                'email' => 'sekretariat@gmail.com'
+                'email' => 'sekretariat@gmail.com',
             ], $default_user_value));
 
             $akademik = User::create(array_merge([
                 'name' => 'akademik',
                 'username' => 'akademik',
-                'email' => 'akademik@gmail.com'
+                'email' => 'akademik@gmail.com',
             ], $default_user_value));
 
             $data = User::create(array_merge([
                 'name' => 'data',
                 'username' => 'data',
-                'email' => 'data@gmail.com'
+                'email' => 'data@gmail.com',
             ], $default_user_value));
 
             $dosen = User::create(array_merge([
                 'name' => 'dosen',
                 'username' => 'dosen',
-                'email' => 'dosen@gmail.com'
+                'email' => 'dosen@gmail.com',
             ], $default_user_value));
 
             $guru = User::create(array_merge([
                 'name' => 'guru',
                 'username' => 'guru',
-                'email' => 'guru@gmail.com'
+                'email' => 'guru@gmail.com',
             ], $default_user_value));
 
             $mahasiswa = User::create(array_merge([
                 'name' => 'mahasiswa',
                 'username' => 'mahasiswa',
-                'email' => 'mahasiswa@gmail.com'
+                'email' => 'mahasiswa@gmail.com',
             ], $default_user_value));
 
             $kajur = User::create(array_merge([
                 'name' => 'kajur',
                 'username' => 'kajur',
-                'email' => 'kajur@gmail.com'
+                'email' => 'kajur@gmail.com',
             ], $default_user_value));
 
             $kepsek = User::create(array_merge([
                 'name' => 'kepsek',
                 'username' => 'kepsek',
-                'email' => 'kepsek@gmail.com'
+                'email' => 'kepsek@gmail.com',
             ], $default_user_value));
 
             $korguru = User::create(array_merge([
                 'name' => 'korguru',
                 'username' => 'korguru',
-                'email' => 'korguru@gmail.com'
+                'email' => 'korguru@gmail.com',
             ], $default_user_value));
 
             $kordosen = User::create(array_merge([
                 'name' => 'kordosen',
                 'username' => 'kordosen',
-                'email' => 'kordosen@gmail.com'
+                'email' => 'kordosen@gmail.com',
             ], $default_user_value));
 
             $admin_role = Role::create(['name' => 'admin']);
@@ -143,13 +142,8 @@ class UserRolePermissionSeeder extends Seeder
             $kordosen->assignRole('kordosen');
 
             DB::commit();
-
         } catch (\Throwable $th) {
-
             DB::rollback();
         }
-
-
-
     }
 }

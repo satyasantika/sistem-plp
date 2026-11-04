@@ -29,10 +29,11 @@ class RecalculateGrades extends Command
 
             if (empty($years)) {
                 $this->error('Tidak ada data map dengan flag PLP ditemukan.');
+
                 return self::FAILURE;
             }
 
-            $this->info('Tahun tersedia: ' . implode(', ', $years));
+            $this->info('Tahun tersedia: '.implode(', ', $years));
             $this->line('Jalankan: php artisan plp:recalculate-grades <tahun>');
 
             return self::SUCCESS;
@@ -48,13 +49,14 @@ class RecalculateGrades extends Command
 
         if ($maps->isEmpty()) {
             $this->error("Tidak ada map dengan flag PLP ditemukan untuk tahun {$year}.");
+
             return self::FAILURE;
         }
 
         $isDryRun = $this->option('dry-run');
         $total = $maps->count();
 
-        $this->info("Menghitung ulang {$total} map untuk tahun {$year}" . ($isDryRun ? ' (dry-run)' : '') . '...');
+        $this->info("Menghitung ulang {$total} map untuk tahun {$year}".($isDryRun ? ' (dry-run)' : '').'...');
 
         $bar = $this->output->createProgressBar($total);
         $bar->start();
@@ -81,7 +83,7 @@ class RecalculateGrades extends Command
         $bar->finish();
         $this->newLine();
 
-        $this->info("Selesai. Diproses: {$updated}" . ($errors > 0 ? ", gagal: {$errors}" : '') . '.');
+        $this->info("Selesai. Diproses: {$updated}".($errors > 0 ? ", gagal: {$errors}" : '').'.');
 
         return $errors > 0 ? self::FAILURE : self::SUCCESS;
     }

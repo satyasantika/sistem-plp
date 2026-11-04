@@ -123,7 +123,7 @@ class DashboardController extends Controller
                     'maps' => function ($query) use ($activeYear) {
                         $query->forYear($activeYear)
                             ->with(['subjects', 'students', 'teachers', 'lectures']);
-                    }
+                    },
                 ])
                 ->get();
         }
@@ -134,7 +134,7 @@ class DashboardController extends Controller
                     'maps' => function ($query) use ($activeYear) {
                         $query->forYear($activeYear)
                             ->with(['subjects', 'students', 'teachers', 'lectures']);
-                    }
+                    },
                 ])
                 ->get();
         }
@@ -336,12 +336,12 @@ class DashboardController extends Controller
 
                 $lookup = $mapAssessments
                     ->filter(fn ($a) => (int) $a->plp_order === $lookupPlpOrder)
-                    ->keyBy(fn ($a) => $a->form_id . ':' . $a->form_order);
+                    ->keyBy(fn ($a) => $a->form_id.':'.$a->form_order);
 
                 $badges[$map->id][$plpOrder] = collect($section['form_defs'])
                     ->map(fn ($def) => [
                         'code' => $def['code'],
-                        'done' => $lookup->has($def['form_id'] . ':' . $def['form_order']),
+                        'done' => $lookup->has($def['form_id'].':'.$def['form_order']),
                     ])
                     ->values()
                     ->all();
@@ -390,7 +390,7 @@ class DashboardController extends Controller
                 $definitions[] = [
                     'form_id' => $formId,
                     'form_order' => $formOrder,
-                    'code' => $times > 1 ? $baseCode . '.' . $formOrder : $baseCode,
+                    'code' => $times > 1 ? $baseCode.'.'.$formOrder : $baseCode,
                 ];
             }
         }
@@ -405,11 +405,11 @@ class DashboardController extends Controller
             ->whereIn('form_id', $formIds)
             ->get(['form_id', 'form_order'])
             ->keyBy(function ($assessment) {
-                return $assessment->form_id . ':' . $assessment->form_order;
+                return $assessment->form_id.':'.$assessment->form_order;
             });
 
         $items = collect($definitions)->map(function ($definition) use ($assessmentLookup) {
-            $key = $definition['form_id'] . ':' . $definition['form_order'];
+            $key = $definition['form_id'].':'.$definition['form_order'];
             $exists = $assessmentLookup->has($key);
 
             return [
@@ -425,22 +425,22 @@ class DashboardController extends Controller
         if ($completedCount <= 0) {
             $label = 'Belum dinilai';
             $tone = 'pending';
-            $detail = $actorLabel . ' belum mengisi penilaian apa pun.';
+            $detail = $actorLabel.' belum mengisi penilaian apa pun.';
         } elseif ($completedCount < $expectedCount) {
             $label = 'Sebagian dinilai';
             $tone = 'progress';
-            $detail = $actorLabel . ' sudah menilai sebagian form yang diwajibkan.';
+            $detail = $actorLabel.' sudah menilai sebagian form yang diwajibkan.';
         } else {
             $label = 'Sudah dinilai';
             $tone = 'done';
-            $detail = $actorLabel . ' sudah menyelesaikan seluruh form penilaian.';
+            $detail = $actorLabel.' sudah menyelesaikan seluruh form penilaian.';
         }
 
         return [
             'label' => $label,
             'tone' => $tone,
             'detail' => $detail,
-            'progress' => $completedCount . '/' . $expectedCount . ' form',
+            'progress' => $completedCount.'/'.$expectedCount.' form',
             'items' => $items,
         ];
     }

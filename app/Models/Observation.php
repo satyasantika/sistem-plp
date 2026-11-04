@@ -13,11 +13,11 @@ class Observation extends Model
 
     public function maps()
     {
-        return $this->belongsTo(Map::class,'map_id');
+        return $this->belongsTo(Map::class, 'map_id');
     }
 
     public function forms()
     {
-        return $this->belongsTo(Form::class,'form_id');
+        return $this->belongsTo(Form::class, 'form_id');
     }
 }

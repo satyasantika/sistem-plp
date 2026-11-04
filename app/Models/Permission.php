@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Spatie\Permission\Models\Permission as PermissionSpatie;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Models\Permission as PermissionSpatie;
 
 class Permission extends PermissionSpatie
 {

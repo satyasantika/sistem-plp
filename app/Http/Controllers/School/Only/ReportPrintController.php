@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\School\Only;
 
-use PDF;
-use App\Models\Map;
 use App\Http\Controllers\Controller;
+use App\Models\Map;
+use PDF;
 
 class ReportPrintController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
         $this->middleware('permission:aktivitas/reportprint/plp-read');
     }
@@ -31,6 +31,7 @@ class ReportPrintController extends Controller
         ];
 
         $pdf = PDF::loadView('pdf.only.laporan-master', $data);
+
         return $pdf->download('cover-laporan.pdf');
     }
 }

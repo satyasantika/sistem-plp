@@ -3,8 +3,8 @@
 namespace App\DataTables;
 
 use App\Models\Map;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Column;
@@ -46,7 +46,7 @@ class MapDataTable extends DataTable
     /**
      * Build DataTable class.
      *
-     * @param QueryBuilder $query Results from query() method.
+     * @param  QueryBuilder  $query Results from query() method.
      * @return \Yajra\DataTables\EloquentDataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
@@ -89,9 +89,10 @@ class MapDataTable extends DataTable
                     DB::table('assessments')->where('map_id', $row->id)->exists() ||
                     DB::table('observations')->where('map_id', $row->id)->exists();
 
-                if (!$isUsedInOtherTables) {
+                if (! $isUsedInOtherTables) {
                     $action .= ' <button type="button" data-id='.$row->id.' data-jenis="delete" class="btn btn-danger btn-sm my-1 action"><i class="ti-trash"></i></button>';
                 }
+
                 return $action;
             })
             ->setRowId('id');
@@ -100,7 +101,7 @@ class MapDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Map $model
+     * @param  \App\Models\Map  $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query(Map $model): QueryBuilder
@@ -135,7 +136,6 @@ class MapDataTable extends DataTable
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->orderBy(1, 'desc');
-
     }
 
     /**
@@ -169,6 +169,6 @@ class MapDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Map_' . date('YmdHis');
+        return 'Map_'.date('YmdHis');
     }
 }

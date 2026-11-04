@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\School\Only;
 
-use App\Models\Map;
-use App\Models\Diary;
 use App\Http\Controllers\Controller;
+use App\Models\Diary;
+use App\Models\Map;
 
 class DiaryVerificationController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
-        $this->middleware('permission:aktivitas/diaryverifications/plp-read', ['only' => ['index','show']]);
-        $this->middleware('permission:aktivitas/diaryverifications/plp-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:aktivitas/diaryverifications/plp-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:aktivitas/diaryverifications/plp-update', ['only' => ['edit', 'update']]);
     }
 
     public function index()
@@ -53,8 +53,7 @@ class DiaryVerificationController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Logbook diverifikasi'
+            'message' => 'Logbook diverifikasi',
         ]);
     }
-
 }
